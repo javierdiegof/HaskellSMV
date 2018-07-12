@@ -1,0 +1,12 @@
+VARS
+   hola;
+   panchito;
+   pepito;
+   sutanito;
+INIT
+   panchito <-> TRUE;
+   hola <-> TRUE;
+TRANS
+   panchito -> next(panchito);
+CTLSPEC
+   AX hola
