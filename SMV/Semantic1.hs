@@ -118,8 +118,14 @@ satEG fj trans =   let
                            
 
 satEU :: Bdd -> Bdd -> Bdd -> Bdd
-satEU f1 f2 trans = top
-
+satEU fj fc trans =  let
+                        postb = satEX fj trans
+                        term  = fc `con` postb
+                        fjp1  = fj `dis` term
+                      in
+                        if(fj `equ` fjp1) == top
+                           then fjp1
+                           else satEU fjp1 fc trans
 
 
 -- Recibe un Bdd y cambia todas sus variables por la siguiente f{x'<-x}
