@@ -3,6 +3,7 @@ import DataTypes
 import Data.List
 import Data.HasCacBDD
 import Data.Maybe
+import Debug.Trace
 
 semantic11 file = do
                      x <- syntaxChecking file
@@ -71,26 +72,66 @@ subfSynthesis (CVariable cur) _ vars               =  case (cur `elemIndex` vars
                                                       Nothing     -> error "Variable no encontrada"
 subfSynthesis (CBUnary Not ctlf) trans vars        =  neg $ subfSynthesis ctlf trans vars
 subfSynthesis (CBBinary bbinop f1 f2) trans vars   =  case bbinop of
-                                                      And      -> con (subfSynthesis f1 trans vars) (subfSynthesis f2 trans vars)
-                                                      Or       -> dis (subfSynthesis f1 trans vars) (subfSynthesis f2 trans vars)
-                                                      If       -> imp (subfSynthesis f1 trans vars) (subfSynthesis f2 trans vars)
-                                                      Iff      -> equ (subfSynthesis f1 trans vars) (subfSynthesis f2 trans vars)
+                                                         And      -> (subfSynthesis f1 trans vars) `con` (subfSynthesis f2 trans vars)
+                                                         Or       -> (subfSynthesis f1 trans vars) `dis` (subfSynthesis f2 trans vars)
+                                                         If       -> (subfSynthesis f1 trans vars) `imp` (subfSynthesis f2 trans vars)
+                                                         Iff      -> (subfSynthesis f1 trans vars) `equ` (subfSynthesis f2 trans vars)
 subfSynthesis (CCUnary cunop cltf)  trans vars     =  let 
-                                                      sub = subfSynthesis cltf trans vars
+                                                         sub = subfSynthesis cltf trans vars
                                                        in
                                                          case cunop of
-                                                            EX    -> satEX sub trans vars
-                                                            EG    -> satEG sub trans vars
+                                                            EX    -> satEX sub trans 
+                                                            EG    -> satEG sub trans 
+                                                            _     -> error "Formula a verificar no esta en ENF"
+subfSynthesis (CCBinary cbinop f1 f2) trans vars   =  let
+                                                         sub1 = subfSynthesis f1 trans vars
+                                                         sub2 = subfSynthesis f2 trans vars
+                                                       in
+                                                         case cbinop of
+                                                            EU    -> satEU sub1 sub2 trans
                                                             _     -> error "Formula a verificar no esta en ENF"
 
 
-satEX :: Bdd -> Bdd -> [Variable] -> Bdd
-satEX x y z = bot
+{-
+   Funcion que obtiene, dado un conjunto de estados, el conjunto de estados que se encuentran a un paso de este:
+   Dado B, se obtiene EX(B)                                                  
+-}
+satEX :: Bdd -> Bdd -> Bdd
+satEX subf trans  = let
+                           nextsubf    = renameNextBdd subf -- X_B{x' <- x}
+                           transnext   = con trans nextsubf -- Delta & nextsubf 
+                           nextvars    = [a | a <- (allVarsOfSorted transnext), a `mod` 2 == 1] -- Todas las variables next en transnext
+                         in
+                           existsSet nextvars transnext
 
-satEG :: Bdd -> Bdd -> [Variable] -> Bdd
-satEG x y z = top
 
 
+satEG :: Bdd -> Bdd -> Bdd
+satEG fj trans =   let
+                        aux      = satEX fj trans
+                        fjp1     = aux `con` fj
+                      in
+                        if (fj `equ` fjp1) == top 
+                           then fjp1
+                           else satEG fjp1 trans
+
+                           
+
+satEU :: Bdd -> Bdd -> Bdd -> Bdd
+satEU f1 f2 trans = top
+
+
+
+-- Recibe un Bdd y cambia todas sus variables por la siguiente f{x'<-x}
+renameNextBdd :: Bdd -> Bdd
+renameNextBdd orig      =  let 
+                              varbdd = allVarsOfSorted orig
+                              mapping = renameNextList varbdd
+                            in
+                              relabel mapping orig
+
+renameNextList :: [Int] -> [(Int, Int)]
+renameNextList vars = [(a,b) | a <- vars, let b = a+1]
 
 ----------------- Funciones de sintesis de la formula CTL (Fin) ------------------------------------------------------
 
@@ -99,3 +140,11 @@ extractVarsList (Program (VarS vars) _ _ _) = sort vars
 
 
 caller = semantic11 "prueba.txt"
+
+{-
+   Algunas pruebas:
+   cltf = CCUnary EG(CBBinary And (CVariable(Variable "req")) (CBUnary Not (CVariable(Variable "status"))))
+   bdd = var 0 `con` neg(var 2)
+   l = [Variable "req", Variable "status"]
+
+-}
