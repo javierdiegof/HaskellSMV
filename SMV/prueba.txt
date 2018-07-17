@@ -10,3 +10,6 @@ TRANS
    panchito -> next(panchito);
 CTLSPEC
    AX hola
+FAIRNESS
+   panchito <-> TRUE;
+   hola <-> TRUE;

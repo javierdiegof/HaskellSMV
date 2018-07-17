@@ -12,8 +12,8 @@ module SMVParser(
    languageDef = 
       emptyDef{
                Token.commentLine          = "--",
-               Token.identStart           = letter,
-               Token.identLetter          = alphaNum,
+               Token.identStart           = lower,
+               Token.identLetter          = lower,
                Token.reservedNames        = [
                                              "next",
                                              "MODULE",
@@ -22,7 +22,8 @@ module SMVParser(
                                              "TRANS",
                                              "TRUE",
                                              "FALSE",
-                                             "CTLSPEC"
+                                             "CTLSPEC",
+                                             "FAIRNESS"
                                           ],
                Token.reservedOpNames = [
                                           "!",
@@ -85,10 +86,37 @@ module SMVParser(
                       Infix   (reservedOp "AU"  >> return (CCBinary  AU    )) AssocLeft 
                      ]
                    ]
+                   
 
-   -- Parsea programas completos
+   {-
+   -- Parsea programas completos 						 
+     programParser :: Parser Program
+     programParser = 	do
+                        (ProgramU vars init ctlf) <- uProgramParser
+                        return $ (ProgramU vars init ctlf)
+   -}
+
+   {-
+   -- Parsea programas completos, con especificacion de FAIRNESS
+   fairParser :: Parser Fair
+   fairParser = do
+                  reserved "FAIRNESS"
+                  list <- (endBy1 bSimpleParser semi)
+                  return $ Fair list
+   -}
    programParser :: Parser Program
-   programParser = do
+   programParser =   do
+                        (ProgramU vars init trans ctlf)  <- uProgramParser
+                        opfair                           <- option (Fair []) fairParser
+                        return $ case opfair of
+                                    (Fair [])   ->  ProgramU vars init trans ctlf
+                                    fair        ->  ProgramF vars init trans ctlf fair
+
+
+
+   -- Parsea programas completos, sin especificacion de FAIRNESS 
+   uProgramParser :: Parser Program
+   uProgramParser = do
                         reserved "VARS"
                         vars  <- varSParser
                         reserved "INIT"
@@ -97,7 +125,15 @@ module SMVParser(
                         trans <- transParser
                         reserved "CTLSPEC"
                         ctlf  <- ctlFParser
-                        return $ Program vars init trans (CTLS ctlf)
+                        return $ ProgramU vars init trans (CTLS ctlf)
+   
+   fairParser :: Parser Fair
+   fairParser = do
+                  reserved "FAIRNESS"
+                  list <- (endBy1 bSimpleParser semi)
+                  return $ Fair list
+
+                  
    
    -- Parsea una secuencia de expresiones simples, dentro de INIT
    initParser :: Parser Init
