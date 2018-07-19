@@ -20,10 +20,10 @@ syntaxChecking program = do
 
 -- Toma un programa y transforma la formula CTL dentro de el a Forma Normal Existencial (ENF, en ingles)
 transformPENF :: Program -> Program
-transformPENF (Program a b c (CTLS ctlf)) =  let
+transformPENF (Program a b c (CTLS ctlf) fair) =  let
                                                 enf =  transformFNEF ctlf
                                              in
-                                                Program a b c (CTLS enf) 
+                                                Program a b c (CTLS enf) fair
 
 -- Transforma una formula CTL a su Forma Normal Existencial
 -- Teorema: Para toda formula CTL existe una formula CTL en ENF.
@@ -58,22 +58,48 @@ transformFNEF (CCBinary bop f1 f2)     =  let                                   
                                              CCBinary bop tf1 tf2
 
 varCheck :: Program -> String 
-varCheck pg =  let 
-                     vars     = extractVarSet pg
-                     initc    = checkInitU pg vars
-                     transc   = checkTransU pg vars
-                     ctlc     = checkCTLU pg vars
-                  in
-                     if (initc && transc && ctlc) == True then
-                        "primer chequeo exitoso"
-                     else
-                        "Error en l primer chequeo"
+varCheck (Program vars init trans ctls fair) =  let 
+                                                   varset   = extractVarSet vars
+                                                   initc    = checkInitU init varset
+                                                   transc   = checkTransU trans varset
+                                                   ctlc     = checkCTLU ctls varset
+                                                   fairc    = checkFairU fair varset
+                                                 in
+                                                   if initc == False then
+                                                      error "Error en las variables de INIT"
+                                                   else
+                                                      if transc == False then
+                                                         error "Error en las variables de TRANS"
+                                                      else
+                                                         if ctlc == False then
+                                                            error "Error en las variables de CTLSPEC"
+                                                         else
+                                                            if fairc == False then
+                                                               error "Error en las variables de FAIRNESS"
+                                                            else
+                                                               "Primer chequeo exitoso"
 
+                                                         
+                                                
 
-checkCTLU :: Program -> Set Variable -> Bool
-checkCTLU (Program _ _ _ (CTLS ctlf)) set = case (checkCTLS ctlf set) of
-                                                True -> True
-                                                False -> error "Error en las variables de CTLSPEC"
+-- Toma un programa y extrae las variables declaradas, las guarda en un Set
+-- Data.Sequence permite realizar operaciones de busqueda en tiempo logaritmico
+extractVarSet :: VarS -> Set Variable
+extractVarSet (VarS x) =  case checkVarS x (Just Set.empty) of
+                              Just x -> x
+                              Nothing -> error "Error en declaracion de variables"
+
+checkVarS :: [Variable] -> Maybe (Set Variable) -> Maybe (Set Variable)
+checkVarS [] s = s
+checkVarS (x:xs) Nothing   = Nothing
+checkVarS (x:xs) (Just s)    = case member x s of
+                                 True -> Nothing
+                                 False -> checkVarS xs (Just(insert x s))
+
+checkCTLU :: CTLS -> Set Variable -> Bool
+checkCTLU (CTLS ctlf) set = case (checkCTLS ctlf set) of
+                                 True -> True
+                                 False -> False
 
 checkCTLS :: CTLF -> Set Variable -> Bool
 checkCTLS (CConst _) _                 = True
@@ -85,15 +111,15 @@ checkCTLS (CCBinary _ exp1 exp2) set   = (checkCTLS exp1 set) && (checkCTLS exp2
 
 
 -- Desenvuelve el programa y extrae la lista de funciones en las transiciones
-checkTransU :: Program -> Set Variable -> Bool
-checkTransU (Program _ _ (Trans xs) _ ) set = checkTransM xs set
+checkTransU :: Trans -> Set Variable -> Bool
+checkTransU (Trans xs) set = checkTransM xs set
 
 -- Verifica que todas las variables proposicionales que se encuentran en las formulas de TRANS hayan sido declaradas
 checkTransM :: [BNext] -> Set Variable -> Bool
 checkTransM []     set  = True
 checkTransM (x:xs) set  = case checkTransS x set of
                               True ->  checkTransM xs set
-                              False -> error "Error en las variables de TRANS"
+                              False -> False
 
 -- Analiza que las proposiciones de las expresiones Next se hayan analizado
 checkTransS :: BNext -> Set Variable -> Bool
@@ -105,34 +131,25 @@ checkTransS (NBinary _ exp1 exp2)   set      = (checkTransS exp1 set) && (checkT
 
 
 -- Verifica que todas las variables proposicionales que se encuentran en las formulas de INIT hayan sido declaradas
-checkInitU :: Program -> Set Variable -> Bool
-checkInitU (Program _ (Init xs) _ _) set      =  checkInitM xs set
+checkInitU :: Init -> Set Variable -> Bool
+checkInitU (Init xs) set =  checkSimpleL xs set
 
-checkInitM :: [BSimple] -> Set Variable -> Bool
-checkInitM [] set        = True
-checkInitM (x:xs) set    = case checkInitS x set of
-                              True -> checkInitM xs set
-                              False -> error "Error en las variables de INIT"
+checkSimpleL :: [BSimple] -> Set Variable -> Bool
+checkSimpleL [] set        = True
+checkSimpleL (x:xs) set    = case checkSimpleE x set of
+                              True -> checkSimpleL xs set
+                              False -> False
 
 -- Verifica que todas las variables proposicionales en una sola formula hayan sido declaradas   
-checkInitS :: BSimple -> Set Variable -> Bool
-checkInitS (SConst   _) _                       = True
-checkInitS (SVariable var)  set                 = member var set              -- Se verifica directamente si se encuentra en el set
-checkInitS (SUnary Not exp)  set                = checkInitS exp set           -- Se quita el Not y se analiza la subexpresiones
-checkInitS (SBinary _ exp1 exp2)  set           = (checkInitS exp1 set) && (checkInitS exp2 set)     -- Se quita el Not y se analiza la subexpresiones
+checkSimpleE :: BSimple -> Set Variable -> Bool
+checkSimpleE (SConst   _) _             = True
+checkSimpleE (SVariable var)  set       = member var set              -- Se verifica directamente si se encuentra en el set
+checkSimpleE (SUnary Not exp)  set      = checkSimpleE exp set           -- Se quita el Not y se analiza la subexpresiones
+checkSimpleE (SBinary _ exp1 exp2)  set = (checkSimpleE exp1 set) && (checkSimpleE exp2 set)     -- Se quita el Not y se analiza la subexpresiones
 
 
--- Toma un programa y extrae las variables declaradas, las guarda en un Set
--- Data.Sequence permite realizar operaciones de busqueda en tiempo logaritmico
-extractVarSet :: Program -> Set Variable
-extractVarSet (Program (VarS x) _ _ _) =  case checkVarS x (Just Set.empty) of
-                                             Just x -> x
-                                             Nothing -> error "Error en declaracion de variables"
 
+checkFairU :: Maybe Fair -> Set Variable -> Bool 
+checkFairU Nothing   _           = True
+checkFairU (Just (Fair xs)) set  = checkSimpleL xs set
 
-checkVarS :: [Variable] -> Maybe (Set Variable) -> Maybe (Set Variable)
-checkVarS [] s = s
-checkVarS (x:xs) Nothing   = Nothing
-checkVarS (x:xs) (Just s)    = case member x s of
-                                 True -> Nothing
-                                 False -> checkVarS xs (Just(insert x s))

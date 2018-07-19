@@ -106,11 +106,12 @@ module SMVParser(
    -}
    programParser :: Parser Program
    programParser =   do
-                        (ProgramU vars init trans ctlf)  <- uProgramParser
-                        opfair                           <- option (Fair []) fairParser
+                        (Program vars init trans ctlf not) <- uProgramParser
+                        opfair                             <- option (Fair []) fairParser
                         return $ case opfair of
-                                    (Fair [])   ->  ProgramU vars init trans ctlf
-                                    fair        ->  ProgramF vars init trans ctlf fair
+                                    (Fair [])                        ->  error "Error en la especificacion FAIRNESS"
+                                    Fair [SVariable (Variable "-1")] ->  Program vars init trans ctlf Nothing
+                                    fair                             ->  Program vars init trans ctlf (Just fair)
 
 
 
@@ -124,16 +125,27 @@ module SMVParser(
                         reserved "TRANS"
                         trans <- transParser
                         reserved "CTLSPEC"
-                        ctlf  <- ctlFParser
-                        return $ ProgramU vars init trans (CTLS ctlf)
+                        ctlf  <- ctlFParserC
+                        return $ Program vars init trans (CTLS ctlf) Nothing
    
-   fairParser :: Parser Fair
-   fairParser = do
-                  reserved "FAIRNESS"
-                  list <- (endBy1 bSimpleParser semi)
-                  return $ Fair list
 
-                  
+   fairParser :: Parser Fair
+   fairParser =eofParser
+                  <|> fairnessParser
+
+
+   eofParser :: Parser Fair
+   eofParser = do
+                  eof
+                  return (Fair [SVariable (Variable "-1")])
+
+   fairnessParser :: Parser Fair
+   fairnessParser =  do
+                        reserved "FAIRNESS"
+                        list <- (endBy1 bSimpleParser semi)
+                        return $ Fair list
+
+
    
    -- Parsea una secuencia de expresiones simples, dentro de INIT
    initParser :: Parser Init
@@ -164,7 +176,13 @@ module SMVParser(
             <|> nConstParser 
             <|> nNVariableParser
             <|> nSVariableParser
-
+  
+   ctlFParserC :: Parser CTLF         
+   ctlFParserC = do
+                     ctlf <- ctlFParser
+                     semi
+                     return ctlf
+  
    ctlFParser :: Parser CTLF
    ctlFParser = buildExpressionParser cOperators cTerm
 

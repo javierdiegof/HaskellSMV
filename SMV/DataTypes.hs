@@ -75,9 +75,8 @@ module DataTypes(
    data Trans     = Trans [BNext]                  deriving (Show)
    data CTLS      = CTLS CTLF                      deriving (Show)
    data Fair      = Fair [BSimple]                 deriving (Show)
-   data Program   = ProgramU VarS Init Trans CTLS
-                    | ProgramF VarS Init Trans CTLS Fair    
-                     deriving (Show)
+   data Program   = Program VarS Init Trans CTLS (Maybe Fair)
+                     deriving(Show)
 
    {-
       Operaciones utiles para los tipos que se  han creado

@@ -9,7 +9,6 @@ INIT
 TRANS
    panchito -> next(panchito);
 CTLSPEC
-   AX hola
+   AX hola;
 FAIRNESS
    panchito <-> TRUE;
-   hola <-> TRUE;
