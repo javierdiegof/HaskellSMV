@@ -15,7 +15,9 @@ semantic11 file = do
                         res = case (checkFair x) of
                                  False  -> uFormulaCheck x transBDD vars   -- Verificador sin Fairness
                                  True   -> fFormulaCheck x transBDD vars   -- Verificador con Fairness
-                     print transBDD
+                     putStrLn $ "La funcion de transicion es: " ++ show(transBDD)
+                     putStrLn $ "La respuesta es: " ++ show(res)
+                     putStrLn $ "Asignaciones: " ++ show(allSats res)
                      return ()
 
 
@@ -32,17 +34,17 @@ synthOneSimple (SConst const) _  =  case const of
                                        TRUE        ->  top
                                        FALSE       ->  bot
 
-synthOneSimple (SVariable cur) vars	= case (cur `elemIndex` vars) of
-                                          Just num	-> var $ num*2
-                                          Nothing	-> error "Variable no encontrada"
+synthOneSimple (SVariable cur) vars =  case (cur `elemIndex` vars) of
+                                          Just num -> var $ num*2
+                                          Nothing  -> error "Variable no encontrada"
 
-synthOneSimple (SUnary Not f) vars	= neg $ synthOneSimple f vars
+synthOneSimple (SUnary Not f) vars  = neg $ synthOneSimple f vars
 
 synthOneSimple (SBinary bop f1 f2) vars = case bop of
-                                             And 	-> (synthOneSimple f1 vars) `con` (synthOneSimple f2 vars)
-                                             Or 	-> (synthOneSimple f1 vars) `dis` (synthOneSimple f2 vars)
-                                             If 	-> (synthOneSimple f1 vars) `imp` (synthOneSimple f2 vars)
-                                             Iff 	-> (synthOneSimple f1 vars) `equ` (synthOneSimple f2 vars)
+                                             And   -> (synthOneSimple f1 vars) `con` (synthOneSimple f2 vars)
+                                             Or    -> (synthOneSimple f1 vars) `dis` (synthOneSimple f2 vars)
+                                             If    -> (synthOneSimple f1 vars) `imp` (synthOneSimple f2 vars)
+                                             Iff   -> (synthOneSimple f1 vars) `equ` (synthOneSimple f2 vars)
 
 {-
    Nota: El ordenamiento de las variables será por orden lexicográfico, y de manera intercalada.
@@ -122,9 +124,11 @@ uSubCheck (CCBinary cbinop f1 f2) trans vars   =      let
 ----------------- Funciones de verificacion de la formula CTL con Fairness -----------------------------------------
 fFormulaCheck :: Program -> Bdd -> [Variable] -> Bdd
 fFormulaCheck (Program _ _ _ (CTLS ctlf) (Just fair)) trans vars =   let
-                                                                        fairs = synthFairness fair vars
+                                                                        fairl = synthFairness fair vars
+                                                                        fairst = fairStates trans fairl
+                                                                        ctlfFair = fSubCheck ctlf trans fairl vars
                                                                       in
-                                                                        fSubCheck ctlf trans fairs vars
+                                                                        fairst `con` ctlfFair
                                                                         
 
 fSubCheck :: CTLF -> Bdd -> [Bdd]-> [Variable] -> Bdd
@@ -234,14 +238,14 @@ satEG fj trans =   let
                            
 
 satEU :: Bdd -> Bdd -> Bdd -> Bdd
-satEU fj fc trans =  let
-                        postb = satEX fj trans
-                        term  = fc `con` postb
+satEU fc fj trans =  let
+                        postj = satEX fj trans
+                        term  = fc `con` postj
                         fjp1  = fj `dis` term
                       in
                         if(fj `equ` fjp1) == top
                            then fjp1
-                           else satEU fjp1 fc trans
+                           else satEU fc fjp1 trans
 
 
 -- Recibe un Bdd y cambia todas sus variables por la siguiente f{x'<-x}

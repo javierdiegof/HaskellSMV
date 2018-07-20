@@ -1,14 +1,10 @@
 VARS
-   hola;
-   panchito;
-   pepito;
-   sutanito;
+   a;
+   b;
+   c;
 INIT
-   panchito <-> TRUE;
-   hola <-> TRUE;
+   a;
 TRANS
-   panchito -> next(panchito);
+   (((a & !b & !c) & (!next(a) & next(b) & !next(c))) | ((!a & b & !c) & (!next(a) & !next(b) & next(c))) | ((!a & !b & c) & (next(a) & !next(b) & !next(c))));
 CTLSPEC
-   AX hola;
-FAIRNESS
-   panchito <-> TRUE;
+   (!a & !b & c) EU (!a & b & !c);
