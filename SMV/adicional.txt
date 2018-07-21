@@ -1,0 +1,31 @@
+VARS
+   bo;
+   bt;
+   c;
+   d;
+INIT
+   bo;
+TRANS
+   ((!bo & !bt & !c & !d) & (!next(bo) &  !next(bt) & !next(c) & next(d)))|((!bo & !bt & !c & !d) & (next(bo) & !next(bt) & !next(c) & !next(d)))|((!bo & !bt & !c &  d) & (!next(bo) &  !next(bt) & !next(c) & next(d)))|((bo & !bt & !c & !d) & (!next(bo) & !next(bt) & next(c) & !next(d)))|((bo & !bt & !c & !d) & (!next(bo) & next(bt) & !next(c) & !next(d)))|((!bo & !bt &  c & !d) & (!next(bo) & next(bt) & !next(c) & !next(d)))|((!bo &  bt & !c & !d) & (next(bo) & !next(bt) & !next(c) & !next(d)));
+CTLSPEC
+   EX(bo & !bt & !c & !d) & (!bo &  bt & !c & !d);
+(s0 & next(s1)) := ((!bo & !bt & !c & !d) & (!next(bo) &  !next(bt) & !next(c) & next(d)))
+(s0 & next(s2)) := ((!bo & !bt & !c & !d) & (next(bo) & !next(bt) & !next(c) & !next(d)))
+(s1 & next(s1)) := ((!bo & !bt & !c &  d) & (!next(bo) &  !next(bt) & !next(c) & next(d)))
+(s2 & next(s3)) := ((bo & !bt & !c & !d) & (!next(bo) & !next(bt) & next(c) & !next(d)))
+(s2 & next(s4)) := ((bo & !bt & !c & !d) & (!next(bo) & next(bt) & !next(c) & !next(d)))
+(s3 & next(s4)) := ((!bo & !bt &  c & !d) & (!next(bo) & next(bt) & !next(c) & !next(d)))
+(s4 & next(s2)) := ((!bo &  bt & !c & !d) & (next(bo) & !next(bt) & !next(c) & !next(d)))
+
+
+
+s0       := !bo & !bt & !c & !d
+next(s0) := !next(bo) & !next(bt) & !next(c) & !next(d)
+s1       := !bo & !bt & !c &  d
+next(s1) := !next(bo) &  !next(bt) & !next(c) & next(d)
+s2       :=  bo & !bt & !c & !d
+next(s2) := next(bo) & !next(bt) & !next(c) & !next(d)
+s3       := !bo & !bt &  c & !d
+next(s3) := !next(bo) & !next(bt) & next(c) & !next(d)
+s4       := !bo &  bt & !c & !d
+next(s4) := !next(bo) & next(bt) & !next(c) & !next(d)

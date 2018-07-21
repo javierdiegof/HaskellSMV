@@ -1,10 +1,11 @@
 VARS
-   a;
-   b;
+   bo;
+   bt;
    c;
+   d;
 INIT
-   a;
+   bo;
 TRANS
-   (((a & !b & !c) & (!next(a) & next(b) & !next(c))) | ((!a & b & !c) & (!next(a) & !next(b) & next(c))) | ((!a & !b & c) & (next(a) & !next(b) & !next(c))));
+   ((!bo & !bt & !c & !d) & (!next(bo) &  !next(bt) & !next(c) & next(d)))|((!bo & !bt & !c & !d) & (next(bo) & !next(bt) & !next(c) & !next(d)))|((!bo & !bt & !c &  d) & (!next(bo) &  !next(bt) & !next(c) & next(d)))|((bo & !bt & !c & !d) & (!next(bo) & !next(bt) & next(c) & !next(d)))|((bo & !bt & !c & !d) & (!next(bo) & next(bt) & !next(c) & !next(d)))|((!bo & !bt &  c & !d) & (!next(bo) & next(bt) & !next(c) & !next(d)))|((!bo &  bt & !c & !d) & (next(bo) & !next(bt) & !next(c) & !next(d)));
 CTLSPEC
-   (!a & !b & c) EU (!a & b & !c);
+   EG(TRUE);
