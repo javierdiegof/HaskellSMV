@@ -229,7 +229,7 @@ satEX subf trans  = let
 satEG :: Bdd -> Bdd -> Bdd
 satEG fj trans =   let
                         aux      = satEX fj trans
-                        fjp1     = aux `con` fj
+                        fjp1     = fj `con` aux
                       in
                         if (fj `equ` fjp1) == top 
                            then fjp1
