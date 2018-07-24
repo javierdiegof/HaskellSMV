@@ -4,6 +4,7 @@ module SMVParser(
    import DataTypes
    import System.IO
    import Control.Monad
+   import Data.Maybe
    import Text.ParserCombinators.Parsec
    import Text.ParserCombinators.Parsec.Expr
    import Text.ParserCombinators.Parsec.Language
@@ -17,6 +18,7 @@ module SMVParser(
                Token.reservedNames        = [
                                              "next",
                                              "MODULE",
+                                             "DEFINE",
                                              "INIT",
                                              "VAR",
                                              "TRANS",
@@ -26,6 +28,7 @@ module SMVParser(
                                              "FAIRNESS"
                                           ],
                Token.reservedOpNames = [
+                                          ":=",
                                           "!",
                                           "&",
                                           "|",
@@ -69,8 +72,8 @@ module SMVParser(
                   ]
                   
    cOperators = [
-                     [Prefix  (reservedOp "!"   >> return (CBUnary   Not   ))           ,
-                      Prefix  (reservedOp "EG"  >> return (CCUnary   EG    ))           ,
+                     [Prefix  (reservedOp "!"   >> return (CBUnary   Not   ))           ],
+                     [Prefix  (reservedOp "EG"  >> return (CCUnary   EG    ))           ,
                       Prefix  (reservedOp "EX"  >> return (CCUnary   EX    ))           ,
                       Prefix  (reservedOp "EF"  >> return (CCUnary   EF    ))           , 
                       Prefix  (reservedOp "AG"  >> return (CCUnary   AG    ))           , 
@@ -86,51 +89,55 @@ module SMVParser(
                       Infix   (reservedOp "AU"  >> return (CCBinary  AU    )) AssocLeft 
                      ]
                    ]
-                   
-
-   {-
-   -- Parsea programas completos 						 
-     programParser :: Parser Program
-     programParser = 	do
-                        (ProgramU vars init ctlf) <- uProgramParser
-                        return $ (ProgramU vars init ctlf)
-   -}
-
-   {-
-   -- Parsea programas completos, con especificacion de FAIRNESS
-   fairParser :: Parser Fair
-   fairParser = do
-                  reserved "FAIRNESS"
-                  list <- (endBy1 bSimpleParser semi)
-                  return $ Fair list
-   -}
-   programParser :: Parser Program
+            
+   programParser :: Parser UProgram
    programParser =   do
-                        (Program vars init trans ctlf not) <- uProgramParser
-                        opfair                             <- option (Fair []) fairParser
+                        (UProgram vars def init trans ctlf not) <- uProgramParser
+                        opfair                                  <- option (Fair []) fairParser
                         return $ case opfair of
                                     (Fair [])                        ->  error "Error en la especificacion FAIRNESS"
-                                    Fair [SVariable (Variable "-1")] ->  Program vars init trans ctlf Nothing
-                                    fair                             ->  Program vars init trans ctlf (Just fair)
+                                    Fair [SVariable (Variable "-1")] ->  UProgram vars def init trans ctlf Nothing
+                                    fair                             ->  UProgram vars  def init trans ctlf (Just fair)
 
 
 
    -- Parsea programas completos, sin especificacion de FAIRNESS 
-   uProgramParser :: Parser Program
+   uProgramParser :: Parser UProgram
    uProgramParser = do
-                        reserved "VARS"
-                        vars  <- varSParser
-                        reserved "INIT"
-                        init  <- initParser
-                        reserved "TRANS"
-                        trans <- transParser
-                        reserved "CTLSPEC"
-                        ctlf  <- ctlFParserC
-                        return $ Program vars init trans (CTLS ctlf) Nothing
+                        vars        <- varSParser
+                        (def, init) <- defInitParser
+                        trans       <- transParser
+                        ctlf        <- ctlFParserC
+                        return $ UProgram vars def init trans (CTLS ctlf) Nothing
    
 
+   defInitParser :: Parser (Maybe Define, Init)
+   defInitParser = do 
+                     tryinit <- option (Init [SVariable (Variable "-1")]) initParser
+                     if not (tryinit == (Init [SVariable (Variable "-1")]))
+                        then 
+                           return $ (Nothing, tryinit)
+                        else
+                           do
+                              trydefine <- defineParser
+                              tryinit2  <- initParser
+                              return $ ((Just trydefine), tryinit2)
+
+   defineParser :: Parser Define
+   defineParser = do
+                     reserved "DEFINE" 
+                     list <- (endBy1 defExpParser semi)
+                     return $ Define list
+
+   defExpParser :: Parser DefineExp
+   defExpParser = do
+                     var      <- variableParser
+                     reservedOp ":="
+                     nextexp  <- bNextParser
+                     return $ DefineExp var nextexp
+
    fairParser :: Parser Fair
-   fairParser =eofParser
+   fairParser =   eofParser
                   <|> fairnessParser
 
 
@@ -150,12 +157,14 @@ module SMVParser(
    -- Parsea una secuencia de expresiones simples, dentro de INIT
    initParser :: Parser Init
    initParser = do
+                     reserved "INIT"
                      list <- (endBy1 bSimpleParser semi)
                      return $ Init list
    
    -- Parsea una secuencia de expresiones next, dentro de TRANS
    transParser :: Parser Trans
    transParser = do
+                     reserved "TRANS"
                      list <- (endBy1 bNextParser semi)
                      return $ Trans list
 
@@ -179,6 +188,7 @@ module SMVParser(
   
    ctlFParserC :: Parser CTLF         
    ctlFParserC = do
+                     reserved "CTLSPEC"
                      ctlf <- ctlFParser
                      semi
                      return ctlf
@@ -212,6 +222,7 @@ module SMVParser(
    -- Parsea lista de identificadores
    varSParser :: Parser VarS
    varSParser = do
+                     reserved "VARS"
                      list <- (endBy1 variableParser semi) -- separados por punto y coma (semicolon)
                      return $ VarS list
    
@@ -291,7 +302,7 @@ module SMVParser(
                                 Right r -> r 
 
    -- Parsea un programa completo
-   parseFile :: String -> IO Program
+   parseFile :: String -> IO UProgram
    parseFile file = do 
                         program <- readFile file
                         case parse programParser "" program of

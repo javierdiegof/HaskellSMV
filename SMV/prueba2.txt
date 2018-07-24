@@ -1,0 +1,10 @@
+VARS
+   a;
+DEFINE
+   c := a;
+INIT
+   a <-> TRUE;
+TRANS
+   a <-> next(a);
+CTLSPEC
+   EG(TRUE);

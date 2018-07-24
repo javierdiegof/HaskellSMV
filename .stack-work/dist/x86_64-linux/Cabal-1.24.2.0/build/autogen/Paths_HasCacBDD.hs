@@ -29,12 +29,12 @@ version :: Version
 version = Version [0,1,0,0] []
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 
-bindir     = "/home/javier/Dropbox/Carrera/Tesis/Codigos/Prueba Stack/HasCacBDD-0.1.0.0/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/bin"
-libdir     = "/home/javier/Dropbox/Carrera/Tesis/Codigos/Prueba Stack/HasCacBDD-0.1.0.0/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/lib/x86_64-linux-ghc-8.0.2/HasCacBDD-0.1.0.0-9yTDjY7ApZf41Py31f2KZZ"
-dynlibdir  = "/home/javier/Dropbox/Carrera/Tesis/Codigos/Prueba Stack/HasCacBDD-0.1.0.0/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/lib/x86_64-linux-ghc-8.0.2"
-datadir    = "/home/javier/Dropbox/Carrera/Tesis/Codigos/Prueba Stack/HasCacBDD-0.1.0.0/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/share/x86_64-linux-ghc-8.0.2/HasCacBDD-0.1.0.0"
-libexecdir = "/home/javier/Dropbox/Carrera/Tesis/Codigos/Prueba Stack/HasCacBDD-0.1.0.0/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/libexec"
-sysconfdir = "/home/javier/Dropbox/Carrera/Tesis/Codigos/Prueba Stack/HasCacBDD-0.1.0.0/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/etc"
+bindir     = "/home/javier/Desktop/Escuela/Carrera/Tesis/Codigos/Prueba Stack/HasCacBDD-0.1.0.0/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/bin"
+libdir     = "/home/javier/Desktop/Escuela/Carrera/Tesis/Codigos/Prueba Stack/HasCacBDD-0.1.0.0/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/lib/x86_64-linux-ghc-8.0.2/HasCacBDD-0.1.0.0-9yTDjY7ApZf41Py31f2KZZ"
+dynlibdir  = "/home/javier/Desktop/Escuela/Carrera/Tesis/Codigos/Prueba Stack/HasCacBDD-0.1.0.0/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/lib/x86_64-linux-ghc-8.0.2"
+datadir    = "/home/javier/Desktop/Escuela/Carrera/Tesis/Codigos/Prueba Stack/HasCacBDD-0.1.0.0/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/share/x86_64-linux-ghc-8.0.2/HasCacBDD-0.1.0.0"
+libexecdir = "/home/javier/Desktop/Escuela/Carrera/Tesis/Codigos/Prueba Stack/HasCacBDD-0.1.0.0/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/libexec"
+sysconfdir = "/home/javier/Desktop/Escuela/Carrera/Tesis/Codigos/Prueba Stack/HasCacBDD-0.1.0.0/.stack-work/install/x86_64-linux/lts-8.0/8.0.2/etc"
 
 getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: IO FilePath
 getBinDir = catchIO (getEnv "HasCacBDD_bindir") (\_ -> return bindir)
