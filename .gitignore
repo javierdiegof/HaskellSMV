@@ -20,4 +20,4 @@ cabal.sandbox.config
 *.gch
 cpp/t
 *.tix
-.vscode/
+.vscode
