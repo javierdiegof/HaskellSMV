@@ -24,9 +24,11 @@ module DataTypes(
    FairCons(..),
    ModuleElem(..),
    UModule(..),
+   OModule(..),
+   convertModule,
    Define(..)
 ) where
-   import Data.Map.Strict
+   import qualified Data.Map.Strict as DMS
 
    -- Expresion simple, sin next
    data BSimple =    SConst BConstant
@@ -99,7 +101,7 @@ module DataTypes(
                
    data UModule   = UModule [ModuleElem]   deriving (Show)
 
-   data OModule   = OModule VarDec InitCons (Maybe DefineDec) TransCons [CTLSpec] (Maybe [FairCons]) deriving (Show)
+   data OModule   = OModule VarDec (Maybe DefineDec) InitCons TransCons [CTLSpec] (Maybe [FairCons]) deriving (Show)
    
 
 
@@ -150,27 +152,74 @@ module DataTypes(
    convertModule :: UModule -> OModule
    convertModule umodule = let
                               vardec      = extractVarDec      umodule
-                              initcons    = extractInitCons    umodule
                               mdefinedec  = extractDefineDec   umodule
+                              initcons    = extractInitCons    umodule
                               transcons   = extractTransCons   umodule
                               ctlspecs    = extractCTLSpecs    umodule
                               mfaircons   = extractFairCons    umodule
                             in
-                              OModule vardec initcons mdefinedec transcons ctlspecs mfaircons
+                              OModule vardec mdefinedec initcons transcons ctlspecs mfaircons
 
 
 
    -- Funciones auxiliares para convertir un modulo desordenado a ordenado
    
-   -- Obtiene un unico VarDec 
+   -- Obtiene un unico VarDec combinando muchos (posiblemente)
    extractVarDec :: UModule -> VarDec
-   extractVarDec umodule = VarDec $ extractVarDec1 umodule
+   extractVarDec (UModule xs) = VarDec $ foldr extractVarDec1 [] xs
+
+   extractVarDec1 :: ModuleElem -> [Variable] -> [Variable]
+   extractVarDec1 modelem vars = case modelem of
+                                    (ModuleVar (VarDec ys)) -> ys ++ vars
+                                    _                       -> vars     
+
    
-   extractVarDec1 :: UModule -> [Variable]
-   extractVarDec1 (UModule (x:xs)) = case x of 
-                                       (ModuleVar (VarDec ys))    -> ys ++ extractVarDec1(UModule xs)
-                                       _                          -> extractVarDec1(UModule xs)
+   extractInitCons :: UModule -> InitCons
+   extractInitCons (UModule xs) = InitCons $ foldr extractInitCons1 (SConst TRUE) xs
+
+   extractInitCons1 :: ModuleElem -> BSimple -> BSimple
+   extractInitCons1 modelem form =  case modelem of
+                                       (ModuleInit (InitCons bsimple)) -> SBinary And bsimple form
+                                       _                               -> form
    
+   extractDefineDec :: UModule -> Maybe DefineDec
+   extractDefineDec (UModule xs) =  case (foldr extractDefineDec1 [] xs) of
+                                       [] -> Nothing
+                                       xs -> Just (DefineDec xs)
+
+   extractDefineDec1 :: ModuleElem -> [DefineExp] -> [DefineExp]
+   extractDefineDec1 modelem defs = case modelem of
+                                       (ModuleDefine (DefineDec ys)) -> ys ++ defs
+                                       _                             -> defs 
+      
+   extractTransCons :: UModule -> TransCons
+   extractTransCons (UModule xs) = TransCons $ foldr extractTransCons1 (NConst TRUE) xs
+
+   extractTransCons1 :: ModuleElem -> BNext -> BNext
+   extractTransCons1 modelem form = case modelem of
+                                    (ModuleTrans (TransCons bnext)) -> NBinary And bnext form
+                                    _                               -> form 
+
+   extractCTLSpecs :: UModule -> [CTLSpec]
+   extractCTLSpecs (UModule xs) = foldr extractCTLSpecs1 [] xs
+
+   extractCTLSpecs1 :: ModuleElem -> [CTLSpec] -> [CTLSpec]
+   extractCTLSpecs1 modelem ctls =  case modelem of
+                                       (ModuleCTL ctlspec) -> ctlspec : ctls
+                                       _                   -> ctls
+
+   extractFairCons :: UModule -> Maybe [FairCons]
+   extractFairCons (UModule xs) =   case (foldr extractFairCons1 [] xs) of
+                                       [] -> Nothing
+                                       xs -> Just xs
+
+
+
+   extractFairCons1 :: ModuleElem -> [FairCons] -> [FairCons]
+   extractFairCons1 modelem fairs = case modelem of
+                                       (ModuleFair faircons) -> faircons : fairs
+                                       _                     -> fairs 
+   {-
    -- Obtiene un unico InitCons
    extractInitCons :: UModule -> InitCons
    extractInitCons umodule = InitCons $ extractInitCons1 (umodule)
@@ -181,7 +230,6 @@ module DataTypes(
                                           _                                -> extractInitCons1 (UModule xs)
    
 
-
    extractDefineDec :: UModule -> Maybe DefineDec
    extractDefineDec umodule =   case (extractDefineDec1 umodule) of
                                     []    -> Nothing
@@ -191,6 +239,7 @@ module DataTypes(
    extractDefineDec1 (UModule (x:xs)) = case x of
                                           (ModuleDefine (DefineDec ys)) -> ys ++ extractDefineDec1(UModule (xs))
                                           _                             -> extractDefineDec1 (UModule (xs))
+   
 
    -- Obtiene un unico transcons
    extractTransCons :: UModule -> TransCons
@@ -201,11 +250,14 @@ module DataTypes(
                                              (ModuleTrans (TransCons bnext)) -> (NBinary And bnext (extractTransCons1 (UModule xs)))
                                              _                               -> extractTransCons1 (UModule xs)
    
+
+
    extractCTLSpecs :: UModule -> [CTLSpec]
    extractCTLSpecs (UModule (x:xs)) =  case x of
                                           (ModuleCTL ctlspec)  -> ctlspec : extractCTLSpecs(UModule xs)
                                           _                    -> extractCTLSpecs(UModule xs)    
-                                       
+                
+
    extractFairCons :: UModule -> Maybe [FairCons]
    extractFairCons umodule =  case (extractFairCons1 umodule) of 
                               []    -> Nothing
@@ -215,3 +267,6 @@ module DataTypes(
    extractFairCons1 (UModule (x:xs)) =  case x of
                                           (ModuleFair faircons) -> faircons : extractFairCons1 (UModule xs)
                                           _                     -> extractFairCons1 (UModule xs)
+   -}                           
+   
+                        

@@ -299,6 +299,13 @@ module SMVParser(
                         case parse uModuleParser "" program of
                            Left  e -> print e >> fail "parse error"
                            Right r -> return r
+
+   parseFileO :: String -> IO OModule
+   parseFileO file =  do
+                        program <- readFile file
+                        case parse uModuleParser "" program of
+                           Left  e -> print e >> fail "parse error"
+                           Right r -> return $ convertModule r
    --------------------------------------------------------------------------------------------------
    --- Pruebas de parsers varios (fin)                                                       --------
    --------------------------------------------------------------------------------------------------

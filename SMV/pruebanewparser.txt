@@ -1,14 +1,4 @@
-VAR
-   a;
-   b;
-DEFINE
-   c := a & b;
-   cn := next(a) & next(b);
-INIT
-   a;
-TRANS
-   a & next(b);
 CTLSPEC
    EX(a);
-FAIRNESS
-   a & b;
+CTLSPEC
+   EX (b);
