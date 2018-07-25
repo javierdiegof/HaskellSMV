@@ -177,7 +177,7 @@ module SMVParser(
             <|> sVariableParser         -- Una variable simple
 
 
-     -- Parsea expresiones next (usadas en TRANS)
+   -- Parsea expresiones next (usadas en TRANS)
    bNextParser :: Parser BNext
    bNextParser = buildExpressionParser nOperators nTerm
 
@@ -205,10 +205,6 @@ module SMVParser(
       Parsers simples a partir de los lexers
    -}
 
-   -- Parsea a los identificadores individualmente
-   variableParser :: Parser Variable
-   variableParser = liftM Variable identifier -- Conformados por un identificador
-
    -- Parsea constantes booleanas, usadas para formar expresiones simples y complejas
    bConstantParser :: Parser BConstant
    bConstantParser =       (reserved "TRUE" >> return TRUE)
@@ -222,16 +218,20 @@ module SMVParser(
    -- Parsea lista de identificadores
    varSParser :: Parser VarS
    varSParser = do
-                     reserved "VARS"
+                     reserved "VAR"
                      list <- (endBy1 variableParser semi) -- separados por punto y coma (semicolon)
                      return $ VarS list
+
+    -- Parsea a los identificadores individualmente
+   variableParser :: Parser Variable
+   variableParser = liftM Variable identifier -- Conformados por un identificador
    
              
    -- Parsea constantes booleanas dentro de expresiones simples                   
    sConstParser :: Parser BSimple
    sConstParser = do
-                              bconstant <- bConstantParser
-                              return $ SConst bconstant
+                     bconstant <- bConstantParser
+                     return $ SConst bconstant
 
    -- Parsea constantes booleanas dentro de expresiones next                   
    nConstParser :: Parser BNext

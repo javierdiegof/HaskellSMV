@@ -13,9 +13,17 @@ module DataTypes(
    Trans(..),
    CTLS(..),
    Fair(..),
-   Program(..),
-   UProgram(..),
+   --Program(..),
+   --UProgram(..),
+   VarDec(..),
+   InitCons(..),
    DefineExp(..),
+   DefineDec(..),
+   TransCons(..),
+   CTLSpec(..),
+   FairCons(..),
+   ModuleElem(..),
+   UModule(..),
    Define(..)
 ) where
    import Data.Map.Strict
@@ -74,6 +82,28 @@ module DataTypes(
                   |   AU
                   deriving(Show)
 
+   data VarDec     = VarDec    [Variable]     deriving (Show)
+   data InitCons   = InitCons   BSimple       deriving (Show)  
+   data DefineDec  = DefineDec [DefineExp]    deriving (Show)  
+   data TransCons  = TransCons  BNext         deriving (Show)
+   data CTLSpec    = CTLSpec   CTLF           deriving (Show) 
+   data FairCons   = FairCons  BSimple        deriving (Show) 
+
+   data ModuleElem =   ModuleVar       VarDec
+                     | ModuleInit      InitCons
+                     | ModuleDefine    DefineDec
+                     | ModuleTrans     TransCons
+                     | ModuleCTL       CTLSpec
+                     | ModuleFair      FairCons
+                     deriving (Show)
+               
+   data UModule   = UModule [ModuleElem]   deriving (Show)
+
+   data OModule   = OModule VarDec InitCons (Maybe DefineDec) TransCons [CTLSpec] (Maybe [FairCons]) deriving (Show)
+   
+
+
+
 
    -- Conjunto de asignaciones, uso en INIT y en TRANS
    data VarS      = VarS [Variable]                deriving (Show)
@@ -82,10 +112,13 @@ module DataTypes(
    data Trans     = Trans [BNext]                  deriving (Show)
    data CTLS      = CTLS CTLF                      deriving (Show)
    data Fair      = Fair [BSimple]                 deriving (Show)
+
+   {-
    data Program   = Program VarS Init Trans CTLS (Maybe Fair)
                      deriving(Show)
    data UProgram  = UProgram VarS (Maybe Define) Init Trans CTLS (Maybe Fair)
                      deriving(Show)
+   -}
 
    {-
       Operaciones utiles para los tipos que se  han creado
@@ -107,9 +140,78 @@ module DataTypes(
       TRUE == TRUE                  = True
       FALSE == FALSE                = True
       _  == _                       = False
+
+   {-
+      Esta funcion convierte un modulo desordenado a un modulo ordenado.
+      El modulo desordenado proviene del parser.
+      El modulo ordenado es con el que van a trabajar los algoritmos de verificacion de modelos
+   -}
+
+   convertModule :: UModule -> OModule
+   convertModule umodule = let
+                              vardec      = extractVarDec      umodule
+                              initcons    = extractInitCons    umodule
+                              mdefinedec  = extractDefineDec   umodule
+                              transcons   = extractTransCons   umodule
+                              ctlspecs    = extractCTLSpecs    umodule
+                              mfaircons   = extractFairCons    umodule
+                            in
+                              OModule vardec initcons mdefinedec transcons ctlspecs mfaircons
+
+
+
+   -- Funciones auxiliares para convertir un modulo desordenado a ordenado
+   
+   -- Obtiene un unico VarDec 
+   extractVarDec :: UModule -> VarDec
+   extractVarDec umodule = VarDec $ extractVarDec1 umodule
+   
+   extractVarDec1 :: UModule -> [Variable]
+   extractVarDec1 (UModule (x:xs)) = case x of 
+                                       (ModuleVar (VarDec ys))    -> ys ++ extractVarDec1(UModule xs)
+                                       _                          -> extractVarDec1(UModule xs)
+   
+   -- Obtiene un unico InitCons
+   extractInitCons :: UModule -> InitCons
+   extractInitCons umodule = InitCons $ extractInitCons1 (umodule)
+
+   extractInitCons1 :: UModule -> BSimple
+   extractInitCons1 (UModule (x:xs)) = case x of
+                                          (ModuleInit (InitCons bsimple))  -> (SBinary And bsimple (extractInitCons1 (UModule xs)))
+                                          _                                -> extractInitCons1 (UModule xs)
    
 
-   instance Eq BSimple where
-      -- (==) :: a -> a -> Bool
-      SConst a == SConsta b            = a == b
-      SVariable a == SVariable b       = a == b
+
+   extractDefineDec :: UModule -> Maybe DefineDec
+   extractDefineDec umodule =   case (extractDefineDec1 umodule) of
+                                    []    -> Nothing
+                                    xs    -> Just (DefineDec xs)
+
+   extractDefineDec1 :: UModule -> [DefineExp]
+   extractDefineDec1 (UModule (x:xs)) = case x of
+                                          (ModuleDefine (DefineDec ys)) -> ys ++ extractDefineDec1(UModule (xs))
+                                          _                             -> extractDefineDec1 (UModule (xs))
+
+   -- Obtiene un unico transcons
+   extractTransCons :: UModule -> TransCons
+   extractTransCons umodule = TransCons $ extractTransCons1 umodule
+
+   extractTransCons1 :: UModule -> BNext
+   extractTransCons1 (UModule (x:xs)) =   case x of
+                                             (ModuleTrans (TransCons bnext)) -> (NBinary And bnext (extractTransCons1 (UModule xs)))
+                                             _                               -> extractTransCons1 (UModule xs)
+   
+   extractCTLSpecs :: UModule -> [CTLSpec]
+   extractCTLSpecs (UModule (x:xs)) =  case x of
+                                          (ModuleCTL ctlspec)  -> ctlspec : extractCTLSpecs(UModule xs)
+                                          _                    -> extractCTLSpecs(UModule xs)    
+                                       
+   extractFairCons :: UModule -> Maybe [FairCons]
+   extractFairCons umodule =  case (extractFairCons1 umodule) of 
+                              []    -> Nothing
+                              xs    -> Just xs
+
+   extractFairCons1 :: UModule -> [FairCons]
+   extractFairCons1 (UModule (x:xs)) =  case x of
+                                          (ModuleFair faircons) -> faircons : extractFairCons1 (UModule xs)
+                                          _                     -> extractFairCons1 (UModule xs)
