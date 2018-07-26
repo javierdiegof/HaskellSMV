@@ -162,7 +162,7 @@ fSubCheck (CCUnary EG ctlf) trans fairs vars =  let
                                                    sub = fSubCheck ctlf trans fairs vars
                                                  in
                                                    satEG sub trans 
-
+----------------- Funciones de verificacion de la formula CTL con Fairness (fin) -----------------------------------------
 
 
 

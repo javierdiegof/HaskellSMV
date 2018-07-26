@@ -1,5 +1,5 @@
 module DataTypesOps(
-
+   syntaxCheck
 ) where
    import DataTypes
    import SMVParser
@@ -11,8 +11,8 @@ module DataTypesOps(
    -- Ordenado a P
    -- Inicio
    -----------------------------------------------------------------------------------------------------
-   filechecking :: String -> IO (PModule)
-   filechecking file =  do
+   syntaxCheck :: String -> IO (PModule)
+   syntaxCheck file =  do
                            umod <- parseFile file
                            let omod    = convertModuleUO umod
                            let pmod    = convertModuleOP omod

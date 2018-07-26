@@ -1,9 +1,10 @@
 VAR
    a;
    b;
+   c;
 INIT
-   a & b;
+   a & !b & !c;
 TRANS
-   a | next(b);
+   (a & !b & !c & !next(a) &  next(b) & !next(c)) | (!a & b & !c & !next(a) & !next(b) &  next(c)) | (!a & !b & c & next(a) & !next(b) & !next(c));
 CTLSPEC
-   EX (a);
+   (a & !b & !c) EU (!a & b & !c);
