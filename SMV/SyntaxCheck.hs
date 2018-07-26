@@ -59,7 +59,7 @@ transformFNEF (CCBinary bop f1 f2)     =  let                                   
 
 varCheck :: Program -> String 
 varCheck (Program vars init trans ctls fair) =  let 
-                                                   varset   = extractVarSet vars
+                                                   varset   = extractVarSet vars -- Check
                                                    initc    = checkInitU init varset
                                                    transc   = checkTransU trans varset
                                                    ctlc     = checkCTLU ctls varset
@@ -92,7 +92,7 @@ extractVarSet (VarS x) =  case checkVarS x (Just Set.empty) of
 checkVarS :: [Variable] -> Maybe (Set Variable) -> Maybe (Set Variable)
 checkVarS [] s = s
 checkVarS (x:xs) Nothing   = Nothing
-checkVarS (x:xs) (Just s)    = case member x s of
+checkVarS (x:xs) (Just s)  = case member x s of
                                  True -> Nothing
                                  False -> checkVarS xs (Just(insert x s))
 

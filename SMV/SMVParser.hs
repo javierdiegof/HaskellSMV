@@ -7,168 +7,125 @@ module SMVParser(
    import Data.Maybe
    import Text.ParserCombinators.Parsec
    import Text.ParserCombinators.Parsec.Expr
-   import Text.ParserCombinators.Parsec.Language
-   import qualified Text.ParserCombinators.Parsec.Token as Token
-      
-   languageDef = 
-      emptyDef{
-               Token.commentLine          = "--",
-               Token.identStart           = lower,
-               Token.identLetter          = lower,
-               Token.reservedNames        = [
-                                             "next",
-                                             "MODULE",
-                                             "DEFINE",
-                                             "INIT",
-                                             "VAR",
-                                             "TRANS",
-                                             "TRUE",
-                                             "FALSE",
-                                             "CTLSPEC",
-                                             "FAIRNESS"
-                                          ],
-               Token.reservedOpNames = [
-                                          ":=",
-                                          "!",
-                                          "&",
-                                          "|",
-                                          "->",
-                                          "<->",
-                                          "EG",
-                                          "EX",
-                                          "EF",
-                                          "AG",
-                                          "AX",
-                                          "AF"
-                                       ]
-      }
+   import LanguageDef
 
-   lexer       = Token.makeTokenParser languageDef
+
+   --------------------------------------------------------------------------------------------------
+   -- Parser del modulo desordenado (inicio)                                                     ----
+   --------------------------------------------------------------------------------------------------
+   uModuleParser :: Parser UModule
+   uModuleParser = do 
+                     list <- manyTill moduleElemParser eof
+                     return $ UModule list 
+   --------------------------------------------------------------------------------------------------
+   -- Parser del modulo desordenado (fin)                                                        ----
+   --------------------------------------------------------------------------------------------------
+
+   --------------------------------------------------------------------------------------------------
+   -- Parser de los elementos del modulo y sus wrapper (inicio)                                 -----
+   --------------------------------------------------------------------------------------------------
+   moduleElemParser :: Parser ModuleElem
+   moduleElemParser =    mVarDecParser
+                     <|> mInitConsParser 
+                     <|> mDefineParser
+                     <|> mTransConsParser
+                     <|> mCtlSpecParser
+                     <|> mFairConsParser 
+
+   mVarDecParser :: Parser ModuleElem
+   mVarDecParser = do
+                     varDec <- varDecParser
+                     return $ ModuleVar varDec 
    
-   identifier  = Token.identifier      lexer
-   reserved    = Token.reserved        lexer
-   reservedOp  = Token.reservedOp      lexer
-   parens      = Token.parens          lexer
-   brackets    = Token.brackets        lexer
-   semi        = Token.semi            lexer
-   whiteSpace  = Token.whiteSpace      lexer
+   mInitConsParser :: Parser ModuleElem
+   mInitConsParser = do 
+                        initcons <- initConsParser
+                        return $ ModuleInit initcons
+               
+   mDefineParser :: Parser ModuleElem
+   mDefineParser = do
+                     definedec <- defineDecParser
+                     return $ ModuleDefine definedec
 
-
-   -- Se deben de definir operadores distintos para las expresiones Simple y Next, semantica distinta tambien 
-   sOperators = [
-                    [Prefix  (reservedOp "!"   >> return (SUnary  Not  ))           ],
-                    [Infix   (reservedOp "&"   >> return (SBinary And  )) AssocLeft ],
-                    [Infix   (reservedOp "|"   >> return (SBinary Or   )) AssocLeft ],
-                    [Infix   (reservedOp "->"  >> return (SBinary If   )) AssocRight],
-                    [Infix   (reservedOp "<->" >> return (SBinary Iff  )) AssocLeft ]
-                  ]
-   
-   nOperators = [
-                    [Prefix  (reservedOp "!"   >> return (NUnary  Not  ))           ],
-                    [Infix   (reservedOp "&"   >> return (NBinary And  )) AssocLeft ],
-                    [Infix   (reservedOp "|"   >> return (NBinary Or   )) AssocLeft ],
-                    [Infix   (reservedOp "->"  >> return (NBinary If   )) AssocRight],
-                    [Infix   (reservedOp "<->" >> return (NBinary Iff  )) AssocLeft ]
-                  ]
-                  
-   cOperators = [
-                     [Prefix  (reservedOp "!"   >> return (CBUnary   Not   ))           ],
-                     [Prefix  (reservedOp "EG"  >> return (CCUnary   EG    ))           ,
-                      Prefix  (reservedOp "EX"  >> return (CCUnary   EX    ))           ,
-                      Prefix  (reservedOp "EF"  >> return (CCUnary   EF    ))           , 
-                      Prefix  (reservedOp "AG"  >> return (CCUnary   AG    ))           , 
-                      Prefix  (reservedOp "AX"  >> return (CCUnary   AX    ))           , 
-                      Prefix  (reservedOp "AF"  >> return (CCUnary   AF    ))            
-                     ],
-                     [Infix   (reservedOp "&"   >> return (CBBinary  And   )) AssocLeft ],
-                     [Infix   (reservedOp "|"   >> return (CBBinary  Or    )) AssocLeft ],
-                     [Infix   (reservedOp "->"  >> return (CBBinary  If    )) AssocRight],
-                     [Infix   (reservedOp "<->" >> return (CBBinary  Iff   )) AssocLeft ],
-                     [Infix   (reservedOp "<->" >> return (CBBinary  Iff   )) AssocLeft ],
-                     [Infix   (reservedOp "EU"  >> return (CCBinary  EU    )) AssocLeft ,
-                      Infix   (reservedOp "AU"  >> return (CCBinary  AU    )) AssocLeft 
-                     ]
-                   ]
+   mTransConsParser :: Parser ModuleElem
+   mTransConsParser = do
+                        transcons <- transConsParser
+                        return $ ModuleTrans transcons
             
-   programParser :: Parser UProgram
-   programParser =   do
-                        (UProgram vars def init trans ctlf not) <- uProgramParser
-                        opfair                                  <- option (Fair []) fairParser
-                        return $ case opfair of
-                                    (Fair [])                        ->  error "Error en la especificacion FAIRNESS"
-                                    Fair [SVariable (Variable "-1")] ->  UProgram vars def init trans ctlf Nothing
-                                    fair                             ->  UProgram vars  def init trans ctlf (Just fair)
+   mCtlSpecParser :: Parser ModuleElem
+   mCtlSpecParser =  do
+                        ctlspec <- ctlSpecParser
+                        return $ ModuleCTL ctlspec
+
+   mFairConsParser :: Parser ModuleElem
+   mFairConsParser = do
+                        faircons <- fairConsParser
+                        return $ ModuleFair faircons
+   --------------------------------------------------------------------------------------------------
+   -- Parser de los elementos del modulo y sus wrapper (fin)                                    -----
+   --------------------------------------------------------------------------------------------------
 
 
 
-   -- Parsea programas completos, sin especificacion de FAIRNESS 
-   uProgramParser :: Parser UProgram
-   uProgramParser = do
-                        vars        <- varSParser
-                        (def, init) <- defInitParser
-                        trans       <- transParser
-                        ctlf        <- ctlFParserC
-                        return $ UProgram vars def init trans (CTLS ctlf) Nothing
-   
 
-   defInitParser :: Parser (Maybe Define, Init)
-   defInitParser = do 
-                     tryinit <- option (Init [SVariable (Variable "-1")]) initParser
-                     if not (tryinit == (Init [SVariable (Variable "-1")]))
-                        then 
-                           return $ (Nothing, tryinit)
-                        else
-                           do
-                              trydefine <- defineParser
-                              tryinit2  <- initParser
-                              return $ ((Just trydefine), tryinit2)
+   --------------------------------------------------------------------------------------------------
+   -- Parser de los elementos del modulo (module_element) inicio                                -----
+   --------------------------------------------------------------------------------------------------
+   -- Parsea declaracion VAR
+   varDecParser :: Parser VarDec
+   varDecParser = do
+                     reserved "VAR"
+                     list <- (endBy1 variableParser semi) -- separados y finalizados por punto y coma (semicolon)
+                     return $ VarDec list
 
-   defineParser :: Parser Define
-   defineParser = do
-                     reserved "DEFINE" 
-                     list <- (endBy1 defExpParser semi)
-                     return $ Define list
-
-   defExpParser :: Parser DefineExp
-   defExpParser = do
-                     var      <- variableParser
-                     reservedOp ":="
-                     nextexp  <- bNextParser
-                     return $ DefineExp var nextexp
-
-   fairParser :: Parser Fair
-   fairParser =   eofParser
-                  <|> fairnessParser
-
-
-   eofParser :: Parser Fair
-   eofParser = do
-                  eof
-                  return (Fair [SVariable (Variable "-1")])
-
-   fairnessParser :: Parser Fair
-   fairnessParser =  do
-                        reserved "FAIRNESS"
-                        list <- (endBy1 bSimpleParser semi)
-                        return $ Fair list
-
-
-   
-   -- Parsea una secuencia de expresiones simples, dentro de INIT
-   initParser :: Parser Init
-   initParser = do
+   initConsParser :: Parser InitCons
+   initConsParser = do
                      reserved "INIT"
-                     list <- (endBy1 bSimpleParser semi)
-                     return $ Init list
-   
-   -- Parsea una secuencia de expresiones next, dentro de TRANS
-   transParser :: Parser Trans
-   transParser = do
-                     reserved "TRANS"
-                     list <- (endBy1 bNextParser semi)
-                     return $ Trans list
+                     bsimple <- bSimpleParser
+                     optional semi
+                     return $ InitCons bsimple 
 
-   -- Parsea expresiones simples (usadas en INIT)
+
+   defineDecParser :: Parser DefineDec
+   defineDecParser = do
+                        reserved "DEFINE"
+                        list <- (endBy1 defineExpParser semi) -- separados y finalizados por un punto y coma (semicolon)
+                        return $ DefineDec list
+
+   
+   transConsParser :: Parser TransCons
+   transConsParser =  do
+                        reserved "TRANS"
+                        bnext <- bNextParser
+                        optional semi
+                        return $ TransCons bnext
+
+   ctlSpecParser :: Parser CTLSpec
+   ctlSpecParser = do
+                     reserved "CTLSPEC"
+                     ctlf <- ctlFParser
+                     optional semi
+                     return $ CTLSpec ctlf
+
+   fairConsParser :: Parser FairCons
+   fairConsParser =  do  
+                        reserved "FAIRNESS"
+                        bsimple <- bSimpleParser
+                        optional semi
+                        return $ FairCons bsimple
+   --------------------------------------------------------------------------------------------------
+   -- Parser de los elementos del modulo (module_element) fin                                   -----
+   --------------------------------------------------------------------------------------------------
+   
+
+   
+   
+   
+   
+   --------------------------------------------------------------------------------------------------
+   --- Parser de expresiones simples y sus wrappers (inicio)                                 --------
+   --------------------------------------------------------------------------------------------------
+   -- Crea las operaciones a partir de los operadores
    bSimpleParser :: Parser BSimple
    bSimpleParser = buildExpressionParser sOperators sTerm
 
@@ -176,8 +133,28 @@ module SMVParser(
             <|> sConstParser            -- Una constante booleana
             <|> sVariableParser         -- Una variable simple
 
-
-   -- Parsea expresiones next (usadas en TRANS)
+   -- Parsea constantes booleanas y las envuelve en una expresion simple                   
+   sConstParser :: Parser BSimple
+   sConstParser = do
+                     bconstant <- bConstantParser
+                     return $ SConst bconstant
+            
+   -- Parsea variables (booleanas) y las envuelve en expresiones simples
+   sVariableParser :: Parser BSimple
+   sVariableParser = do
+                        variable <- variableParser
+                        return $ SVariable variable
+   --------------------------------------------------------------------------------------------------
+   --- Parser de expresiones simples y sus wrappers (fin)                                    --------
+   --------------------------------------------------------------------------------------------------
+   
+   
+   
+   
+   --------------------------------------------------------------------------------------------------
+   --- Parser de expresiones next y sus wrappers (inicio)                                    --------
+   --------------------------------------------------------------------------------------------------
+   -- Parsea expresiones next
    bNextParser :: Parser BNext
    bNextParser = buildExpressionParser nOperators nTerm
 
@@ -185,53 +162,6 @@ module SMVParser(
             <|> nConstParser 
             <|> nNVariableParser
             <|> nSVariableParser
-  
-   ctlFParserC :: Parser CTLF         
-   ctlFParserC = do
-                     reserved "CTLSPEC"
-                     ctlf <- ctlFParser
-                     semi
-                     return ctlf
-  
-   ctlFParser :: Parser CTLF
-   ctlFParser = buildExpressionParser cOperators cTerm
-
-   cTerm =     parens ctlFParser
-         <|>  cConstParser
-         <|>  cVariableParser
-   
-   
-   {-
-      Parsers simples a partir de los lexers
-   -}
-
-   -- Parsea constantes booleanas, usadas para formar expresiones simples y complejas
-   bConstantParser :: Parser BConstant
-   bConstantParser =       (reserved "TRUE" >> return TRUE)
-                     <|>   (reserved "FALSE" >> return FALSE)
-   
-
-   {-
-      Parsers compuestos que envuelven a los simples
-   -}
-
-   -- Parsea lista de identificadores
-   varSParser :: Parser VarS
-   varSParser = do
-                     reserved "VAR"
-                     list <- (endBy1 variableParser semi) -- separados por punto y coma (semicolon)
-                     return $ VarS list
-
-    -- Parsea a los identificadores individualmente
-   variableParser :: Parser Variable
-   variableParser = liftM Variable identifier -- Conformados por un identificador
-   
-             
-   -- Parsea constantes booleanas dentro de expresiones simples                   
-   sConstParser :: Parser BSimple
-   sConstParser = do
-                     bconstant <- bConstantParser
-                     return $ SConst bconstant
 
    -- Parsea constantes booleanas dentro de expresiones next                   
    nConstParser :: Parser BNext
@@ -239,19 +169,6 @@ module SMVParser(
                     bconstant <- bConstantParser
                     return $ NConst bconstant
 
-   -- Parsea constantes booleanas dentro de expresiones CTL
-   cConstParser :: Parser CTLF
-   cConstParser = do
-                     bconstant <- bConstantParser
-                     return $ CConst bconstant
-
-   
-   -- Parsea variables (booleanas) dentro de expresiones simples
-   sVariableParser :: Parser BSimple
-   sVariableParser = do
-                        variable <- variableParser
-                        return $ SVariable variable
-   
    -- Parsea variables (booleanas) dentro de expresiones next    
    nSVariableParser :: Parser BNext
    nSVariableParser = do 
@@ -264,47 +181,148 @@ module SMVParser(
                            reserved "next"
                            nvariable <- parens variableParser
                            return $ NNVariable nvariable
+   --------------------------------------------------------------------------------------------------
+   --- Parser de expresiones next y sus wrappers (fin)                                    --------
+   --------------------------------------------------------------------------------------------------
+   
+
+
+
+
+   --------------------------------------------------------------------------------------------------
+   --- Parser de expresiones CTL y sus wrappers (inicio)                                    --------
+   --------------------------------------------------------------------------------------------------
+   ctlFParser :: Parser CTLF
+   ctlFParser = buildExpressionParser cOperators cTerm
+
+   cTerm =     parens ctlFParser
+         <|>  cConstParser
+         <|>  cVariableParser
+
+   -- Parsea constantes booleanas dentro de expresiones CTL
+   cConstParser :: Parser CTLF
+   cConstParser = do
+                     bconstant <- bConstantParser
+                     return $ CConst bconstant
 
    cVariableParser :: Parser CTLF
    cVariableParser = do 
                         variable <- variableParser
                         return $ CVariable variable
+   --------------------------------------------------------------------------------------------------
+   --- Parser de expresiones CTL y sus wrappers (fin)                                        --------
+   --------------------------------------------------------------------------------------------------
 
 
 
 
 
-   {-
-        **********************************************************************************************
-        **********************************************************************************************
-        Funciones de prueba hermano
-        **********************************************************************************************
-        **********************************************************************************************
-        **********************************************************************************************
-   -}
 
-   -- Simple Expression Parser
-   parseBSimple :: String -> BSimple
-   parseBSimple string = case parse bSimpleParser "" string of
-                                Left e -> error $ show e
-                                Right r -> r 
+   
+   
+   
+   
+   
+   --------------------------------------------------------------------------------------------------
+   --- Parser de expresiones define y sus wrappers (inicio)                                    --------
+   --------------------------------------------------------------------------------------------------
+   -- Parsea expresiones define
+   defineExpParser :: Parser DefineExp
+   defineExpParser = do 
+                        var <- variableParser
+                        reservedOp ":="
+                        nextexp <- bNextParser
+                        return $ DefineExp var nextexp
+   --------------------------------------------------------------------------------------------------
+   --- Parser de expresiones define y sus wrappers (fin)                                    --------
+   --------------------------------------------------------------------------------------------------
 
-   -- Next Expression Parser
-   parseBNext :: String -> BNext
-   parseBNext string = case parse bNextParser "" string of
-                                Left e -> error $ show e
-                                Right r -> r 
 
-   -- CTL Formula Parser
-   parseCTLF :: String -> CTLF
-   parseCTLF string = case parse ctlFParser "" string of
-                                Left e -> error $ show e
-                                Right r -> r 
 
-   -- Parsea un programa completo
-   parseFile :: String -> IO UProgram
-   parseFile file = do 
+
+
+
+   --------------------------------------------------------------------------------------------------
+   --- Parsers primitivos que utilizan los elementos del modulo (inicio)                     --------
+   --------------------------------------------------------------------------------------------------
+   -- Parsea a los identificadores individualmente
+   variableParser :: Parser Variable
+   variableParser = liftM Variable identifier -- Conformados por un identificador
+
+   -- Parsea constantes booleanas, usadas para formar expresiones simples y complejas
+   bConstantParser :: Parser BConstant
+   bConstantParser =       (reserved "TRUE" >> return TRUE)
+                     <|>   (reserved "FALSE" >> return FALSE)
+   --------------------------------------------------------------------------------------------------
+   --- Parsers primitivos que utilizan los elementos del modulo (fin)                        --------
+   --------------------------------------------------------------------------------------------------
+
+
+
+
+   --------------------------------------------------------------------------------------------------
+   --- Pruebas de parsers varios (inicio)                                                    --------
+   --------------------------------------------------------------------------------------------------
+   parseVarDec :: String -> VarDec
+   parseVarDec string = case parse varDecParser "" string of 
+                           Left e   -> error $ show e
+                           Right r  -> r
+
+   parseInitCons :: String -> InitCons
+   parseInitCons string =   case parse initConsParser "" string of
+                              Left e   -> error $ show e
+                              Right r  -> r
+
+   parseDefineDec :: String -> DefineDec
+   parseDefineDec string = case parse defineDecParser "" string of
+                              Left e   -> error $ show e
+                              Right r  -> r
+   
+   parseTransCons :: String -> TransCons
+   parseTransCons string =  case parse transConsParser "" string of
+                              Left e   -> error $ show e
+                              Right r  -> r 
+                        
+   parseCTLSpec :: String -> CTLSpec
+   parseCTLSpec string =  case parse ctlSpecParser "" string of
+                              Left e   -> error $ show e
+                              Right r  -> r 
+
+   parseFairCons :: String -> FairCons
+   parseFairCons string =  case parse fairConsParser "" string of
+                              Left e   -> error $ show e
+                              Right r  -> r
+
+   parseFile :: String -> IO UModule
+   parseFile file =  do
                         program <- readFile file
-                        case parse programParser "" program of
-                           Left e   -> print e >> fail "parse error"
-                           Right r  -> return r  
+                        case parse uModuleParser "" program of
+                           Left  e -> print e >> fail "parse error"
+                           Right r -> return r
+   
+   
+
+   
+   --------------------------------------------------------------------------------------------------
+   --- Pruebas de parsers varios (fin)                                                       --------
+   --------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+   --------------------------------------------------------------------------------------------------
+   --- Cadenas para probar parsers (inicio)                                                  --------
+   --------------------------------------------------------------------------------------------------
+   -- parseVarDec "VAR a; b;"
+   -- parseInitCons "INIT a & b & c; a & b & c;"
+   -- parseDefineDec "DEFINE sx := next(ax) & bx; sy := ay & next(by);" 
+   -- parseTransCons  "TRANS next(a) & next(b); next(a) & next(b);"
+   -- parseCTLSpec "CTLSPEC EX(a) & AG(b);"
+   -- parseFairCons "FAIRNESS a & b;"
+   -- parseFile "pruebanewparser.txt"
+   --------------------------------------------------------------------------------------------------
+   --- Cadenas para probar parsers  (fin)                                                    --------
+   --------------------------------------------------------------------------------------------------
+

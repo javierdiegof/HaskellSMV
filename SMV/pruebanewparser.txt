@@ -1,4 +1,9 @@
+VAR
+   a;
+   b;
+INIT
+   a & b;
+TRANS
+   a | next(b);
 CTLSPEC
-   EX(a);
-CTLSPEC
-   EX (b);
+   EX (a);
