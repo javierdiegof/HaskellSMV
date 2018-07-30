@@ -2,9 +2,13 @@ VAR
    a;
    b;
    c;
+DEFINE
+   su := a & !b & !c;
+   sd := !a & b & !c;
+   st := !a & !b & c;
 INIT
-   a & !b & !c;
+   su;
 TRANS
-   (a & !b & !c & !next(a) &  next(b) & !next(c)) | (!a & b & !c & !next(a) & !next(b) &  next(c)) | (!a & !b & c & next(a) & !next(b) & !next(c));
+   (su & next(sd)) | (sd & next(st)) | (st & next(su));
 CTLSPEC
-   (a & !b & !c) EU (!a & b & !c);
+   AX(st);

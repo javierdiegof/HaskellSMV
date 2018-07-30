@@ -231,7 +231,7 @@ module SMVParser(
    defineExpParser = do 
                         var <- variableParser
                         reservedOp ":="
-                        nextexp <- bNextParser
+                        nextexp <- bSimpleParser
                         return $ DefineExp var nextexp
    --------------------------------------------------------------------------------------------------
    --- Parser de expresiones define y sus wrappers (fin)                                    --------

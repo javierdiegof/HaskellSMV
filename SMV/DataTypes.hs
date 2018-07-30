@@ -53,7 +53,7 @@ module DataTypes(
       
    data BUnOp = Not deriving (Show)
 
-   data DefineExp = DefineExp Variable BNext deriving (Show)
+   data DefineExp = DefineExp Variable BSimple deriving (Show)
 
    -- Misma sintaxis que NuSMV
    data BBinOp =   And 

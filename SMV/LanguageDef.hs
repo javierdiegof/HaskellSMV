@@ -46,9 +46,11 @@ module LanguageDef(
                                           "EG",
                                           "EX",
                                           "EF",
+                                          "EU",
                                           "AG",
                                           "AX",
-                                          "AF"
+                                          "AF",
+                                          "AU"
                                        ]
       }
 
