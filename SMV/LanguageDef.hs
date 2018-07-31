@@ -80,7 +80,7 @@ module LanguageDef(
                     [Prefix  (reservedOp "!"   >> return (NUnary  Not  ))           ],
                     [Infix   (reservedOp "&"   >> return (NBinary And  )) AssocLeft ],
                     [Infix   (reservedOp "|"   >> return (NBinary Or   )) AssocLeft ],
-                    [Infix   (reservedOp "xor" >> return (SBinary Xor  )) AssocLeft ],
+                    [Infix   (reservedOp "xor" >> return (NBinary Xor  )) AssocLeft ],
                     [Infix   (reservedOp "->"  >> return (NBinary If   )) AssocRight],
                     [Infix   (reservedOp "<->" >> return (NBinary Iff  )) AssocLeft ]
                   ]
@@ -96,7 +96,7 @@ module LanguageDef(
                      ],
                      [Infix   (reservedOp "&"   >> return (CBBinary  And   )) AssocLeft ],
                      [Infix   (reservedOp "|"   >> return (CBBinary  Or    )) AssocLeft ],
-                     [Infix   (reservedOp "xor" >> return (SBinary Xor  )) AssocLeft ],
+                     [Infix   (reservedOp "xor" >> return (CBBinary Xor     )) AssocLeft ],
                      [Infix   (reservedOp "->"  >> return (CBBinary  If    )) AssocRight],
                      [Infix   (reservedOp "<->" >> return (CBBinary  Iff   )) AssocLeft ],
                      [Infix   (reservedOp "<->" >> return (CBBinary  Iff   )) AssocLeft ],

@@ -8,13 +8,6 @@ module DataTypes(
    CTLF(..),
    CUnOp(..),
    CBinOp(..),
-   --VarS(..),
-   --Init(..),
-   --Trans(..),
-   --CTLS(..),
-   --Fair(..),
-   --Program(..),
-   --UProgram(..),
    VarDec(..),
    InitCons(..),
    DefineExp(..),
@@ -27,8 +20,6 @@ module DataTypes(
    OModule(..),
    PModule(..)
 ) where
-   import qualified Data.Map.Strict as DMS
-
    -- Expresion simple, sin next
    data BSimple =    SConst BConstant
                   |  SVariable Variable

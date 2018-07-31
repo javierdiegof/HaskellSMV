@@ -6,6 +6,17 @@ module SemanticCheck(
    import DataTypesOps
    import Data.List
    import Data.HasCacBDD
+   import Criterion.Main
+
+   main = benchMark
+
+   benchMark :: IO ()
+   benchMark = defaultMain [
+                  bgroup "semantic" [
+                     bench "1" $ whnf sFileChecking "counter.txt"
+                  ]
+               ]
+
 
    sFileChecking :: String -> IO ()
    sFileChecking file = do
@@ -45,7 +56,7 @@ module SemanticCheck(
 
    synthSimple (SBinary bop f1 f2) vars = case bop of
                                                 And   -> (synthSimple f1 vars) `con` (synthSimple f2 vars)
-                                                Or    -> (synthSimple f1 vars) `dis` (synthSimple f2 vars)}
+                                                Or    -> (synthSimple f1 vars) `dis` (synthSimple f2 vars)
                                                 Xor   -> (synthSimple f1 vars) `xor` (synthSimple f2 vars)
                                                 If    -> (synthSimple f1 vars) `imp` (synthSimple f2 vars)
                                                 Iff   -> (synthSimple f1 vars) `equ` (synthSimple f2 vars)
