@@ -58,6 +58,7 @@ module DataTypes(
    -- Misma sintaxis que NuSMV
    data BBinOp =   And 
                |   Or 
+               |   Xor
                |   If 
                |   Iff 
                deriving(Show)

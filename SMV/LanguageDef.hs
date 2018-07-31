@@ -41,6 +41,7 @@ module LanguageDef(
                                           "!",
                                           "&",
                                           "|",
+                                          "xor",
                                           "->",
                                           "<->",
                                           "EG",
@@ -70,6 +71,7 @@ module LanguageDef(
                     [Prefix  (reservedOp "!"   >> return (SUnary  Not  ))           ],
                     [Infix   (reservedOp "&"   >> return (SBinary And  )) AssocLeft ],
                     [Infix   (reservedOp "|"   >> return (SBinary Or   )) AssocLeft ],
+                    [Infix   (reservedOp "xor" >> return (SBinary Xor  )) AssocLeft ],
                     [Infix   (reservedOp "->"  >> return (SBinary If   )) AssocRight],
                     [Infix   (reservedOp "<->" >> return (SBinary Iff  )) AssocLeft ]
                   ]
@@ -78,6 +80,7 @@ module LanguageDef(
                     [Prefix  (reservedOp "!"   >> return (NUnary  Not  ))           ],
                     [Infix   (reservedOp "&"   >> return (NBinary And  )) AssocLeft ],
                     [Infix   (reservedOp "|"   >> return (NBinary Or   )) AssocLeft ],
+                    [Infix   (reservedOp "xor" >> return (SBinary Xor  )) AssocLeft ],
                     [Infix   (reservedOp "->"  >> return (NBinary If   )) AssocRight],
                     [Infix   (reservedOp "<->" >> return (NBinary Iff  )) AssocLeft ]
                   ]
@@ -93,6 +96,7 @@ module LanguageDef(
                      ],
                      [Infix   (reservedOp "&"   >> return (CBBinary  And   )) AssocLeft ],
                      [Infix   (reservedOp "|"   >> return (CBBinary  Or    )) AssocLeft ],
+                     [Infix   (reservedOp "xor" >> return (SBinary Xor  )) AssocLeft ],
                      [Infix   (reservedOp "->"  >> return (CBBinary  If    )) AssocRight],
                      [Infix   (reservedOp "<->" >> return (CBBinary  Iff   )) AssocLeft ],
                      [Infix   (reservedOp "<->" >> return (CBBinary  Iff   )) AssocLeft ],

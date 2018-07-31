@@ -45,7 +45,8 @@ module SemanticCheck(
 
    synthSimple (SBinary bop f1 f2) vars = case bop of
                                                 And   -> (synthSimple f1 vars) `con` (synthSimple f2 vars)
-                                                Or    -> (synthSimple f1 vars) `dis` (synthSimple f2 vars)
+                                                Or    -> (synthSimple f1 vars) `dis` (synthSimple f2 vars)}
+                                                Xor   -> (synthSimple f1 vars) `xor` (synthSimple f2 vars)
                                                 If    -> (synthSimple f1 vars) `imp` (synthSimple f2 vars)
                                                 Iff   -> (synthSimple f1 vars) `equ` (synthSimple f2 vars)
 
@@ -73,6 +74,7 @@ module SemanticCheck(
    synthTrans (NBinary bop f1 f2)  vars  =   case bop of
                                                 And        -> (synthTrans f1 vars) `con` (synthTrans f2 vars)
                                                 Or         -> (synthTrans f1 vars) `dis` (synthTrans f2 vars)
+                                                Xor        -> (synthTrans f1 vars) `xor` (synthTrans f2 vars)
                                                 If         -> (synthTrans f1 vars) `imp` (synthTrans f2 vars)
                                                 Iff        -> (synthTrans f1 vars) `equ` (synthTrans f2 vars)
    ----------------- Funciones de sintesis la relacion de transicion (fin)--------------------------------------------
@@ -85,7 +87,7 @@ module SemanticCheck(
 
    uFormulaCheckL :: [CTLSpec] -> Bdd -> [Variable] -> [Bdd]
    uFormulaCheckL [] trans vars = []
-   uFormulaCheckL ((CTLSpec ctlf):xs) trans vars = (uSubCheck ctlf trans vars) : uFormulaCheckL  xs trans vars
+   uFormulaCheckL ((CTLSpec ctlf) : xs) trans vars = (uSubCheck ctlf trans vars) : uFormulaCheckL  xs trans vars
 
 
 
@@ -102,6 +104,7 @@ module SemanticCheck(
    uSubCheck (CBBinary bbinop f1 f2) trans vars   =  case bbinop of
                                                             And      -> (uSubCheck f1 trans vars) `con` (uSubCheck f2 trans vars)
                                                             Or       -> (uSubCheck f1 trans vars) `dis` (uSubCheck f2 trans vars)
+                                                            Xor      -> (uSubCheck f1 trans vars) `xor` (uSubCheck f2 trans vars)
                                                             If       -> (uSubCheck f1 trans vars) `imp` (uSubCheck f2 trans vars)
                                                             Iff      -> (uSubCheck f1 trans vars) `equ` (uSubCheck f2 trans vars)
    uSubCheck (CCUnary cunop cltf)  trans vars     =      let 
