@@ -1,0 +1,80 @@
+-- This file has been generated from package.yaml by hpack version 0.28.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: f47a339e7b6817981c1fa0935e143e81210c0654318a890f4f6def7a86cb920b
+
+name:           SMV-Haskell
+version:        0.0.0
+synopsis:       A symbolic model checker written in Haskell
+description:    Simple symbolic model checker based on NuSMV written in Haskell, it uses HasCacBDD binding to implement the BDD functionality.
+category:       Data
+homepage:       https://github.com/javierdiegof/SMV-Haskell#readme
+bug-reports:    https://github.com/javierdiegof/SMV-Haskell/issues
+author:         Javier Diego-Fernández @ UNAM Mexico City C.U.
+maintainer:     Javier Diego-Fernández <javier.d.fernandez7@gmail.com>
+license-file:   LICENSE
+build-type:     Custom
+cabal-version:  >= 1.24
+extra-source-files:
+    c/BDDNodeC.cpp
+    c/BDDNodeC.h
+    c/Makefile
+    cpp/Base.h
+    cpp/BDDNode.cpp
+    cpp/BDDNode.h
+    cpp/CTable.cpp
+    cpp/CTable.h
+    cpp/DdNode.cpp
+    cpp/DdNode.h
+    cpp/main.cpp
+    cpp/Makefile
+    cpp/Manager.cpp
+    cpp/Manager.h
+    cpp/OriginalMakefile
+    cpp/README
+    cpp/Timer.h
+    cpp/UTable.cpp
+    cpp/UTable.h
+    cpp/XBits.h
+    cpp/XFunction.h
+    cpp/XInts.h
+    cpp/XVector.h
+    stack.yaml
+
+source-repository head
+  type: git
+  location: https://github.com/javierdiegof/SMV-Haskell
+
+custom-setup
+  setup-depends:
+      Cabal
+    , base >=4.8 && <5
+    , directory
+
+library
+  exposed-modules:
+      SemanticCheck
+      DataTypes
+      Data.HasCacBDD
+      DataTypesOps
+      LanguageDef
+      SMVParser
+  other-modules:
+      Data.HasCacBDD.Visuals
+      Paths_SMV_Haskell
+  hs-source-dirs:
+      SMV
+  ghc-options: -pgml g++ -Wall -fPIC -fno-full-laziness
+  cc-options: -fPIC -shared
+  extra-libraries:
+      stdc++
+      CacBDD
+  build-depends:
+      QuickCheck
+    , base >=4.8 && <5
+    , containers
+    , criterion
+    , parsec
+    , process >=1.1
+  default-language: Haskell2010

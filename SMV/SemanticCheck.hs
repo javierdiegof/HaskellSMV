@@ -1,25 +1,29 @@
 module SemanticCheck(
-
+   fileCheck,
+   fileCheckOutput
 )where
    import DataTypes
    import SMVParser
    import DataTypesOps
    import Data.List
    import Data.HasCacBDD
-   import Criterion.Main
 
-   main = benchMark
+   fileCheck :: String -> IO()
+   fileCheck file = do
+                        pmod <- syntaxCheck file
+                        let
+                           vars     = extractVarsList pmod
+                           initBDD  = initSynthesis pmod vars
+                           transBDD = transSynthesis pmod vars
+                           res = case (existsFairness pmod) of
+                              False -> uFormulaCheck pmod transBDD vars
+                              _     -> error "Algoritmo con fairness no implementado todavia"
+                           verify = checkInitSat initBDD res
+                        --printSolution verify
+                        return ()  
 
-   benchMark :: IO ()
-   benchMark = defaultMain [
-                  bgroup "semantic" [
-                     bench "1" $ whnf sFileChecking "counter.txt"
-                  ]
-               ]
-
-
-   sFileChecking :: String -> IO ()
-   sFileChecking file = do
+   fileCheckOutput :: String -> IO ()
+   fileCheckOutput file = do
                            pmod <- syntaxCheck file
                            putStrLn $ "El programa definido es: " ++ show pmod
                            let
@@ -29,12 +33,39 @@ module SemanticCheck(
                               res = case (existsFairness pmod) of
                                        False -> uFormulaCheck pmod transBDD vars
                                        _     -> error "Algoritmo con fairness no implementado todavia"
-                           putStrLn $ "La funcion de transicion es: " ++ show(transBDD)
-                           putStrLn $ "La respuesta es: " ++ show (res)
-                           putStrLn $ "Asignaciones: "    ++ show (map allSats res)
+                              verify = checkInitSat initBDD res
+                           putStrLn $ "\nLos estados iniciales son: " ++ show(initBDD) ++ "\n"
+                           putStrLn $ "La funcion de transicion es: " ++ show(transBDD) ++ "\n"
+                           putStrLn $ "Los estados que satisfacen la formula son: " ++ show (res) ++ "\n"
+                           putStrLn $ "Asignaciones: "    ++ show (map allSats res) ++ "\n"
+                           putStrLn $ "Verificacion: " ++ show(verify) ++ "\n"
+                           putStrLn $ "initBDD: " ++ show(initBDD) ++ "\n"
+                           putStrLn $ "res: " ++ show(res) ++ "\n"
+                           printSolution verify
                            return () 
 
+   printSolution :: [Bool] -> IO ()
+   printSolution xs = printSolRec 1 xs
 
+   printSolRec :: Int -> [Bool] -> IO ()
+   printSolRec _        []    = return ()
+   printSolRec specnum (x:xs) =  do
+                                    let 
+                                       res = case x of 
+                                          True  -> "\8872"
+                                          False -> "\8877"
+                                    putStrLn $ "Especificacion #" ++ show(specnum) ++ ": " ++ res
+                                    printSolRec (specnum + 1) xs
+
+
+
+
+   checkInitSat :: Bdd -> [Bdd] -> [Bool]
+   checkInitSat init []       = []
+   checkInitSat init (x:xs)   =  if (init `imp` x == top) 
+                                 then True : checkInitSat init xs
+                                 else False : checkInitSat init xs
+                                 
    
    
    extractVarsList :: PModule -> [Variable]
@@ -183,3 +214,93 @@ module SemanticCheck(
    existsFairness :: PModule -> Bool
    existsFairness (PModule _ _ _ _ Nothing) = False
    existsFairness (PModule _ _ _ _ (Just _)) = True
+
+
+{-
+   ----------------- Funciones de verificacion de la formula CTL con Fairness -----------------------------------------
+   fFormulaCheck :: Program -> Bdd -> [Variable] -> Bdd
+   fFormulaCheck (Program _ _ _ (CTLS ctlf) (Just fair)) trans vars =   let
+                                                                           fairl = synthFairness fair vars
+                                                                           fairst = fairStates trans fairl
+                                                                           ctlfFair = fSubCheck ctlf trans fairl vars
+                                                                        in
+                                                                           fairst `con` ctlfFair
+                                                                           
+
+   fSubCheck :: CTLF -> Bdd -> [Bdd]-> [Variable] -> Bdd
+   fSubCheck (CConst const) _ _ _      =  case const of
+                                             TRUE  -> top
+                                             FALSE -> bot
+   fSubCheck (CVariable cur) _ _ vars  =  case (cur `elemIndex` vars) of
+                                             Just num -> var $ num*2
+                                             Nothing  -> error "Variable no encontrada"
+
+   fSubCheck (CBUnary Not ctlf) trans fairs vars = neg $ fSubCheck ctlf trans fairs vars
+
+   fSubCheck (CBBinary bbinop f1 f2) trans fairs vars = case bbinop of
+                                                            And   -> (fSubCheck f1 trans fairs vars) `con` (fSubCheck f2 trans fairs vars)
+                                                            Or    -> (fSubCheck f1 trans fairs vars) `dis` (fSubCheck f2 trans fairs vars)
+                                                            If    -> (fSubCheck f1 trans fairs vars) `imp` (fSubCheck f2 trans fairs vars)
+                                                            Iff   -> (fSubCheck f1 trans fairs vars) `equ` (fSubCheck f2 trans fairs vars)
+   fSubCheck (CCUnary EX ctlf) trans fairs vars =  let
+                                                      sub = fSubCheck ctlf trans fairs vars
+                                                      statefair = fairStates trans fairs
+                                                   in
+                                                      satEX (sub `con` statefair) trans
+   fSubCheck (CCBinary cbinop f1 f2) trans fairs vars =  let
+                                                            sub1 = fSubCheck f1 trans fairs vars
+                                                            sub2 = fSubCheck f2 trans fairs vars
+                                                            statefair = fairStates trans fairs
+                                                         in
+                                                            satEU sub1 (sub2 `con` statefair) trans
+
+   fSubCheck (CCUnary EG ctlf) trans fairs vars =  let
+                                                      sub = fSubCheck ctlf trans fairs vars
+                                                   in
+                                                      satEG sub trans 
+
+
+
+   fairStates :: Bdd -> [Bdd] -> Bdd
+   fairStates trans xs = satEGFair top trans xs 
+
+   satEGFair :: Bdd -> Bdd -> [Bdd] -> Bdd
+   satEGFair subf trans xs = satEGFairA subf subf trans xs
+
+
+   satEGFairA :: Bdd -> Bdd -> Bdd -> [Bdd] -> Bdd
+   satEGFairA subf fixed trans xs =  let
+                                       bigconj = satEGFairCon subf trans fixed xs
+                                       fixedp = subf `con` bigconj
+                                    in
+                                       if (fixedp `equ` fixed) == top
+                                          then fixed
+                                          else satEGFairA subf fixedp trans xs
+
+
+   -- Realiza la conjuncion iterada de 
+   satEGFairCon :: Bdd -> Bdd -> Bdd -> [Bdd]  -> Bdd
+   satEGFairCon subf trans fixed []  = top
+   satEGFairCon subf trans fixed (x:xs)  = let
+                                             eu = satEU subf (fixed `con` x) trans
+                                             ex = satEX eu trans
+                                          in
+                                             ex `con` (satEGFairCon subf trans fixed xs)
+
+   synthFairness :: Fair -> [Variable] -> [Bdd]
+   synthFairness (Fair xs) vars = synthFairList xs vars
+
+
+   synthFairList :: [BSimple] -> [Variable] -> [Bdd]
+   synthFairList [] _ = []
+   synthFairList (x:xs) vars = (synthOneSimple x vars) : synthFairList xs vars
+
+
+
+
+
+
+
+
+   ----------------- Funciones de verificacion de la formula CTL con Fairness (fin) -----------------------------------------
+-}

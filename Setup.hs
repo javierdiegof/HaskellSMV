@@ -22,6 +22,7 @@ makeExtLib _ flags = do
     let verbosity = fromFlag $ configVerbosity flags
     rawSystemExit verbosity "env" ["make", "--directory=cpp"]
     rawSystemExit verbosity "env" ["make", "--directory=c"]
+    print $ "emptyHookedBuildInfo: " ++ (show emptyHookedBuildInfo)
     return emptyHookedBuildInfo
 
 updateExtraLibDirs :: LocalBuildInfo -> IO LocalBuildInfo
@@ -31,6 +32,8 @@ updateExtraLibDirs localBuildInfo = do
         libBuild = libBuildInfo lib
     dir <- getCurrentDirectory
     print (dir ++ "/c")
+    print $ "libBuild: " ++ show(libBuild)
+    print $ "packageDescription: " ++ show(myPackageDescription)
     return localBuildInfo {
         localPkgDescr = myPackageDescription {
             library = Just $ lib {
@@ -48,6 +51,7 @@ copyExtLib _ flags pkg_descr lbi = do
                 . fromFlag . copyDest
                 $ flags
     let verbosity = fromFlag $ copyVerbosity flags
+    print $ "prefijo libPref: " ++ (show libPref)
     rawSystemExit verbosity "cp" ["c/libCacBDD.a", libPref]
 
 cleanExtLib :: Args -> CleanFlags -> PackageDescription -> () -> IO ()

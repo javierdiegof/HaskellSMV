@@ -1,0 +1,3 @@
+import SemanticCheck
+
+main = benchMark

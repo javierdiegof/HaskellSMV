@@ -1,0 +1,66 @@
+name:           SMV-Haskell
+synopsis:       A symbolic model checker written in Haskell
+github:         https://github.com/javierdiegof/SMV-Haskell
+author:         Javier Diego-Fernández @ UNAM Mexico City C.U.
+maintainer:     Javier Diego-Fernández <javier.d.fernandez7@gmail.com>
+category:       Data      
+build-type:     Custom  # Optional but useful (uses custom Setup.hs file)
+
+
+description:    Simple symbolic model checker based on NuSMV written in Haskell, it uses HasCacBDD binding
+                to implement the BDD functionality.
+  
+extra-source-files:
+  - stack.yaml
+  - c/BDDNodeC.cpp
+  - c/BDDNodeC.h
+  - c/Makefile
+  - cpp/*.cpp
+  - cpp/*.h
+  - cpp/Makefile
+  - cpp/OriginalMakefile
+  - cpp/README
+
+github: javierdiegof/SMV-Haskell
+
+custom-setup:
+  dependencies:
+    - base >= 4.8 && < 5
+    - Cabal
+    - directory
+
+library:
+  exposed-modules:
+    - SemanticCheck
+    - DataTypes
+    - Data.HasCacBDD
+    - DataTypesOps
+    - LanguageDef
+    - SMVParser
+  
+  dependencies:
+    - base >=4.8 && < 5
+    - process >= 1.1
+    - QuickCheck
+    - containers
+    - parsec
+    - criterion
+  
+  source-dirs:
+    - SMV
+  
+  extra-libraries:
+    - stdc++
+    - CacBDD
+  
+  cc-options:
+    - -fPIC 
+    - -shared
+  
+  ghc-options:
+    - -pgml 
+    - g++ 
+    - -Wall 
+    - -fPIC 
+    - -fno-full-laziness
+
