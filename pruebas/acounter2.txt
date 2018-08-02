@@ -1,0 +1,9 @@
+VAR
+   a;
+   b;
+INIT
+   !a & !b;
+TRANS
+   (next(a) xor a) & (next(b) <-> (b xor (a)));
+CTLSPEC
+   AG(AF(a & b));

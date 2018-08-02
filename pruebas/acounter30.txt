@@ -1,0 +1,37 @@
+VAR
+   aa;
+   ab;
+   ac;
+   ad;
+   ae;
+   af;
+   ag;
+   ah;
+   ai;
+   aj;
+   ak;
+   al;
+   am;
+   an;
+   ao;
+   ap;
+   aq;
+   ar;
+   as;
+   at;
+   au;
+   av;
+   aw;
+   ax;
+   ay;
+   az;
+   ba;
+   bb;
+   bc;
+   bd;
+INIT
+   !aa & !ab & !ac & !ad & !ae & !af & !ag & !ah & !ai & !aj & !ak & !al & !am & !an & !ao & !ap & !aq & !ar & !as & !at & !au & !av & !aw & !ax & !ay & !az & !ba & !bb & !bc & !bd;
+TRANS
+   (next(aa) xor aa) & (next(ab) <-> (ab xor (aa))) & (next(ac) <-> (ac xor (aa & ab))) & (next(ad) <-> (ad xor (aa & ab & ac))) & (next(ae) <-> (ae xor (aa & ab & ac & ad))) & (next(af) <-> (af xor (aa & ab & ac & ad & ae))) & (next(ag) <-> (ag xor (aa & ab & ac & ad & ae & af))) & (next(ah) <-> (ah xor (aa & ab & ac & ad & ae & af & ag))) & (next(ai) <-> (ai xor (aa & ab & ac & ad & ae & af & ag & ah))) & (next(aj) <-> (aj xor (aa & ab & ac & ad & ae & af & ag & ah & ai))) & (next(ak) <-> (ak xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj))) & (next(al) <-> (al xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak))) & (next(am) <-> (am xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al))) & (next(an) <-> (an xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am))) & (next(ao) <-> (ao xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an))) & (next(ap) <-> (ap xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao))) & (next(aq) <-> (aq xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap))) & (next(ar) <-> (ar xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq))) & (next(as) <-> (as xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar))) & (next(at) <-> (at xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar & as))) & (next(au) <-> (au xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar & as & at))) & (next(av) <-> (av xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar & as & at & au))) & (next(aw) <-> (aw xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar & as & at & au & av))) & (next(ax) <-> (ax xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar & as & at & au & av & aw))) & (next(ay) <-> (ay xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar & as & at & au & av & aw & ax))) & (next(az) <-> (az xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar & as & at & au & av & aw & ax & ay))) & (next(ba) <-> (ba xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar & as & at & au & av & aw & ax & ay & az))) & (next(bb) <-> (bb xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar & as & at & au & av & aw & ax & ay & az & ba))) & (next(bc) <-> (bc xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar & as & at & au & av & aw & ax & ay & az & ba & bb))) & (next(bd) <-> (bd xor (aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar & as & at & au & av & aw & ax & ay & az & ba & bb & bc)));
+CTLSPEC
+   AG(AF(aa & ab & ac & ad & ae & af & ag & ah & ai & aj & ak & al & am & an & ao & ap & aq & ar & as & at & au & av & aw & ax & ay & az & ba & bb & bc & bd));
