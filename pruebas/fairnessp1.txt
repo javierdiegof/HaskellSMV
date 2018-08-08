@@ -1,0 +1,24 @@
+VAR
+   a;
+   k;
+   m;
+   s;
+DEFINE
+   sone     := !k & !s & !m &  a;
+   stwo     :=  k & !s & !m &  a;
+   sthree   :=  k & !s & !m & !a;
+   sfour    := !k &  s &  m & !a;
+   sfive    := !k & !s & !m & !a;
+   ssix     := !k &  s & !m & !a;
+INIT
+   sone;
+TRANS
+   (sone & next(stwo)) | (sone & next(sthree)) | (sthree & next(ssix)) | (ssix & next(sthree)) | (stwo & next(sfour)) | (sfour & next(sfive)) | (sfive & next(stwo)); 
+CTLSPEC
+   TRUE;
+FAIRNESS
+   k;
+FAIRNESS
+   s;
+FAIRNESS
+   m;

@@ -1,8 +1,0 @@
-VAR
-   a;
-   INIT
-   !a;
-TRANS
-   (next(a) xor a);
-CTLSPEC
-   AF(AG(a))
