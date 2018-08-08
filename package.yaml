@@ -41,10 +41,10 @@ library:
   dependencies:
     - base >=4.8 && < 5
     - process >= 1.1
-    - QuickCheck
     - containers
     - parsec
     - criterion
+    - QuickCheck
   
   source-dirs:
     - SMV
@@ -64,18 +64,19 @@ library:
     - -fPIC 
     - -fno-full-laziness
 
-#tests:
-#  source-dirs:
-#    - tests
-#  
-#  main:
-#    - Test1
-#
-#  dependencies:
-#    - base >=4.8 && < 5
-#
-#  ghc-options:
-#    - -Weverything
-#    - -threaded
+tests:
+  stack-test:
+    source-dirs: tests
+    main: Test1.hs
+
+    dependencies:
+      - base >=4.8 && < 5
+      - hspec
+      - QuickCheck
+      - exceptions
+
+    ghc-options:
+      - -Weverything
+      - -threaded
 
 

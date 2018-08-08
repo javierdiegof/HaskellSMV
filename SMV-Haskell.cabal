@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f47a339e7b6817981c1fa0935e143e81210c0654318a890f4f6def7a86cb920b
+-- hash: a3e4fecf1d82cd7c88b05b90aa22f667774f98f2a0d5738aac8fd9cab151dc76
 
 name:           SMV-Haskell
 version:        0.0.0
@@ -77,4 +77,19 @@ library
     , criterion
     , parsec
     , process >=1.1
+  default-language: Haskell2010
+
+test-suite stack-test
+  type: exitcode-stdio-1.0
+  main-is: Test1.hs
+  other-modules:
+      Paths_SMV_Haskell
+  hs-source-dirs:
+      tests
+  ghc-options: -Weverything -threaded
+  build-depends:
+      QuickCheck
+    , base >=4.8 && <5
+    , exceptions
+    , hspec
   default-language: Haskell2010
