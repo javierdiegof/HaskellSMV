@@ -8,7 +8,7 @@ module SemanticCheck(
    import Data.List
    import Data.HasCacBDD
 
-   fileCheck :: String -> IO()
+   fileCheck :: String -> IO [Bool]
    fileCheck file = do
                         pmod <- syntaxCheck file
                         let
@@ -20,9 +20,9 @@ module SemanticCheck(
                               False -> uFormulaCheck pmod transBDD vars
                            verify = checkInitSat initBDD res
                         printSolution verify
-                        return ()  
+                        return (verify)  
 
-   fileCheckOutput :: String -> IO ()
+   fileCheckOutput :: String -> IO [Bool]
    fileCheckOutput file = do
                            pmod <- syntaxCheck file
                            putStrLn $ "El programa definido es: " ++ show pmod
@@ -43,7 +43,7 @@ module SemanticCheck(
                            putStrLn $ "initBDD: " ++ show(initBDD) ++ "\n"
                            putStrLn $ "res: " ++ show(res) ++ "\n"
                            printSolution verify
-                           return () 
+                           return (verify) 
 
    printSolution :: [Bool] -> IO ()
    printSolution xs = printSolRec 1 xs

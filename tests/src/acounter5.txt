@@ -9,5 +9,6 @@ INIT
 TRANS
    (next(a) xor a) & (next(b) <-> (b xor (a))) & (next(c) <-> (c xor (a & b))) & (next(d) <-> (d xor (a & b & c))) & (next(e) <-> (e xor (a & b & c & d)));
 CTLSPEC
-   AG(AF(a & b & c & d & e));
-
+   AG(AF(a & !b & c & !d & e));
+CTLSPEC
+   AX(a & !b & !c & !d & !e);

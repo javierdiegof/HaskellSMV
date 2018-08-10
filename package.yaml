@@ -74,9 +74,10 @@ tests:
       - hspec
       - QuickCheck
       - exceptions
+      - SMV-Haskell
+      - directory
 
     ghc-options:
       - -Weverything
       - -threaded
-
 
