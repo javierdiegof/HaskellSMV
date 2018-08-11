@@ -19,4 +19,5 @@ main = hspec $ do
    describe "Shift registers" $ do
       it "test counter3" $ do
          (fileCheck "tests/src/acounter3.txt")  `shouldReturn` [True, False]
+
    
