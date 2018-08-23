@@ -9,6 +9,7 @@ module DataTypes(
    CUnOp(..),
    CBinOp(..),
    VarDec(..),
+   IVarDec(..),
    InitCons(..),
    DefineExp(..),
    DefineDec(..),
@@ -76,6 +77,7 @@ module DataTypes(
                   deriving(Show)
 
    data VarDec     = VarDec    [Variable]     deriving (Show)
+   data IVarDec    = IVarDec   [Variable]     deriving (Show)
    data InitCons   = InitCons   BSimple       deriving (Show)  
    data DefineDec  = DefineDec [DefineExp]    deriving (Show)  
    data TransCons  = TransCons  BNext         deriving (Show)
@@ -83,6 +85,7 @@ module DataTypes(
    data FairCons   = FairCons  BSimple        deriving (Show) 
 
    data ModuleElem =   ModuleVar       VarDec
+                     | ModuleIVar      IVarDec
                      | ModuleInit      InitCons
                      | ModuleDefine    DefineDec
                      | ModuleTrans     TransCons
@@ -92,9 +95,9 @@ module DataTypes(
                
    data UModule   = UModule [ModuleElem]   deriving (Show)
 
-   data OModule   = OModule VarDec (Maybe DefineDec) InitCons TransCons [CTLSpec] (Maybe [FairCons]) deriving (Show)
+   data OModule   = OModule VarDec (Maybe IVarDec) (Maybe DefineDec) InitCons TransCons [CTLSpec] (Maybe [FairCons]) deriving (Show)
 
-   data PModule   = PModule VarDec InitCons TransCons [CTLSpec] (Maybe [FairCons]) deriving (Show)
+   data PModule   = PModule VarDec (Maybe IVarDec) InitCons TransCons [CTLSpec] (Maybe [FairCons]) deriving (Show)
 
 
    

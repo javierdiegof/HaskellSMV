@@ -15,10 +15,10 @@ module DataTypesOps(
    syntaxCheck :: String -> IO (PModule)
    syntaxCheck file =  do
                            umod <- parseFile file
-                           let omod    = convertModuleUO umod
-                           let pmod    = convertModuleOP omod
-                           let pmodE   = pModEmptyCheck pmod
-                           let pmodc   = pModSyntaxCheck pmodE
+                           let omod    = convertModuleUO umod           -- *
+                           let pmod    = convertModuleOP omod           -- *
+                           let pmodE   = pModEmptyCheck pmod            -- *
+                           let pmodc   = pModSyntaxCheck pmodE          
                            let pmodENF = transforMPENF pmodc
                            return pmodENF 
 
@@ -27,39 +27,40 @@ module DataTypesOps(
    convertModuleUO :: UModule -> OModule
    convertModuleUO umodule = let
                               vardec      = joinVarDec      umodule
-                              mdefinedec  = joinDefineDec   umodule
+                              mivardec    = joinIVarDec     umodule -- Maybe
+                              mdefinedec  = joinDefineDec   umodule -- Maybe
                               initcons    = joinInitCons    umodule
                               transcons   = joinTransCons   umodule
                               ctlspecs    = joinCTLSpecs    umodule
-                              mfaircons   = joinFairCons    umodule
+                              mfaircons   = joinFairCons    umodule -- Maybe
                             in
-                              OModule vardec mdefinedec initcons transcons ctlspecs mfaircons
-
+                              OModule vardec mivardec mdefinedec initcons transcons ctlspecs mfaircons
+                                                            
    
-                  
-   -- Debido a los problemas con define, por el momento ignoraremos la construccion
+   
    convertModuleOP :: OModule -> PModule
-   convertModuleOP (OModule vdc Nothing ics tcs ctls fcs) = PModule vdc ics tcs ctls fcs -- Si no tiene expresion DEFINE, unicamente se elimina
-   convertModuleOP (OModule vdc (Just dfd) ics tcs ctls fcs) = let
-                                                                  (lck, rck) = checkDef vdc dfd
-                                                                in
-                                                                  if not lck
-                                                                  then error "macros previamente declaradas"
-                                                                  else if not rck
-                                                                       then error "variables no declaradas en DEFINE"
-                                                                       else subsituteDef (OModule vdc (Just dfd) ics tcs ctls fcs)
+   convertModuleOP (OModule vdc ivdc Nothing ics tcs ctls fcs)    =  PModule vdc ivdc ics tcs ctls fcs -- Si no se tiene DEFINE, unicamente se elimina
+   convertModuleOP (OModule vdc ivdc (Just dfd) ics tcs ctls fcs) =  let
+                                                                        (lck, rck) = checkDef vdc ivdc dfd
+                                                                      in
+                                                                        if not lck
+                                                                        then error "macros previamente declaradas"
+                                                                        else if not rck
+                                                                           then error "variables no declaradas en DEFINE"
+                                                                           else subsituteDef (OModule vdc ivdc (Just dfd) ics tcs ctls fcs)
+
 
    -- Funcion que se encarga de hacer la sustitucion de todas las expresiones define a los largo del programa
    subsituteDef :: OModule -> PModule
-   subsituteDef (OModule vdc (Just dfd) ics tcs ctls fcs) = let
+   subsituteDef (OModule vdc ivdc (Just dfd) ics tcs ctls fcs) = let
                                                                map      = defMap dfd 
                                                                newics   = subsInit ics map
                                                                newtcs   = subsTrans tcs map
                                                                newctls  = subsCTLSS ctls map
                                                             in 
                                                                case fcs of
-                                                                  Nothing  -> (PModule vdc newics newtcs newctls Nothing)
-                                                                  Just fs -> (PModule vdc newics newtcs newctls (Just (subsFairs fs map)))
+                                                                  Nothing  -> (PModule vdc ivdc newics newtcs newctls Nothing)
+                                                                  Just fs ->  (PModule vdc ivdc newics newtcs newctls (Just (subsFairs fs map)))
 
    defMap :: DefineDec -> DMS.Map Variable BSimple
    defMap (DefineDec defs) =  let
@@ -70,16 +71,17 @@ module DataTypesOps(
    defTuple :: DefineExp -> [(Variable, BSimple)] -> [(Variable, BSimple)]
    defTuple (DefineExp var simple) tuples = (var, simple) : tuples
    -- Crea un mapa cuya llave es 
-   checkDef :: VarDec -> DefineDec -> (Bool, Bool)
-   checkDef vdc dfd =   let
-                           varset = extractVarsDec vdc
-                           lck    = checkVarsDef varset dfd
-                           rck    = checkSimpleDef varset dfd
-                         in
-                           (lck, rck) 
+   checkDef :: VarDec -> Maybe IVarDec -> DefineDec -> (Bool, Bool)
+   checkDef vdc ivdc dfd = let
+                              varset   = extractVarsDec vdc
+                              ivarset  = extractIVarsDec ivdc
+                              lck      = checkVarsDef   (varset `Set.union` ivarset) dfd
+                              rck      = checkSimpleDef (varset `Set.union` ivarset) dfd
+                            in
+                              (lck, rck) 
 
 
-   -- Funcion que verifica que las variables en el lado izquierdo de las definiciones no hayan sido declaradas previamente
+   -- Funcion que verifica que las variables en el lado izquierdo de las definiciones no hayan sido declaradas previamente (en VAR o en IVAR)
    checkVarsDef :: Set.Set Variable -> DefineDec -> Bool
    checkVarsDef varset dfd =  let
                               defVarSet = extractVarsDef dfd
@@ -88,7 +90,7 @@ module DataTypesOps(
                               then True
                               else False
 
-   -- Funcion que verifica que las variables del lado derecho de las definiciones hayan sido declaradas
+   -- Funcion que verifica que las variables del lado derecho de las definiciones hayan sido declaradas (en VAR o en IVAR)
    checkSimpleDef :: Set.Set Variable -> DefineDec -> Bool
    checkSimpleDef varset dfd = checkDefVars dfd varset
                               
@@ -96,7 +98,7 @@ module DataTypesOps(
 
 
    pModEmptyCheck :: PModule -> PModule
-   pModEmptyCheck (PModule vdc ics tcs ctls fcs) = let 
+   pModEmptyCheck (PModule vdc ivdc ics tcs ctls fcs) = let 
                                                       vdcE  = varDecEmpty vdc
                                                       icsE  = initConsEmpty ics
                                                       tcsE  = transConsEmpty tcs
@@ -110,26 +112,36 @@ module DataTypesOps(
                                                                 then error "TRANS vacio"
                                                                 else if ctlsE
                                                                      then error "CTLSPEC vacio"
-                                                                     else (PModule vdc ics tcs ctls fcs)
+                                                                     else (PModule vdc ivdc ics tcs ctls fcs)
                                                    
 
    pModSyntaxCheck :: PModule -> PModule
-   pModSyntaxCheck (PModule vdc ics tcs ctls fcs) =   let
-                                                         varset      = extractVarsDec vdc
-                                                         checkinit   = checkInitVars ics varset
-                                                         checktrans  = checkTransVars tcs varset
-                                                         checkctl    = checkCTLSVars ctls varset
-                                                         checkfair   = checkFairVars fcs varset
-                                                       in
-                                                         if (checkinit == False)
-                                                         then error "Error en las variables de INIT"
-                                                         else if (checktrans == False)
-                                                               then error "Error en las variables de TRANS"
-                                                               else if (checkctl == False)
-                                                                     then error "Error en las variables de CTLSPEC"
-                                                                     else if (checkfair == False)
-                                                                        then error "Error en las variables de FAIRNESS"
-                                                                        else (PModule vdc ics tcs ctls fcs)
+   pModSyntaxCheck (PModule vdc ivdc ics tcs ctls fcs) = let
+                                                            varset         = extractVarsDec vdc
+                                                            ivarset        = extractIVarsDec ivdc
+                                                            checkinput     = checkInputDec varset ivarset -- Podemos suponer conjuntos disconjuntos
+                                                            incheckinit    = checkInitIVars ics ivarset
+                                                            checkinit      = checkInitVars ics varset
+                                                            checktrans     = checkTransVars tcs varset ivarset
+                                                            incheckctl     = checkCTLSIVars ctls ivarset
+                                                            checkctl       = checkCTLSVars ctls varset
+                                                            checkfair      = checkFairVars fcs (varset `Set.intersection` ivarset)
+                                                          in
+                                                            if (not checkinput)
+                                                            then error "declaracion repetida en IVAR"
+                                                            else  if (not  incheckinit)
+                                                                  then error "No se permiten IVARS en INIT"
+                                                                  else  if (not checkinit)
+                                                                        then error "Variable no declarada en INIT"
+                                                                        else  if (not checktrans)
+                                                                              then error "Error en las variables de TRANS, variable no declarada o IVAR dentro de next"
+                                                                              else  if (not incheckctl)
+                                                                                    then error "No se permiten IVAR en CTLSPEC"
+                                                                                    else  if (not checkctl)
+                                                                                          then error "Variable no declarada en CTLSPEC"
+                                                                                          else  if (not checkfair)
+                                                                                                then error "Variable no declarada dentro de FAIRNESS"
+                                                                                                else (PModule vdc ivdc ics tcs ctls fcs)
    -----------------------------------------------------------------------------------------------------
    -- Funciones de conversiones de modulos
    -- Desordenado a ordenado
@@ -219,15 +231,27 @@ module DataTypesOps(
    --   Verifican que todas las variables usadas hayan sido declaradas en Vars
    --   Inicio
    --------------------------------------------------------------------------------------------------
+   -- Verificamos que ninguna variable declarada en IVAR fue declarada en VAR
+   checkInputDec :: Set.Set Variable -> Set.Set Variable -> Bool
+   checkInputDec vdc ivdc = Set.null (vdc `Set.intersection` ivdc)
+
    checkInitVars :: InitCons  -> Set.Set Variable -> Bool
    checkInitVars (InitCons bsimple) varset = checkSimpleVars bsimple varset
 
-   checkTransVars :: TransCons -> Set.Set Variable -> Bool
-   checkTransVars (TransCons bnext) varset = checkNextVars bnext varset
+   checkInitIVars :: InitCons -> Set.Set Variable -> Bool
+   checkInitIVars (InitCons bsimple) varset = checkNotSimpleVars bsimple varset
+
+   checkTransVars :: TransCons -> Set.Set Variable -> Set.Set Variable -> Bool
+   checkTransVars (TransCons bnext) varset ivarset = checkNextVars bnext varset ivarset
 
    checkCTLSVars :: [CTLSpec] -> Set.Set Variable -> Bool
    checkCTLSVars [] _     = True
    checkCTLSVars ((CTLSpec x):xs) set = (checkCTLSVars1 x set) && checkCTLSVars xs set 
+
+
+   checkCTLSIVars :: [CTLSpec] -> Set.Set Variable -> Bool
+   checkCTLSIVars [] _  = True
+   checkCTLSIVars ((CTLSpec x):xs) set = (checkCTLSIVars1 x set) && checkCTLSIVars xs set 
 
    checkFairVars :: (Maybe [FairCons]) -> Set.Set Variable -> Bool
    checkFairVars Nothing _    = True
@@ -294,7 +318,13 @@ module DataTypesOps(
    extractVarsDec :: VarDec -> Set.Set Variable
    extractVarsDec (VarDec vars) =   case checkVarS vars (Just Set.empty) of
                                        Just x -> x
-                                       Nothing -> error "Declaracion de variable repetida"
+                                       Nothing -> error "Declaracion de VAR repetida"
+
+   extractIVarsDec :: Maybe IVarDec -> Set.Set Variable
+   extractIVarsDec (Nothing)              = Set.empty
+   extractIVarsDec (Just (IVarDec vars))  = case checkVarS vars (Just Set.empty) of
+                                             Just x -> x
+                                             Nothing -> error "Declaracion de IVAR repetida"
 
    extractVarsDef :: DefineDec -> Set.Set Variable
    extractVarsDef defDec = let 
@@ -320,14 +350,24 @@ module DataTypesOps(
    checkSimpleVars (SUnary _ exp) set    = checkSimpleVars exp set
    checkSimpleVars (SBinary _ e1 e2) set   = (checkSimpleVars e1 set) && (checkSimpleVars e2 set) 
 
+   checkNotSimpleVars :: BSimple -> Set.Set Variable -> Bool
+   checkNotSimpleVars (SConst _) _            = True
+   checkNotSimpleVars (SVariable var) set     = not (Set.member var set)
+   checkNotSimpleVars (SUnary _ exp) set      = checkNotSimpleVars exp set
+   checkNotSimpleVars (SBinary _ e1 e2) set   = (checkNotSimpleVars e1 set) && (checkNotSimpleVars e2 set) 
+
    
 
-   checkNextVars :: BNext -> Set.Set Variable -> Bool
-   checkNextVars (NConst _)  set = True
-   checkNextVars (NSVariable var) set = Set.member var set
-   checkNextVars (NNVariable var) set = Set.member var set
-   checkNextVars (NUnary _ exp)  set  = checkNextVars exp set 
-   checkNextVars (NBinary _ e1 e2) set = (checkNextVars e1 set) && (checkNextVars e2 set)
+   checkNextVars :: BNext -> Set.Set Variable -> Set.Set Variable -> Bool
+   checkNextVars (NConst _)  set      iset = True 
+   checkNextVars (NSVariable var) set iset = (Set.member var set) || (Set.member var iset)
+   checkNextVars (NNVariable var) set iset = (Set.member var set) && (not $ Set.member var iset)
+   checkNextVars (NUnary _ exp)   set iset = checkNextVars exp set iset 
+   checkNextVars (NBinary _ e1 e2)set iset = (checkNextVars e1 set iset)  && (checkNextVars e2 set iset)
+
+   checkNextIVars :: BNext -> Set.Set Variable -> Bool
+   checkNextIVars (NConst _) iset     = True
+   checkNextIvars (NSVariable var) set = (Set.member var)
 
 
    
@@ -339,6 +379,15 @@ module DataTypesOps(
    checkCTLSVars1 (CCUnary _ exp) set           = checkCTLSVars1 exp set
    checkCTLSVars1 (CBBinary _ exp1 exp2) set    = (checkCTLSVars1 exp1 set) && (checkCTLSVars1 exp2 set)
    checkCTLSVars1 (CCBinary _ exp1 exp2) set    = (checkCTLSVars1 exp1 set) && (checkCTLSVars1 exp2 set)
+
+
+   checkCTLSIVars1 :: CTLF -> Set.Set Variable -> Bool
+   checkCTLSIVars1 (CConst _) _                  = True
+   checkCTLSIVars1 (CVariable var) set           = not $ Set.member var set
+   checkCTLSIVars1 (CBUnary _ exp) set           = checkCTLSIVars1 exp set
+   checkCTLSIVars1 (CCUnary _ exp) set           = checkCTLSIVars1 exp set
+   checkCTLSIVars1 (CBBinary _ exp1 exp2) set    = (checkCTLSIVars1 exp1 set) && (checkCTLSIVars1 exp2 set)
+   checkCTLSIVars1 (CCBinary _ exp1 exp2) set    = (checkCTLSIVars1 exp1 set) && (checkCTLSIVars1 exp2 set)
 
 
    
@@ -375,6 +424,16 @@ module DataTypesOps(
    joinVarDec1 modelem vars = case modelem of
                                     (ModuleVar (VarDec ys)) -> ys ++ vars
                                     _                       -> vars     
+
+   joinIVarDec :: UModule -> Maybe IVarDec
+   joinIVarDec (UModule xs) = case (foldr joinIVarDec1 [] xs) of
+                                 [] -> Nothing
+                                 xs -> Just (IVarDec xs)
+                              
+   joinIVarDec1 :: ModuleElem -> [Variable] -> [Variable]
+   joinIVarDec1 modelem vars = case modelem of  
+                                 (ModuleIVar (IVarDec ys)) -> ys ++ vars
+                                 _                         -> vars      
 
    -- Junta los init InitCons, hace la conjuncion de todos los presentes
    joinInitCons :: UModule -> InitCons
@@ -439,10 +498,10 @@ module DataTypesOps(
    --------------------------------------------------------------------------------------------------
    -- Toma un programa y transforma la formula CTL dentro de el a Forma Normal Existencial (ENF, en ingles)
    transforMPENF :: PModule -> PModule
-   transforMPENF (PModule vdc ics tcs ctls fcs) =  let
+   transforMPENF (PModule vdc ivdc ics tcs ctls fcs) =  let
                                                       enf = map transformSENF ctls
                                                     in
-                                                      PModule vdc ics tcs enf fcs
+                                                      PModule vdc ivdc ics tcs enf fcs
 
    transformSENF :: CTLSpec -> CTLSpec
    transformSENF (CTLSpec ctlf) = CTLSpec (transformFNEF ctlf)

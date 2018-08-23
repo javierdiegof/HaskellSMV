@@ -30,6 +30,7 @@ module LanguageDef(
                                              "DEFINE",
                                              "INIT",
                                              "VAR",
+                                             "IVAR",
                                              "TRANS",
                                              "TRUE",
                                              "FALSE",

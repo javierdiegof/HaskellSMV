@@ -26,6 +26,7 @@ module SMVParser(
    --------------------------------------------------------------------------------------------------
    moduleElemParser :: Parser ModuleElem
    moduleElemParser =    mVarDecParser
+                     <|> mIVarDecParser 
                      <|> mInitConsParser 
                      <|> mDefineParser
                      <|> mTransConsParser
@@ -36,6 +37,12 @@ module SMVParser(
    mVarDecParser = do
                      varDec <- varDecParser
                      return $ ModuleVar varDec 
+
+   mIVarDecParser :: Parser ModuleElem
+   mIVarDecParser =  do 
+                        iVarDec <- iVarDecParser
+                        return $ ModuleIVar iVarDec
+
    
    mInitConsParser :: Parser ModuleElem
    mInitConsParser = do 
@@ -71,12 +78,19 @@ module SMVParser(
    --------------------------------------------------------------------------------------------------
    -- Parser de los elementos del modulo (module_element) inicio                                -----
    --------------------------------------------------------------------------------------------------
-   -- Parsea declaracion VAR
    varDecParser :: Parser VarDec
    varDecParser = do
                      reserved "VAR"
                      list <- (endBy1 variableParser semi) -- separados y finalizados por punto y coma (semicolon)
                      return $ VarDec list
+
+               
+   iVarDecParser :: Parser IVarDec
+   iVarDecParser = do
+                     reserved "IVAR"
+                     list <- (endBy1 variableParser semi) -- separados y finalizados por punto y coma (semicolon)
+                     return $ IVarDec list
+
 
    initConsParser :: Parser InitCons
    initConsParser = do

@@ -1,0 +1,13 @@
+VAR
+   a; -- 1
+   b; -- 2
+   pa;
+INIT
+   !a & !b & pa; -- De acuerdo con el comportamiento, en el estado anterior era par 
+TRANS
+   (((next(a) <-> !a) & (next(b) <->  b))  | 
+    ((next(a) <->  a) & (next(b) <-> !b))) & 
+   (next(pa) <-> (a xor b));
+CTLSPEC
+   AG(pa <-> AX(!pa))
+   

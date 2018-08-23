@@ -13,8 +13,10 @@ module SemanticCheck(
                         pmod <- syntaxCheck file
                         let
                            vars     = extractVarsList pmod
-                           initBDD  = initSynthesis pmod vars
-                           transBDD = transSynthesis pmod vars
+                           ivars    = extractIVarsList pmod
+                           totvars  = sort(vars ++ ivars)
+                           initBDD  = initSynthesis pmod totvars
+                           transBDD = transSynthesis pmod totvars ivars
                            res = case (existsFairness pmod) of
                               True  -> fFormulaCheck pmod transBDD vars
                               False -> uFormulaCheck pmod transBDD vars
@@ -28,14 +30,18 @@ module SemanticCheck(
                            putStrLn $ "El programa definido es: " ++ show pmod
                            let
                               vars     = extractVarsList pmod
-                              initBDD  = initSynthesis pmod vars
-                              transBDD = transSynthesis pmod vars
+                              ivars    = extractIVarsList pmod
+                              totvars  = sort(vars ++ ivars)
+                              initBDD  = initSynthesis pmod totvars
+                              transBDD = transSynthesis pmod totvars ivars
                               res = case (existsFairness pmod) of
                                        True  -> fFormulaCheck pmod transBDD vars
                                        False -> uFormulaCheck pmod transBDD vars
                               verify = checkInitSat initBDD res
-                           putStrLn $ "\nLos estados iniciales son: " ++ show(initBDD) ++ "\n"
+                           putStrLn $ "\n La numeracion de los estados es: " ++ show (varNumbering vars totvars) ++ "\n"
+                           putStrLn $ "Los estados iniciales son: " ++ show(initBDD) ++ "\n"
                            putStrLn $ "La funcion de transicion es: " ++ show(transBDD) ++ "\n"
+                           putStrLn $ "Las asignaciones que satisfacen la funcion de transicion son:" ++ show (allSats transBDD) ++ "\n"
                            putStrLn $ "La lista de variables es: " ++ show(vars) ++ "\n"
                            putStrLn $ "Los estados que satisfacen la formula son: " ++ show (res) ++ "\n"
                            putStrLn $ "Asignaciones: "    ++ show (map allSats res) ++ "\n"
@@ -58,6 +64,21 @@ module SemanticCheck(
                                     putStrLn $ "Especificacion #" ++ show(specnum) ++ ": " ++ res
                                     printSolRec (specnum + 1) xs
 
+   varNumbering :: [Variable] -> [Variable] -> [(String, Int)]
+   varNumbering  [] totvars                  = []
+   varNumbering ((Variable str):xs) totvars  =  let
+                                                   ind = (Variable str) `elemIndex` totvars
+                                                 in
+                                                   case ind of
+                                                      Nothing  -> error "Variable no encontrada"
+                                                      Just pos -> let
+                                                                     vtuple   = (str, pos*2)
+                                                                     vtuplep  = (str ++ "'", pos*2+1)
+                                                                   in
+                                                                     vtuple:vtuplep:(varNumbering xs totvars)
+
+                                                   
+
 
 
 
@@ -70,10 +91,15 @@ module SemanticCheck(
    
    
    extractVarsList :: PModule -> [Variable]
-   extractVarsList (PModule (VarDec vars) _ _ _ _) = sort vars
+   extractVarsList (PModule (VarDec vars) _ _ _ _ _) = sort vars
+
+   extractIVarsList :: PModule -> [Variable]
+   extractIVarsList (PModule _ ivdc _ _ _ _) = case ivdc of
+                                                Nothing -> []
+                                                Just (IVarDec vars) -> vars
 
    initSynthesis :: PModule -> [Variable] -> Bdd
-   initSynthesis (PModule _ (InitCons bsimple) _ _ _) vars = synthSimple bsimple vars
+   initSynthesis (PModule _ _ (InitCons bsimple) _ _ _) vars = synthSimple bsimple vars
 
    synthSimple :: BSimple -> [Variable] -> Bdd
    synthSimple (SConst const) _  =  case const of
@@ -96,8 +122,11 @@ module SemanticCheck(
 
    ----------------- Funciones de sintesis la relacion de transicion ------------------------------------------------
    -- Convierte la lista de expresiones en TRANS a un BDD que representa a la funcion de transicion
-   transSynthesis :: PModule -> [Variable] -> Bdd
-   transSynthesis (PModule _ _ (TransCons trans) _ _) varL = synthTrans trans varL
+   transSynthesis :: PModule -> [Variable] -> [Variable] -> Bdd
+   transSynthesis (PModule _ _ _ (TransCons trans) _ _) tvars ivars =   let
+                                                                           transbdd = synthTrans trans tvars
+                                                                        in 
+                                                                           removeInput transbdd tvars ivars
 
    -- Convierte uno de los renglones en TRANS a un bdd
    synthTrans :: BNext -> [Variable] -> Bdd
@@ -120,13 +149,23 @@ module SemanticCheck(
                                                 Xor        -> (synthTrans f1 vars) `xor` (synthTrans f2 vars)
                                                 If         -> (synthTrans f1 vars) `imp` (synthTrans f2 vars)
                                                 Iff        -> (synthTrans f1 vars) `equ` (synthTrans f2 vars)
+
+   -- Elimina las variables INPUT utilizando en operador existencial
+   removeInput :: Bdd -> [Variable] -> [Variable] -> Bdd
+   removeInput trans tvars [] = trans
+   removeInput trans tvars (x:xs) = let
+                                       index = (x `elemIndex` tvars)
+                                     in
+                                       case index of
+                                          Just pos -> removeInput (exists (pos*2) trans) tvars xs
+                                          Nothing  -> error "Variable input no encontrada"
    ----------------- Funciones de sintesis la relacion de transicion (fin)--------------------------------------------
 
 
 
    ----------------- Funciones de verificacion de la formula CTL sin Fairness -----------------------------------------
    uFormulaCheck :: PModule -> Bdd -> [Variable] -> [Bdd]
-   uFormulaCheck (PModule _ _ _ ctlspecs _) trans vars = uFormulaCheckL ctlspecs trans vars
+   uFormulaCheck (PModule _ _ _ _ ctlspecs _) trans vars = uFormulaCheckL ctlspecs trans vars
 
 
    uFormulaCheckL :: [CTLSpec] -> Bdd -> [Variable] -> [Bdd]
@@ -214,14 +253,14 @@ module SemanticCheck(
    renameNextList vars = [(a,b) | a <- vars, let b = a+1]
 
    existsFairness :: PModule -> Bool
-   existsFairness (PModule _ _ _ _ Nothing) = False
-   existsFairness (PModule _ _ _ _ (Just _)) = True
+   existsFairness (PModule _ _ _ _ _ Nothing) = False
+   existsFairness (PModule _ _ _ _ _ (Just _)) = True
 
 
 
    ----------------- Funciones de verificacion de la formula CTL con Fairness -----------------------------------------
    fFormulaCheck :: PModule -> Bdd -> [Variable] -> [Bdd]
-   fFormulaCheck (PModule _ _ _ ctls (Just fairs)) trans vars =  let
+   fFormulaCheck (PModule _ _ _ _ ctls (Just fairs)) trans vars =  let
                                                                   fairl    = synthFairness fairs vars
                                                                   fairst   = fairStates trans fairl 
                                                                   ctlfFair = fSubCheckU ctls trans fairl vars
