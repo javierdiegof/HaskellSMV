@@ -1,0 +1,49 @@
+MODULE main
+VAR
+   a   : boolean;
+   b   : boolean;
+   c   : boolean;
+   d   : boolean;
+   e   : boolean;
+   f   : boolean;
+   g   : boolean;
+   h   : boolean;
+   i   : boolean;
+   j   : boolean;
+   k   : boolean;
+   l   : boolean;
+   m   : boolean;
+   n   : boolean;
+   o   : boolean;
+   p   : boolean;
+   q   : boolean;
+   r   : boolean;
+   s   : boolean;
+   t   : boolean;
+   u   : boolean;
+INIT
+   !a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n & !o & !p & !q & !r & !s & !t & u;
+TRANS
+   (((next(a) <-> !a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <-> !b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <-> !c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <-> !d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <-> !e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <-> !f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <-> !g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <-> !h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <-> !i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <-> !j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <-> !k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <-> !l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <-> !m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <-> !n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <-> !o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <-> !p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <-> !q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <-> !r) & (next(s) <->  s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <-> !s) & (next(t) <->  t)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g) & (next(h) <->  h) & (next(i) <->  i) & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <->  r) & (next(s) <->  s) & (next(t) <-> !t))) & 
+   (next(u) <-> (((((((((((((((((((a xor b) xor c) xor d) xor e) xor f) xor g) xor h) xor i) xor j) xor k) xor l) xor m) xor n) xor o) xor p) xor q) xor r) xor s) xor t));
+CTLSPEC
+   AG(u <-> AX(!u));

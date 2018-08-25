@@ -22,8 +22,8 @@ main = hspec $ do
          (fileCheck "tests/src/acounter3.txt")  `shouldReturn` [True, False]
    -}
 
-   describe "Interleave" $ do
-      {-
+   {-describe "Interleave" $ do
+      
       it "test interleave2" $ do
          (fileCheckOutput "tests/src/interleave2.txt")  `shouldReturn` [True]
       it "test interleave3" $ do
@@ -43,6 +43,12 @@ main = hspec $ do
       it "test interleave16" $ do
          (fileCheck "tests/src/interleave16.txt")  `shouldReturn` [True]
       it "test interleave17" $ do
-         (fileCheck "tests/src/interleave17.txt")  `shouldReturn` [True]-}
+         (fileCheck "tests/src/interleave17.txt")  `shouldReturn` [True]
       it "test interleave18" $ do
          (fileCheck "tests/src/interleave18.txt")  `shouldReturn` [True]
+      it "test interleave19" $ do
+         (fileCheck "tests/src/interleave19.txt")  `shouldReturn` [True]-}
+   
+   describe "ShiftReg" $ do
+      it "test shiftG3.smv" $ do
+         (fileCheckOutput "tests/shiftG/shiftG3.smv") `shouldReturn` [True]

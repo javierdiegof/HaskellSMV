@@ -39,6 +39,6 @@ TRANS
     ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g)  & (next(h) <->  h)  & (next(i) <->  i)  & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <-> !p) & (next(q) <->  q) & (next(r) <->  r)) | 
     ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g)  & (next(h) <->  h)  & (next(i) <->  i)  & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <-> !q) & (next(r) <->  r)) |  
     ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d) & (next(e) <->  e) & (next(f) <->  f) & (next(g) <->  g)  & (next(h) <->  h)  & (next(i) <->  i)  & (next(j) <->  j) & (next(k) <->  k) & (next(l) <->  l) & (next(m) <->  m) & (next(n) <->  n) & (next(o) <->  o) & (next(p) <->  p) & (next(q) <->  q) & (next(r) <-> !r))) &
-   (next(zpa) <-> ((((((((((((((((a xor b) xor c) xor d) xor e) xor f) xor g) xor h) xor i) xor j) xor k) xor l) xor m) xor n) xor o) xor p) xor q));
+   (next(zpa) <-> (((((((((((((((((a xor b) xor c) xor d) xor e) xor f) xor g) xor h) xor i) xor j) xor k) xor l) xor m) xor n) xor o) xor p) xor q) xor r));
 CTLSPEC
    AG(zpa <-> AX(!zpa))
