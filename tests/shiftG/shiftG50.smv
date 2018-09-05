@@ -1,0 +1,125 @@
+VAR
+   aa   ;
+   ab   ;
+   ac   ;
+   ad   ;
+   ae   ;
+   af   ;
+   ag   ;
+   ah   ;
+   ai   ;
+   aj   ;
+   ak   ;
+   al   ;
+   am   ;
+   an   ;
+   ao   ;
+   ap   ;
+   aq   ;
+   ar   ;
+   as   ;
+   at   ;
+   au   ;
+   av   ;
+   aw   ;
+   ax   ;
+   ay   ;
+   az   ;
+   ba   ;
+   bb   ;
+   bc   ;
+   bd   ;
+   be   ;
+   bf   ;
+   bg   ;
+   bh   ;
+   bi   ;
+   bj   ;
+   bk   ;
+   bl   ;
+   bm   ;
+   bn   ;
+   bo   ;
+   bp   ;
+   bq   ;
+   br   ;
+   bs   ;
+   bt   ;
+   bu   ;
+   bv   ;
+   bw   ;
+   bx   ;
+   dw   ;
+   dx   ;
+   ea   ;
+IVAR
+   by   ;
+   bz   ;
+   ca   ;
+   cb   ;
+   cc   ;
+   cd   ;
+   ce   ;
+   cf   ;
+   cg   ;
+   ch   ;
+   ci   ;
+   cj   ;
+   ck   ;
+   cl   ;
+   cm   ;
+   cn   ;
+   co   ;
+   cp   ;
+   cq   ;
+   cr   ;
+   cs   ;
+   ct   ;
+   cu   ;
+   cv   ;
+   cw   ;
+   cx   ;
+   cy   ;
+   cz   ;
+   da   ;
+   db   ;
+   dc   ;
+   dd   ;
+   de   ;
+   df   ;
+   dg   ;
+   dh   ;
+   di   ;
+   dj   ;
+   dk   ;
+   dl   ;
+   dm   ;
+   dn   ;
+   do   ;
+   dp   ;
+   dq   ;
+   dr   ;
+   ds   ;
+   dt   ;
+   du   ;
+   dv   ;
+   dy   ;
+   dz   ;
+INIT
+   !aa & !ab & !ac & !ad & !ae & !af & !ag & !ah & !ai & !aj & !ak & !al & !am & !an & !ao & !ap & !aq & !ar & !as & !at & !au & !av & !aw & !ax & !ay & !az & !ba & !bb & !bc & !bd & !be & !bf & !bg & !bh & !bi & !bj & !bk & !bl & !bm & !bn & !bo & !bp & !bq & !br & !bs & !bt & !bu & !bv & !bw & !bx;
+TRANS
+   ((!dx & !dw & !ea) -> ((next(aa) <-> aa) & (next(ab) <-> ab) & (next(ac) <-> ac) & (next(ad) <-> ad) & (next(ae) <-> ae) & (next(af) <-> af) & (next(ag) <-> ag) & (next(ah) <-> ah) & (next(ai) <-> ai) & (next(aj) <-> aj) & (next(ak) <-> ak) & (next(al) <-> al) & (next(am) <-> am) & (next(an) <-> an) & (next(ao) <-> ao) & (next(ap) <-> ap) & (next(aq) <-> aq) & (next(ar) <-> ar) & (next(as) <-> as) & (next(at) <-> at) & (next(au) <-> au) & (next(av) <-> av) & (next(aw) <-> aw) & (next(ax) <-> ax) & (next(ay) <-> ay) & (next(az) <-> az) & (next(ba) <-> ba) & (next(bb) <-> bb) & (next(bc) <-> bc) & (next(bd) <-> bd) & (next(be) <-> be) & (next(bf) <-> bf) & (next(bg) <-> bg) & (next(bh) <-> bh) & (next(bi) <-> bi) & (next(bj) <-> bj) & (next(bk) <-> bk) & (next(bl) <-> bl) & (next(bm) <-> bm) & (next(bn) <-> bn) & (next(bo) <-> bo) & (next(bp) <-> bp) & (next(bq) <-> bq) & (next(br) <-> br) & (next(bs) <-> bs) & (next(bt) <-> bt) & (next(bu) <-> bu) & (next(bv) <-> bv) & (next(bw) <-> bw) & (next(bx) <-> bx))) &
+   ((!dx &  dw & !ea) -> ((next(aa) <-> dy) & (next(ab) <-> aa) & (next(ac) <-> ab) & (next(ad) <-> ac) & (next(ae) <-> ad) & (next(af) <-> ae) & (next(ag) <-> af) & (next(ah) <-> ag) & (next(ai) <-> ah) & (next(aj) <-> ai) & (next(ak) <-> aj) & (next(al) <-> ak) & (next(am) <-> al) & (next(an) <-> am) & (next(ao) <-> an) & (next(ap) <-> ao) & (next(aq) <-> ap) & (next(ar) <-> aq) & (next(as) <-> ar) & (next(at) <-> as) & (next(au) <-> at) & (next(av) <-> au) & (next(aw) <-> av) & (next(ax) <-> aw) & (next(ay) <-> ax) & (next(az) <-> ay) & (next(ba) <-> az) & (next(bb) <-> ba) & (next(bc) <-> bb) & (next(bd) <-> bc) & (next(be) <-> bd) & (next(bf) <-> be) & (next(bg) <-> bf) & (next(bh) <-> bg) & (next(bi) <-> bh) & (next(bj) <-> bi) & (next(bk) <-> bj) & (next(bl) <-> bk) & (next(bm) <-> bl) & (next(bn) <-> bm) & (next(bo) <-> bn) & (next(bp) <-> bo) & (next(bq) <-> bp) & (next(br) <-> bq) & (next(bs) <-> br) & (next(bt) <-> bs) & (next(bu) <-> bt) & (next(bv) <-> bu) & (next(bw) <-> bv) & (next(bx) <-> bw)))&
+   (( dx & !dw & !ea) -> ((next(aa) <-> ab) & (next(ab) <-> ac) & (next(ac) <-> ad) & (next(ad) <-> ae) & (next(ae) <-> af) & (next(af) <-> ag) & (next(ag) <-> ah) & (next(ah) <-> ai) & (next(ai) <-> aj) & (next(aj) <-> ak) & (next(ak) <-> al) & (next(al) <-> am) & (next(am) <-> an) & (next(an) <-> ao) & (next(ao) <-> ap) & (next(ap) <-> aq) & (next(aq) <-> ar) & (next(ar) <-> as) & (next(as) <-> at) & (next(at) <-> au) & (next(au) <-> av) & (next(av) <-> aw) & (next(aw) <-> ax) & (next(ax) <-> ay) & (next(ay) <-> az) & (next(az) <-> ba) & (next(ba) <-> bb) & (next(bb) <-> bc) & (next(bc) <-> bd) & (next(bd) <-> be) & (next(be) <-> bf) & (next(bf) <-> bg) & (next(bg) <-> bh) & (next(bh) <-> bi) & (next(bi) <-> bj) & (next(bj) <-> bk) & (next(bk) <-> bl) & (next(bl) <-> bm) & (next(bm) <-> bn) & (next(bn) <-> bo) & (next(bo) <-> bp) & (next(bp) <-> bq) & (next(bq) <-> br) & (next(br) <-> bs) & (next(bs) <-> bt) & (next(bt) <-> bu) & (next(bu) <-> bv) & (next(bv) <-> bw) & (next(bw) <-> bx) & (next(bx) <-> dz))) &
+   (( dx &  dw & !ea) -> ((next(aa) <-> by) & (next(ab) <-> bz) & (next(ac) <-> ca) & (next(ad) <-> cb) & (next(ae) <-> cc) & (next(af) <-> cd) & (next(ag) <-> ce) & (next(ah) <-> cf) & (next(ai) <-> cg) & (next(aj) <-> ch) & (next(ak) <-> ci) & (next(al) <-> cj) & (next(am) <-> ck) & (next(an) <-> cl) & (next(ao) <-> cm) & (next(ap) <-> cn) & (next(aq) <-> co) & (next(ar) <-> cp) & (next(as) <-> cq) & (next(at) <-> cr) & (next(au) <-> cs) & (next(av) <-> ct) & (next(aw) <-> cu) & (next(ax) <-> cv) & (next(ay) <-> cw) & (next(az) <-> cx) & (next(ba) <-> cy) & (next(bb) <-> cz) & (next(bc) <-> da) & (next(bd) <-> db) & (next(be) <-> dc) & (next(bf) <-> dd) & (next(bg) <-> de) & (next(bh) <-> df) & (next(bi) <-> dg) & (next(bj) <-> dh) & (next(bk) <-> di) & (next(bl) <-> dj) & (next(bm) <-> dk) & (next(bn) <-> dl) & (next(bo) <-> dm) & (next(bp) <-> dn) & (next(bq) <-> do) & (next(br) <-> dp) & (next(bs) <-> dq) & (next(bt) <-> dr) & (next(bu) <-> ds) & (next(bv) <-> dt) & (next(bw) <-> du) & (next(bx) <-> dv))) &
+   (ea -> ((next(aa) <-> FALSE) & (next(ab) <-> FALSE) & (next(ac) <-> FALSE) & (next(ad) <-> FALSE) & (next(ae) <-> FALSE) & (next(af) <-> FALSE) & (next(ag) <-> FALSE) & (next(ah) <-> FALSE) & (next(ai) <-> FALSE) & (next(aj) <-> FALSE) & (next(ak) <-> FALSE) & (next(al) <-> FALSE) & (next(am) <-> FALSE) & (next(an) <-> FALSE) & (next(ao) <-> FALSE) & (next(ap) <-> FALSE) & (next(aq) <-> FALSE) & (next(ar) <-> FALSE) & (next(as) <-> FALSE) & (next(at) <-> FALSE) & (next(au) <-> FALSE) & (next(av) <-> FALSE) & (next(aw) <-> FALSE) & (next(ax) <-> FALSE) & (next(ay) <-> FALSE) & (next(az) <-> FALSE) & (next(ba) <-> FALSE) & (next(bb) <-> FALSE) & (next(bc) <-> FALSE) & (next(bd) <-> FALSE) & (next(be) <-> FALSE) & (next(bf) <-> FALSE) & (next(bg) <-> FALSE) & (next(bh) <-> FALSE) & (next(bi) <-> FALSE) & (next(bj) <-> FALSE) & (next(bk) <-> FALSE) & (next(bl) <-> FALSE) & (next(bm) <-> FALSE) & (next(bn) <-> FALSE) & (next(bo) <-> FALSE) & (next(bp) <-> FALSE) & (next(bq) <-> FALSE) & (next(br) <-> FALSE) & (next(bs) <-> FALSE) & (next(bt) <-> FALSE) & (next(bu) <-> FALSE) & (next(bv) <-> FALSE) & (next(bw) <-> FALSE) & (next(bx) <-> FALSE)))
+CTLSPEC
+   AG((!dx & !dw & !ea) -> ((aa <-> AX(aa)) & (ab <-> AX(ab)) & (ac <-> AX(ac)) & (ad <-> AX(ad)) & (ae <-> AX(ae)) & (af <-> AX(af)) & (ag <-> AX(ag)) & (ah <-> AX(ah)) & (ai <-> AX(ai)) & (aj <-> AX(aj)) & (ak <-> AX(ak)) & (al <-> AX(al)) & (am <-> AX(am)) & (an <-> AX(an)) & (ao <-> AX(ao)) & (ap <-> AX(ap)) & (aq <-> AX(aq)) & (ar <-> AX(ar)) & (as <-> AX(as)) & (at <-> AX(at)) & (au <-> AX(au)) & (av <-> AX(av)) & (aw <-> AX(aw)) & (ax <-> AX(ax)) & (ay <-> AX(ay)) & (az <-> AX(az)) & (ba <-> AX(ba)) & (bb <-> AX(bb)) & (bc <-> AX(bc)) & (bd <-> AX(bd)) & (be <-> AX(be)) & (bf <-> AX(bf)) & (bg <-> AX(bg)) & (bh <-> AX(bh)) & (bi <-> AX(bi)) & (bj <-> AX(bj)) & (bk <-> AX(bk)) & (bl <-> AX(bl)) & (bm <-> AX(bm)) & (bn <-> AX(bn)) & (bo <-> AX(bo)) & (bp <-> AX(bp)) & (bq <-> AX(bq)) & (br <-> AX(br)) & (bs <-> AX(bs)) & (bt <-> AX(bt)) & (bu <-> AX(bu)) & (bv <-> AX(bv)) & (bw <-> AX(bw)) & (bx <-> AX(bx))));
+CTLSPEC
+   AG((!dx &  dw & !ea) -> (EX(aa) & EX(!aa)));
+CTLSPEC
+   AG((dx & !dw & !ea) -> (EX(bx) & EX(!bx)));
+CTLSPEC
+   AG((dx & dw & !ea) -> (EX(aa) & EX(ab) & EX(ac) & EX(ad) & EX(ae) & EX(af) & EX(ag) & EX(ah) & EX(ai) & EX(aj) & EX(ak) & EX(al) & EX(am) & EX(an) & EX(ao) & EX(ap) & EX(aq) & EX(ar) & EX(as) & EX(at) & EX(au) & EX(av) & EX(aw) & EX(ax) & EX(ay) & EX(az) & EX(ba) & EX(bb) & EX(bc) & EX(bd) & EX(be) & EX(bf) & EX(bg) & EX(bh) & EX(bi) & EX(bj) & EX(bk) & EX(bl) & EX(bm) & EX(bn) & EX(bo) & EX(bp) & EX(bq) & EX(br) & EX(bs) & EX(bt) & EX(bu) & EX(bv) & EX(bw) & EX(bx) & EX(!aa) & EX(!ab) & EX(!ac) & EX(!ad) & EX(!ae) & EX(!af) & EX(!ag) & EX(!ah) & EX(!ai) & EX(!aj) & EX(!ak) & EX(!al) & EX(!am) & EX(!an) & EX(!ao) & EX(!ap) & EX(!aq) & EX(!ar) & EX(!as) & EX(!at) & EX(!au) & EX(!av) & EX(!aw) & EX(!ax) & EX(!ay) & EX(!az) & EX(!ba) & EX(!bb) & EX(!bc) & EX(!bd) & EX(!be) & EX(!bf) & EX(!bg) & EX(!bh) & EX(!bi) & EX(!bj) & EX(!bk) & EX(!bl) & EX(!bm) & EX(!bn) & EX(!bo) & EX(!bp) & EX(!bq) & EX(!br) & EX(!bs) & EX(!bt) & EX(!bu) & EX(!bv) & EX(!bw) & EX(!bx)));
+CTLSPEC
+   AG(ea -> AX(!aa & !ab & !ac & !ad & !ae & !af & !ag & !ah & !ai & !aj & !ak & !al & !am & !an & !ao & !ap & !aq & !ar & !as & !at & !au & !av & !aw & !ax & !ay & !az & !ba & !bb & !bc & !bd & !be & !bf & !bg & !bh & !bi & !bj & !bk & !bl & !bm & !bn & !bo & !bp & !bq & !br & !bs & !bt & !bu & !bv & !bw & !bx));

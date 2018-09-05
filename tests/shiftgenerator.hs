@@ -250,7 +250,7 @@ printAnd str1 str2 = str1 ++ " & " ++ str2
 ------------------------------------------------------------------------------
 genList :: Int -> [String]
 genList valmax =  let
-                     numdig = numDigits valmax
+                     numdig = numDigits (2*valmax + 4)
                   in
                      [genDig val numdig | val <- [0 .. 2*valmax + 4]]
 

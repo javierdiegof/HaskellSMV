@@ -21,3 +21,11 @@ TRANS
    (k -> ((next(a) <-> FALSE) & (next(b) <-> FALSE) & (next(c) <-> FALSE)))
 CTLSPEC
    AG((!h & !g & !k) -> ((a <-> AX(a)) & (b <-> AX(b)) & (c <-> AX(c))));
+CTLSPEC
+   AG((!h &  g & !k) -> (EX(a) & EX(!a)));
+CTLSPEC
+   AG((h & !g & !k) -> (EX(c) & EX(!c)));
+CTLSPEC
+   AG((h & g & !k) -> (EX(a) & EX(b) & EX(c) & EX(!a) & EX(!b) & EX(!c)));
+CTLSPEC
+   AG(k -> AX(!a & !b & !c));

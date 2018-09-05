@@ -1,0 +1,39 @@
+VAR
+   a   ;
+   b   ;
+   c   ;
+   d   ;
+   e   ;
+   f   ;
+   g   ;
+   o   ;
+   p   ;
+   s   ;
+IVAR
+   h   ;
+   i   ;
+   j   ;
+   k   ;
+   l   ;
+   m   ;
+   n   ;
+   q   ;
+   r   ;
+INIT
+   !a & !b & !c & !d & !e & !f & !g;
+TRANS
+   ((!p & !o & !s) -> ((next(a) <-> a) & (next(b) <-> b) & (next(c) <-> c) & (next(d) <-> d) & (next(e) <-> e) & (next(f) <-> f) & (next(g) <-> g))) &
+   ((!p &  o & !s) -> ((next(a) <-> q) & (next(b) <-> a) & (next(c) <-> b) & (next(d) <-> c) & (next(e) <-> d) & (next(f) <-> e) & (next(g) <-> f)))&
+   (( p & !o & !s) -> ((next(a) <-> b) & (next(b) <-> c) & (next(c) <-> d) & (next(d) <-> e) & (next(e) <-> f) & (next(f) <-> g) & (next(g) <-> r))) &
+   (( p &  o & !s) -> ((next(a) <-> h) & (next(b) <-> i) & (next(c) <-> j) & (next(d) <-> k) & (next(e) <-> l) & (next(f) <-> m) & (next(g) <-> n))) &
+   (s -> ((next(a) <-> FALSE) & (next(b) <-> FALSE) & (next(c) <-> FALSE) & (next(d) <-> FALSE) & (next(e) <-> FALSE) & (next(f) <-> FALSE) & (next(g) <-> FALSE)))
+CTLSPEC
+   AG((!p & !o & !s) -> ((a <-> AX(a)) & (b <-> AX(b)) & (c <-> AX(c)) & (d <-> AX(d)) & (e <-> AX(e)) & (f <-> AX(f)) & (g <-> AX(g))));
+CTLSPEC
+   AG((!p &  o & !s) -> (EX(a) & EX(!a)));
+CTLSPEC
+   AG((p & !o & !s) -> (EX(g) & EX(!g)));
+CTLSPEC
+   AG((p & o & !s) -> (EX(a) & EX(b) & EX(c) & EX(d) & EX(e) & EX(f) & EX(g) & EX(!a) & EX(!b) & EX(!c) & EX(!d) & EX(!e) & EX(!f) & EX(!g)));
+CTLSPEC
+   AG(s -> AX(!a & !b & !c & !d & !e & !f & !g));

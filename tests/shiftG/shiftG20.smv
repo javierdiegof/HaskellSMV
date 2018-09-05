@@ -1,0 +1,65 @@
+VAR
+   a   ;
+   b   ;
+   c   ;
+   d   ;
+   e   ;
+   f   ;
+   g   ;
+   h   ;
+   i   ;
+   j   ;
+   k   ;
+   l   ;
+   m   ;
+   n   ;
+   o   ;
+   p   ;
+   q   ;
+   r   ;
+   s   ;
+   t   ;
+   b   ;
+   b   ;
+   b   ;
+IVAR
+   u   ;
+   v   ;
+   w   ;
+   x   ;
+   y   ;
+   z   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+   b   ;
+INIT
+   !a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n & !o & !p & !q & !r & !s & !t;
+TRANS
+   ((!b & !b & !b) -> ((next(a) <-> a) & (next(b) <-> b) & (next(c) <-> c) & (next(d) <-> d) & (next(e) <-> e) & (next(f) <-> f) & (next(g) <-> g) & (next(h) <-> h) & (next(i) <-> i) & (next(j) <-> j) & (next(k) <-> k) & (next(l) <-> l) & (next(m) <-> m) & (next(n) <-> n) & (next(o) <-> o) & (next(p) <-> p) & (next(q) <-> q) & (next(r) <-> r) & (next(s) <-> s) & (next(t) <-> t))) &
+   ((!b &  b & !b) -> ((next(a) <-> b) & (next(b) <-> a) & (next(c) <-> b) & (next(d) <-> c) & (next(e) <-> d) & (next(f) <-> e) & (next(g) <-> f) & (next(h) <-> g) & (next(i) <-> h) & (next(j) <-> i) & (next(k) <-> j) & (next(l) <-> k) & (next(m) <-> l) & (next(n) <-> m) & (next(o) <-> n) & (next(p) <-> o) & (next(q) <-> p) & (next(r) <-> q) & (next(s) <-> r) & (next(t) <-> s)))&
+   (( b & !b & !b) -> ((next(a) <-> b) & (next(b) <-> c) & (next(c) <-> d) & (next(d) <-> e) & (next(e) <-> f) & (next(f) <-> g) & (next(g) <-> h) & (next(h) <-> i) & (next(i) <-> j) & (next(j) <-> k) & (next(k) <-> l) & (next(l) <-> m) & (next(m) <-> n) & (next(n) <-> o) & (next(o) <-> p) & (next(p) <-> q) & (next(q) <-> r) & (next(r) <-> s) & (next(s) <-> t) & (next(t) <-> b))) &
+   (( b &  b & !b) -> ((next(a) <-> u) & (next(b) <-> v) & (next(c) <-> w) & (next(d) <-> x) & (next(e) <-> y) & (next(f) <-> z) & (next(g) <-> b) & (next(h) <-> b) & (next(i) <-> b) & (next(j) <-> b) & (next(k) <-> b) & (next(l) <-> b) & (next(m) <-> b) & (next(n) <-> b) & (next(o) <-> b) & (next(p) <-> b) & (next(q) <-> b) & (next(r) <-> b) & (next(s) <-> b) & (next(t) <-> b))) &
+   (b -> ((next(a) <-> FALSE) & (next(b) <-> FALSE) & (next(c) <-> FALSE) & (next(d) <-> FALSE) & (next(e) <-> FALSE) & (next(f) <-> FALSE) & (next(g) <-> FALSE) & (next(h) <-> FALSE) & (next(i) <-> FALSE) & (next(j) <-> FALSE) & (next(k) <-> FALSE) & (next(l) <-> FALSE) & (next(m) <-> FALSE) & (next(n) <-> FALSE) & (next(o) <-> FALSE) & (next(p) <-> FALSE) & (next(q) <-> FALSE) & (next(r) <-> FALSE) & (next(s) <-> FALSE) & (next(t) <-> FALSE)))
+CTLSPEC
+   AG((!b & !b & !b) -> ((a <-> AX(a)) & (b <-> AX(b)) & (c <-> AX(c)) & (d <-> AX(d)) & (e <-> AX(e)) & (f <-> AX(f)) & (g <-> AX(g)) & (h <-> AX(h)) & (i <-> AX(i)) & (j <-> AX(j)) & (k <-> AX(k)) & (l <-> AX(l)) & (m <-> AX(m)) & (n <-> AX(n)) & (o <-> AX(o)) & (p <-> AX(p)) & (q <-> AX(q)) & (r <-> AX(r)) & (s <-> AX(s)) & (t <-> AX(t))));
+CTLSPEC
+   AG((!b &  b & !b) -> (EX(a) & EX(!a)));
+CTLSPEC
+   AG((b & !b & !b) -> (EX(t) & EX(!t)));
+CTLSPEC
+   AG((b & b & !b) -> (EX(a) & EX(b) & EX(c) & EX(d) & EX(e) & EX(f) & EX(g) & EX(h) & EX(i) & EX(j) & EX(k) & EX(l) & EX(m) & EX(n) & EX(o) & EX(p) & EX(q) & EX(r) & EX(s) & EX(t) & EX(!a) & EX(!b) & EX(!c) & EX(!d) & EX(!e) & EX(!f) & EX(!g) & EX(!h) & EX(!i) & EX(!j) & EX(!k) & EX(!l) & EX(!m) & EX(!n) & EX(!o) & EX(!p) & EX(!q) & EX(!r) & EX(!s) & EX(!t)));
+CTLSPEC
+   AG(b -> AX(!a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n & !o & !p & !q & !r & !s & !t));

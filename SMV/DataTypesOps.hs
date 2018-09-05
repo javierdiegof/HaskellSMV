@@ -125,7 +125,7 @@ module DataTypesOps(
                                                             checktrans     = checkTransVars tcs varset ivarset
                                                             incheckctl     = checkCTLSIVars ctls ivarset
                                                             checkctl       = checkCTLSVars ctls varset
-                                                            checkfair      = checkFairVars fcs (varset `Set.intersection` ivarset)
+                                                            checkfair      = checkFairVars fcs varset
                                                           in
                                                             if (not checkinput)
                                                             then error "declaracion repetida en IVAR"

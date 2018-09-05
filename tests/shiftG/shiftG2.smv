@@ -1,0 +1,29 @@
+VAR
+   a   ;
+   b   ;
+   e   ;
+   f   ;
+   i   ;
+IVAR
+   c   ;
+   d   ;
+   g   ;
+   h   ;
+INIT
+   !a & !b;
+TRANS
+   ((!f & !e & !i) -> ((next(a) <-> a) & (next(b) <-> b))) &
+   ((!f &  e & !i) -> ((next(a) <-> g) & (next(b) <-> a)))&
+   (( f & !e & !i) -> ((next(a) <-> b) & (next(b) <-> h))) &
+   (( f &  e & !i) -> ((next(a) <-> c) & (next(b) <-> d))) &
+   (i -> ((next(a) <-> FALSE) & (next(b) <-> FALSE)))
+CTLSPEC
+   AG((!f & !e & !i) -> ((a <-> AX(a)) & (b <-> AX(b))));
+CTLSPEC
+   AG((!f &  e & !i) -> (EX(a) & EX(!a)));
+CTLSPEC
+   AG((f & !e & !i) -> (EX(b) & EX(!b)));
+CTLSPEC
+   AG((f & e & !i) -> (EX(a) & EX(b) & EX(!a) & EX(!b)));
+CTLSPEC
+   AG(i -> AX(!a & !b));

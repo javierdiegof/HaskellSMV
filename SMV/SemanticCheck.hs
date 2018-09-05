@@ -18,8 +18,8 @@ module SemanticCheck(
                            initBDD  = initSynthesis pmod totvars
                            transBDD = transSynthesis pmod totvars ivars
                            res = case (existsFairness pmod) of
-                              True  -> fFormulaCheck pmod transBDD vars
-                              False -> uFormulaCheck pmod transBDD vars
+                              True  -> fFormulaCheck pmod transBDD totvars
+                              False -> uFormulaCheck pmod transBDD totvars
                            verify = checkInitSat initBDD res
                         printSolution verify
                         return (verify)  
@@ -35,9 +35,10 @@ module SemanticCheck(
                               initBDD  = initSynthesis pmod totvars
                               transBDD = transSynthesis pmod totvars ivars
                               res = case (existsFairness pmod) of
-                                       True  -> fFormulaCheck pmod transBDD vars
-                                       False -> uFormulaCheck pmod transBDD vars
+                                       True  -> fFormulaCheck pmod transBDD totvars
+                                       False -> uFormulaCheck pmod transBDD totvars
                               verify = checkInitSat initBDD res
+                           putStrLn $ "\n El total de variables es: " ++ show (totvars) ++ "\n"   
                            putStrLn $ "\n La numeracion de los estados es: " ++ show (varNumbering vars totvars) ++ "\n"
                            putStrLn $ "Los estados iniciales son: " ++ show(initBDD) ++ "\n"
                            putStrLn $ "La funcion de transicion es: " ++ show(transBDD) ++ "\n"
