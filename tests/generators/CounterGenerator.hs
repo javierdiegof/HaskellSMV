@@ -1,17 +1,26 @@
-module CounterGenerator(
-   genProgram
-)
-where
 import Data.Char
 
-genProgram :: Int -> IO()
-genProgram nvars =   let
-                        var   = genVar      (nvars - 1)
-                        init  = genInit     (nvars - 1)
-                        trans = genTrans    (nvars - 1)
-                        ctls  = genCTLSpec  (nvars - 1)
+genProgramS :: Int -> IO()
+genProgramS nvars =  let
+                        var      = genVarS       (nvars - 1)
+                        init     = genInit      (nvars - 1)
+                        trans    = genTrans     (nvars - 1)
+                        ctls     = genCTLSpec   (nvars - 1)
+                        program  = "MODULE main\n" ++ var ++ init ++ trans ++ ctls
+                     in 
+                        writeFile ("../testcodes/counter/S/counterS" ++ show(nvars) ++ ".smv") program 
+
+
+
+genProgramH :: Int -> IO()
+genProgramH nvars =   let
+                        var      = genVarH      (nvars - 1)
+                        init     = genInit     (nvars - 1)
+                        trans    = genTrans    (nvars - 1)
+                        ctls     = genCTLSpec  (nvars - 1)
+                        program  = var ++ init ++ trans ++ ctls
                       in
-                        writeFile ("acounter" ++ show(nvars) ++ ".txt") (var ++ init ++ trans ++ ctls) 
+                        writeFile ("../testcodes/counter/H/counterH" ++ show(nvars) ++ ".txt") program 
 
 
 
@@ -19,11 +28,18 @@ genProgram nvars =   let
 
 
 ----------------------------------- Funciones para generar los elementos del programa (Inicio) --------------------
-genVar :: Int -> String
-genVar x =  let 
+genVarH :: Int -> String
+genVarH x =  let 
                var = concat (map addSemi (genStringList x x))  
              in 
                "VAR" ++ var ++ "\n"
+
+genVarS :: Int -> String
+genVarS x =  let 
+               var = concat (map addSemi (map (++ ": boolean") (genStringList x x)))  
+             in 
+               "VAR" ++ var ++ "\n"
+
 genInit :: Int -> String
 genInit x =   let
                expr = andList (map addNeg (genStringList x x))

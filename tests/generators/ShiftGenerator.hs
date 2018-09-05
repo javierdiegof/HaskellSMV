@@ -2,41 +2,87 @@ import Data.Char
 import Data.List
 
 -- Este código genera programas de registro de corrimiento universal arbitrariamente largos
-genProgram :: Int -> IO()
-genProgram val =  let
+genProgramS :: Int -> IO()
+genProgramS val =  let
                      mod  = "MODULE main\n"
-                     var   = genVar val
-                     ivar  = genIVar val
+                     var   = genVarS val
+                     ivar  = genIVarS val
                      init  = genInit val
                      trans = genTrans val
                      spec  = genSpec val
                      strf = mod ++ var ++ ivar ++ init ++ trans ++ spec
                    in 
-                     writeFile ("shiftG/shiftG" ++ show(val) ++ ".smv") strf
+                     writeFile ("../testcodes/shift/S/shiftS" ++ show(val) ++ ".smv") strf
 
 
-genVar :: Int -> String
-genVar val =   let
-                  genl = genList (val)
-                  varl = take val genl
-                  s0var   = head $ drop (2*val) genl
-                  s1var   = head $ drop (2*val + 1) genl
-                  clrvar  = last genl
-                  vardl = varl ++ [s0var] ++ [s1var] ++ [clrvar]
+genProgramH :: Int -> IO ()
+genProgramH val =  let
+                     var   = genVarH val
+                     ivar  = genIVarH val
+                     init  = genInit val
+                     trans = genTrans val
+                     spec  = genSpec val
+                     strf  = var ++ ivar ++ init ++ trans ++ spec
+                   in 
+                     writeFile ("../testcodes/shift/H/shiftH" ++ show(val) ++ ".txt") strf
+
+
+genVarS :: Int -> String
+genVarS val =   let
+                  genl     = genList (val)
+                  varl     = take val genl
+                  s0var    = head $ drop (2*val) genl
+                  s1var    = head $ drop (2*val + 1) genl
+                  clrvar   = last genl
+                  vardl    = varl ++ [s0var] ++ [s1var] ++ [clrvar]
+                  vardl1   = map ("   " ++ ) vardl
+                  vardl2   = map (++ ": boolean;\n" ) vardl1
+                  vardl3   = concat vardl2
                 in
-                  "VAR\n   " ++ intercalate "   : boolean;\n   " vardl ++ "   : boolean;\n"
+                  "VAR\n" ++ vardl3
 
 
-genIVar :: Int -> String
-genIVar val =   let
+genVarH :: Int -> String
+genVarH val =   let
+                  genl     = genList (val)
+                  varl     = take val genl
+                  s0var    = head $ drop (2*val) genl
+                  s1var    = head $ drop (2*val + 1) genl
+                  clrvar   = last genl
+                  vardl    = varl ++ [s0var] ++ [s1var] ++ [clrvar]
+                  vardl1   = map ("   " ++ ) vardl
+                  vardl2   = map (++ ";\n") vardl1
+                  vardl3   = concat vardl2
+                in
+                  "VAR\n" ++ vardl3
+
+genIVarS :: Int -> String
+genIVarS val =   let
                   genl = genList (val)
                   ivarl = drop val (take (2*val) genl)
                   shiftlv  = head $ drop (2*val + 2) genl
                   shiftrv  = head $ drop (2*val + 3) genl
                   ivardl = ivarl ++ [shiftlv] ++ [shiftrv]
+                  ivardl1 = map ("   " ++ ) ivardl
+                  ivardl2 = map (++ " :boolean;\n") ivardl1
+                  ivardl3 = concat ivardl2
                 in
-                  "IVAR\n   " ++ intercalate "   : boolean;\n   " ivardl ++ "   : boolean;\n"
-               
+                  "IVAR\n" ++ ivardl3
+   
+genIVarH :: Int -> String
+genIVarH val =   let
+                  genl = genList (val)
+                  ivarl = drop val (take (2*val) genl)
+                  shiftlv  = head $ drop (2*val + 2) genl
+                  shiftrv  = head $ drop (2*val + 3) genl
+                  ivardl = ivarl ++ [shiftlv] ++ [shiftrv]
+                  ivardl1 = map ("   " ++ ) ivardl
+                  ivardl2 = map (++ ";\n") ivardl1
+                  ivardl3 = concat ivardl2
+                in
+                  "IVAR\n" ++ ivardl3
+
+
 genInit :: Int -> String
 genInit val =  let
                   genl = genList (val)

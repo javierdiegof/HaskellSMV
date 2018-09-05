@@ -1,10 +1,9 @@
 import Data.Char
 import Data.List
 
-genProgram :: Int -> IO()
-genProgram val =  let
-                     mod   = "MODULE main\n"
-                     var   = genVar val
+genProgramH :: Int -> IO ()
+genProgramH val =  let
+                     var   = genVarH val
                      def   = genDefine val
                      init  = genInit val
                      trans = genTrans val
@@ -12,14 +11,40 @@ genProgram val =  let
                      fair  = genFairness val
                      strf  = var ++ def ++ init ++ trans ++ ctls ++ fair
                    in 
-                     writeFile ("fair/fairG" ++ show(val) ++ ".smv") strf
+                     writeFile ("../testcodes/fair/H/fairH" ++ show(val) ++ ".txt") strf
 
-genVar :: Int -> String
-genVar val =   let
+                  
+genProgramS :: Int -> IO ()
+genProgramS val =  let
+                     main  = "MODULE main\n"
+                     var   = genVarS val
+                     def   = genDefine val
+                     init  = genInit val
+                     trans = genTrans val
+                     ctls  = genCTLS val
+                     fair  = genFairness val
+                     strf  = main ++ var ++ def ++ init ++ trans ++ ctls ++ fair
+                   in 
+                     writeFile ("../testcodes/fair/S/fairS" ++ show(val) ++ ".smv") strf
+
+
+genVarS :: Int -> String
+genVarS val =  let
                   genl    = genList (val)
-                  str     = intercalate ";\n   " genl 
+                  defl1   = map ("   " ++) genl
+                  defl2   = map (++ ": boolean;\n") defl1
+                  str     = concat defl2 
                 in
-                  "VAR\n   " ++ str ++ ";\n"
+                  "VAR\n" ++ str
+
+genVarH :: Int -> String
+genVarH val =  let
+                  genl    = genList (val)
+                  defl1   = map ("   " ++ ) genl
+                  defl2   = map ( ++ ";\n") defl1
+                  str     = concat defl2
+                in
+                  "VAR\n" ++ str
          
 genDefine :: Int -> String
 genDefine val =   let

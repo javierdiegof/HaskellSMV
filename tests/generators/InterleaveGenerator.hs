@@ -1,32 +1,45 @@
 import Data.Char
 import Data.List
 
-genPrograms :: Int -> IO()
-genPrograms val = genProgramsR val
-
-genProgramsR :: Int -> IO()
-genProgramsR 3 = genProgram 3
-genProgramsR x =  do
-                     genProgram x
-                     genProgramsR (x-1)
-
 -- Este código genera programas de interleave arbitrariamente largos
-genProgram :: Int -> IO()
-genProgram val =  let
+genProgramH :: Int -> IO()
+genProgramH val = let
+                     var   = genVarH val
+                     init  = genInit val
+                     trans = genTrans val
+                     spec  = genSpec val
+                     strf  = var ++ init ++ trans ++ spec
+                   in 
+                     writeFile ("../testcodes/interleave/H/interleaveH" ++ show(val) ++ ".txt") strf
+
+genProgramS :: Int -> IO()
+genProgramS val = let
                      mod  = "MODULE main\n"
-                     var   = genVar val
+                     var   = genVarS val
                      init  = genInit val
                      trans = genTrans val
                      spec  = genSpec val
                      strf = mod ++ var ++ init ++ trans ++ spec
                    in 
-                     writeFile ("interleaveG/interleaveG" ++ show(val) ++ ".smv") strf
+                     writeFile ("../testcodes/interleave/S/interleaveS" ++ show(val) ++ ".smv") strf
 
-genVar :: Int -> String
-genVar val =   let
-                  genl = genList (val)
-                in
-                  "VAR\n   " ++ intercalate "   : boolean;\n   " genl ++ "   : boolean;\n"
+genVarH :: Int -> String
+genVarH val =  let
+                  genl = genList val
+                  defl1 = map ("   " ++ ) genl
+                  defl2 = map (++ ";\n") defl1
+                  defl3 = concat defl2
+                in 
+                  "VAR\n" ++ defl3
+
+genVarS :: Int -> String
+genVarS val =  let
+                  genl = genList val
+                  defl1 = map ("   " ++ ) genl
+                  defl2 = map (++ ": boolean;\n") defl1
+                  defl3 = concat defl2
+               in 
+                  "VAR\n" ++ defl3
 
 genInit :: Int -> String
 genInit val =  let
