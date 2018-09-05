@@ -44,6 +44,13 @@ library:
     - containers
     - parsec
     - criterion
+  
+  dependencies:
+    - base >=4.8 && < 5
+    - process >= 1.1
+    - containers
+    - parsec
+    - criterion
     - QuickCheck
   
   source-dirs:
@@ -63,6 +70,18 @@ library:
     - -Wall 
     - -fPIC 
     - -fno-full-laziness
+
+executables:
+  counter-exe:
+    main:           Main.hs
+    source-dirs:    app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - SMV-Haskell
+    - base >=4.8 && < 5
 
 tests:
   stack-test:

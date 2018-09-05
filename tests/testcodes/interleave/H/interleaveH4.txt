@@ -1,0 +1,16 @@
+VAR
+   a;
+   b;
+   c;
+   d;
+   e;
+INIT
+   !a & !b & !c & !d & e;
+TRANS
+   (((next(a) <-> !a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <->  d)) | 
+    ((next(a) <->  a) & (next(b) <-> !b) & (next(c) <->  c) & (next(d) <->  d)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <-> !c) & (next(d) <->  d)) | 
+    ((next(a) <->  a) & (next(b) <->  b) & (next(c) <->  c) & (next(d) <-> !d))) & 
+   (next(e) <-> (((a xor b) xor c) xor d));
+CTLSPEC
+   AG(e <-> AX(!e));

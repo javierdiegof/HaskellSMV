@@ -1,0 +1,12 @@
+MODULE main
+VAR
+   a: boolean;
+   b: boolean;
+   c: boolean;
+   d: boolean;
+INIT
+   !a & !b & !c & !d;
+TRANS
+   (next(a) xor a) & (next(b) <-> (b xor (a))) & (next(c) <-> (c xor (a & b))) & (next(d) <-> (d xor (a & b & c)));
+CTLSPEC
+   AG(AF(a & b & c & d));

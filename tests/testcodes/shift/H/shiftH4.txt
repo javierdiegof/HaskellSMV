@@ -1,18 +1,18 @@
 VAR
-   a   ;
-   b   ;
-   c   ;
-   d   ;
-   i   ;
-   j   ;
-   m   ;
+   a;
+   b;
+   c;
+   d;
+   i;
+   j;
+   m;
 IVAR
-   e   ;
-   f   ;
-   g   ;
-   h   ;
-   k   ;
-   l   ;
+   e;
+   f;
+   g;
+   h;
+   k;
+   l;
 INIT
    !a & !b & !c & !d;
 TRANS
