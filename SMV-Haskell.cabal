@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2102955fe655e2a1bf7c2715fc86e5d23c5ee8a8936dec49b68eb8d9f199b28e
+-- hash: b7b84545413bebdb60524dc2c6486ca31d13c24c711b2de0f7b647ee7905786f
 
 name:           SMV-Haskell
 version:        0.0.0
@@ -95,7 +95,6 @@ test-suite stack-test
   type: exitcode-stdio-1.0
   main-is: Test1.hs
   other-modules:
-      TestTest
       Paths_SMV_Haskell
   hs-source-dirs:
       test
