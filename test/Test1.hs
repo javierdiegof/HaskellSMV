@@ -8,75 +8,74 @@ import System.Directory
 
 main :: IO ()
 main = hspec $ do
-   {-
-   describe "Counters" $ do
-      it "test counter3" $ do
-         (fileCheck "tests/src/acounter3.txt")  `shouldReturn` [True, False]
-      it "test counter5" $ do
-         (fileCheck "tests/src/acounter5.txt")  `shouldReturn` [True, True]
-      it "test counter 10" $ do
-         (fileCheck "tests/src/acounter10.txt")  `shouldReturn` [False, True]
-
-   describe "Shift registers" $ do
-      it "test counter3" $ do
-         (fileCheck "tests/src/acounter3.txt")  `shouldReturn` [True, False]
-   -}
-
-   {-describe "Interleave" $ do
-      
-      it "test interleave2" $ do
-         (fileCheckOutput "tests/src/interleave2.txt")  `shouldReturn` [True]
-      it "test interleave3" $ do
-         (fileCheckOutput "tests/src/interleave3.txt")  `shouldReturn` [True]
-      it "test interleave6" $ do
-         (fileCheck "tests/src/interleave6.txt")  `shouldReturn` [True]
-      it "test interleave10" $ do
-         (fileCheck "tests/src/interleave10.txt")  `shouldReturn` [True]
-      it "test interleave12" $ do
-         (fileCheck "tests/src/interleave12.txt")  `shouldReturn` [True]
-      it "test interleave13" $ do
-         (fileCheck "tests/src/interleave13.txt")  `shouldReturn` [True]
-      it "test interleave14" $ do
-         (fileCheck "tests/src/interleave14.txt")  `shouldReturn` [True]
-      it "test interleave15" $ do
-         (fileCheck "tests/src/interleave15.txt")  `shouldReturn` [True]
-      it "test interleave16" $ do
-         (fileCheck "tests/src/interleave16.txt")  `shouldReturn` [True]
-      it "test interleave17" $ do
-         (fileCheck "tests/src/interleave17.txt")  `shouldReturn` [True]
-      it "test interleave18" $ do
-         (fileCheck "tests/src/interleave18.txt")  `shouldReturn` [True]
-      it "test interleave19" $ do
-         (fileCheck "tests/src/interleave19.txt")  `shouldReturn` [True]-}
-   {-
-   describe "ShiftReg" $ do
-      it "test shiftG2.smv" $ do
-         (fileCheck "tests/shiftG/shiftG2.smv") `shouldReturn` [True, True, True, True, True]
-      it "test shiftG3.smv" $ do
-         (fileCheck "tests/shiftG/shiftG3.smv") `shouldReturn` [True, True, True, True, True]
-      it "test shiftG4.smv" $ do
-         (fileCheck "tests/shiftG/shiftG4.smv") `shouldReturn` [True, True, True, True, True]
-      it "test shiftG5.smv" $ do
-         (fileCheck "tests/shiftG/shiftG5.smv") `shouldReturn` [True, True, True, True, True]
-      it "test shiftG6.smv" $ do
-         (fileCheck "tests/shiftG/shiftG6.smv") `shouldReturn` [True, True, True, True, True]
-      it "test shiftG7.smv" $ do
-         (fileCheck "tests/shiftG/shiftG7.smv") `shouldReturn` [True, True, True, True, True]
-      it "test shiftG8.smv" $ do
-         (fileCheck "tests/shiftG/shiftG8.smv") `shouldReturn` [True, True, True, True, True]
-      it "test shiftG10.smv" $ do
-         (fileCheck "tests/shiftG/shiftG10.smv") `shouldReturn` [True, True, True, True, True]
-      it "test shiftG11.smv" $ do
-         (fileCheck "tests/shiftG/shiftG11.smv") `shouldReturn` [True, True, True, True, True]
-      it "test shiftG12.smv" $ do
-         (fileCheck "tests/shiftG/shiftG12.smv") `shouldReturn` [True, True, True, True, True]-}
-   describe  "fair" $ do
-      it "test fair2" $ do
+   describe (title "CounterOutput") $ do
+      it "test counter 3" $ do
+         (fileCheckOutput "test/testcodes/counter/H/counterH3.txt") `shouldReturn` [True]
+      it "test counter 4" $ do
          (fileCheckOutput "test/testcodes/counter/H/counterH4.txt") `shouldReturn` [True]
-      it "test fair3" $ do
-         (fileCheckOutput "test/testcodes/interleave/H/interleaveH4.txt") `shouldReturn` [True]
-      it "test fair3" $ do
-         (fileCheckOutput "test/testcodes/shift/H/shiftH4.txt") `shouldReturn` [True]
-      it "test fair3" $ do
+      it "test counter 7" $ do
+         (fileCheckOutput "test/testcodes/counter/H/counterH7.txt") `shouldReturn` [True]
+   
+   describe (title "CounterSilent") $ do     
+      it "test counter 3" $ do
+         (fileCheck "test/testcodes/counter/H/counterH3.txt") `shouldReturn` [True]
+      it "test counter 4" $ do
+         (fileCheck "test/testcodes/counter/H/counterH4.txt") `shouldReturn` [True]
+      it "test counter 7" $ do
+         (fileCheck "test/testcodes/counter/H/counterH7.txt") `shouldReturn` [True]
+   
+   describe (title "FairOutput") $ do
+      it "test fair 3" $ do
+         (fileCheckOutput "test/testcodes/fair/H/fairH3.txt") `shouldReturn` [True]
+      it "test fair 4" $ do
          (fileCheckOutput "test/testcodes/fair/H/fairH4.txt") `shouldReturn` [True]
-         
+      it "test fair 7" $ do
+         (fileCheckOutput "test/testcodes/fair/H/fairH7.txt") `shouldReturn` [True]
+   
+   describe (title "FairSilent") $ do     
+      it "test fair 3" $ do
+         (fileCheck "test/testcodes/fair/H/fairH3.txt") `shouldReturn` [True]
+      it "test fair 4" $ do
+         (fileCheck "test/testcodes/fair/H/fairH4.txt") `shouldReturn` [True]
+      it "test counter 7" $ do
+         (fileCheck "test/testcodes/fair/H/fairH7.txt") `shouldReturn` [True]
+
+   describe (title "InterleaveOutput") $ do
+      it "test interleave 3" $ do
+         (fileCheckOutput "test/testcodes/interleave/H/interleaveH3.txt") `shouldReturn` [True]
+      it "test interleave 4" $ do
+         (fileCheckOutput "test/testcodes/interleave/H/interleaveH4.txt") `shouldReturn` [True]
+      it "test interleave 7" $ do
+         (fileCheckOutput "test/testcodes/interleave/H/interleaveH7.txt") `shouldReturn` [True]
+   
+   describe (title "InterleaveSilent") $ do     
+      it "test interleave 3" $ do
+         (fileCheck "test/testcodes/interleave/H/interleaveH3.txt") `shouldReturn` [True]
+      it "test interleave 4" $ do
+         (fileCheck "test/testcodes/interleave/H/interleaveH4.txt") `shouldReturn` [True]
+      it "test interleave 7" $ do
+         (fileCheck "test/testcodes/interleave/H/interleaveH7.txt") `shouldReturn` [True]
+
+   describe (title "ShiftOutput") $ do
+      it "test interleave 3" $ do
+         (fileCheckOutput "test/testcodes/shift/H/shiftH3.txt") `shouldReturn` [True,True,True,True,True]
+      it "test interleave 4" $ do
+         (fileCheckOutput "test/testcodes/shift/H/shiftH4.txt") `shouldReturn` [True,True,True,True,True]
+      it "test interleave 7" $ do
+         (fileCheckOutput "test/testcodes/shift/H/shiftH7.txt") `shouldReturn` [True,True,True,True,True]
+   
+   describe (title "ShiftSilent") $ do     
+      it "test interleave 3" $ do
+         (fileCheck "test/testcodes/shift/H/shiftH3.txt") `shouldReturn` [True,True,True,True,True]
+      it "test interleave 4" $ do
+         (fileCheck "test/testcodes/shift/H/shiftH4.txt") `shouldReturn` [True,True,True,True,True]
+      it "test interleave 7" $ do
+         (fileCheck "test/testcodes/shift/H/shiftH7.txt") `shouldReturn` [True,True,True,True,True]
+
+
+
+title :: String -> String
+title tit = let
+               deco = "\n" ++ concat (replicate  100 "-") ++ "\n"
+            in 
+               "\n" ++ deco ++ tit ++ deco ++ "\n"
