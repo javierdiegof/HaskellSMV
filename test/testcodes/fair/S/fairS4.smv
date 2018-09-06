@@ -1,0 +1,38 @@
+MODULE main
+VAR
+   a: boolean;
+   b: boolean;
+   c: boolean;
+   d: boolean;
+   e: boolean;
+   f: boolean;
+DEFINE
+   z := !a & !b & !c & !d & !e & !f;
+   a0 := a & !b & !c & !d & !e & !f;
+   a1 := a & !b & !c & !d & !e &  f;
+   a2 := a & !b & !c & !d &  e & !f;
+   a3 := a & !b & !c & !d &  e &  f;
+   b0 := !a & b & !c & !d & !e & !f;
+   b1 := !a & b & !c & !d & !e &  f;
+   b2 := !a & b & !c & !d &  e & !f;
+   c0 := !a & !b & c & !d & !e & !f;
+   c1 := !a & !b & c & !d & !e &  f;
+   d0 := !a & !b & !c & d & !e & !f;
+INIT
+   z;
+TRANS
+   (z & next(a0)) | (z & next(a1)) | (z & next(a2)) | (z & next(a3)) |
+   (a0 & next(a0)) |
+   (a1 & next(b0)) | (b0 & next(a1)) |
+   (a2 & next(b1)) | (b1 & next(c0)) | (c0 & next(a2)) |
+   (a3 & next(b2)) | (b2 & next(c1)) | (c1 & next(d0)) | (d0 & next(a3));
+CTLSPEC
+   AF(a) & AF(b) & AF(c) & AF(d);
+FAIRNESS
+   a;
+FAIRNESS
+   b;
+FAIRNESS
+   c;
+FAIRNESS
+   d;
