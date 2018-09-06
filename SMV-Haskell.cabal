@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 95a834fa51be6b23b1546ccc90f71dc2432d19670df4de8806b7c0122ea5deaa
+-- hash: 2102955fe655e2a1bf7c2715fc86e5d23c5ee8a8936dec49b68eb8d9f199b28e
 
 name:           SMV-Haskell
 version:        0.0.0
@@ -17,29 +17,29 @@ license-file:   LICENSE
 build-type:     Custom
 cabal-version:  >= 1.24
 extra-source-files:
-    c/BDDNodeC.cpp
-    c/BDDNodeC.h
-    c/Makefile
-    cpp/Base.h
-    cpp/BDDNode.cpp
-    cpp/BDDNode.h
-    cpp/CTable.cpp
-    cpp/CTable.h
-    cpp/DdNode.cpp
-    cpp/DdNode.h
-    cpp/main.cpp
-    cpp/Makefile
-    cpp/Manager.cpp
-    cpp/Manager.h
-    cpp/OriginalMakefile
-    cpp/README
-    cpp/Timer.h
-    cpp/UTable.cpp
-    cpp/UTable.h
-    cpp/XBits.h
-    cpp/XFunction.h
-    cpp/XInts.h
-    cpp/XVector.h
+    src/c/BDDNodeC.cpp
+    src/c/BDDNodeC.h
+    src/c/Makefile
+    src/cpp/Base.h
+    src/cpp/BDDNode.cpp
+    src/cpp/BDDNode.h
+    src/cpp/CTable.cpp
+    src/cpp/CTable.h
+    src/cpp/DdNode.cpp
+    src/cpp/DdNode.h
+    src/cpp/main.cpp
+    src/cpp/Makefile
+    src/cpp/Manager.cpp
+    src/cpp/Manager.h
+    src/cpp/OriginalMakefile
+    src/cpp/README
+    src/cpp/Timer.h
+    src/cpp/UTable.cpp
+    src/cpp/UTable.h
+    src/cpp/XBits.h
+    src/cpp/XFunction.h
+    src/cpp/XInts.h
+    src/cpp/XVector.h
     stack.yaml
 
 source-repository head
@@ -64,7 +64,7 @@ library
       Data.HasCacBDD.Visuals
       Paths_SMV_Haskell
   hs-source-dirs:
-      SMV
+      src/SMV
   ghc-options: -pgml g++ -Wall -fPIC -fno-full-laziness
   cc-options: -fPIC -shared
   extra-libraries:
@@ -95,9 +95,10 @@ test-suite stack-test
   type: exitcode-stdio-1.0
   main-is: Test1.hs
   other-modules:
+      TestTest
       Paths_SMV_Haskell
   hs-source-dirs:
-      tests
+      test
   ghc-options: -Weverything -threaded
   build-depends:
       QuickCheck

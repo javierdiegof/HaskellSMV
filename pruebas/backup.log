@@ -1,7 +1,0 @@
-#1533162621 Disk /dev/sda - 1000 GB / 931 GiB - CHS 121601 255 63
- 1 : start=     2048, size=  1024000, Id=00, P
- 2 : start=  1026048, size=   262144, Id=00, P
- 3 : start=  1288192, size=975940038, Id=00, P
- 6 : start=977229824, size=973553664, Id=00, P
- 4 : start=1950783488, size=  1740800, Id=00, P
- 5 : start=1952526336, size=   972800, Id=00, P

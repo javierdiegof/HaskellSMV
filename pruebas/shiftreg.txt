@@ -1,9 +1,0 @@
-VAR
-   a;
-   b;
-INIT
-   !a & !b;
-TRANS
-   (a & !next(a)) | (a & next(b)) | (!a & !next(b));
-CTLSPEC
-   EF((a & !b) & EX(a & !b));

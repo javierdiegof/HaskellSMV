@@ -12,14 +12,14 @@ description:    Simple symbolic model checker based on NuSMV written in Haskell,
   
 extra-source-files:
   - stack.yaml
-  - c/BDDNodeC.cpp
-  - c/BDDNodeC.h
-  - c/Makefile
-  - cpp/*.cpp
-  - cpp/*.h
-  - cpp/Makefile
-  - cpp/OriginalMakefile
-  - cpp/README
+  - src/c/BDDNodeC.cpp
+  - src/c/BDDNodeC.h
+  - src/c/Makefile
+  - src/cpp/*.cpp
+  - src/cpp/*.h
+  - src/cpp/Makefile
+  - src/cpp/OriginalMakefile
+  - src/cpp/README
 
 github: javierdiegof/SMV-Haskell
 
@@ -54,7 +54,7 @@ library:
     - QuickCheck
   
   source-dirs:
-    - SMV
+    - src/SMV
   
   extra-libraries:
     - stdc++
@@ -85,7 +85,7 @@ executables:
 
 tests:
   stack-test:
-    source-dirs: tests
+    source-dirs: test
     main: Test1.hs
 
     dependencies:

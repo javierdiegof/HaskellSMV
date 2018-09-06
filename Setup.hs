@@ -20,8 +20,8 @@ main = defaultMainWithHooks simpleUserHooks
 makeExtLib :: Args -> ConfigFlags -> IO HookedBuildInfo
 makeExtLib _ flags = do
     let verbosity = fromFlag $ configVerbosity flags
-    rawSystemExit verbosity "env" ["make", "--directory=cpp"]
-    rawSystemExit verbosity "env" ["make", "--directory=c"]
+    rawSystemExit verbosity "env" ["make", "--directory=src/cpp"]
+    rawSystemExit verbosity "env" ["make", "--directory=src/c"]
     print $ "emptyHookedBuildInfo: " ++ (show emptyHookedBuildInfo)
     return emptyHookedBuildInfo
 
@@ -31,14 +31,14 @@ updateExtraLibDirs localBuildInfo = do
         lib = fromJust $ library myPackageDescription
         libBuild = libBuildInfo lib
     dir <- getCurrentDirectory
-    print (dir ++ "/c")
+    print (dir ++ "/src/c")
     print $ "libBuild: " ++ show(libBuild)
     print $ "packageDescription: " ++ show(myPackageDescription)
     return localBuildInfo {
         localPkgDescr = myPackageDescription {
             library = Just $ lib {
                 libBuildInfo = libBuild {
-                    extraLibDirs = (dir ++ "/c") :
+                    extraLibDirs = (dir ++ "/src/c") :
                         extraLibDirs libBuild
                 }
             }
@@ -52,11 +52,11 @@ copyExtLib _ flags pkg_descr lbi = do
                 $ flags
     let verbosity = fromFlag $ copyVerbosity flags
     print $ "prefijo libPref: " ++ (show libPref)
-    rawSystemExit verbosity "cp" ["c/libCacBDD.a", libPref]
+    rawSystemExit verbosity "cp" ["src/c/libCacBDD.a", libPref]
 
 cleanExtLib :: Args -> CleanFlags -> PackageDescription -> () -> IO ()
 cleanExtLib _ flags _ _ =
     let verbosity = fromFlag $ cleanVerbosity flags
     in do
-      rawSystemExit verbosity "env" ["make", "--directory=c", "clean"]
-      rawSystemExit verbosity "env" ["make", "--directory=cpp", "clean"]
+      rawSystemExit verbosity "env" ["make", "--directory=src/c", "clean"]
+      rawSystemExit verbosity "env" ["make", "--directory=src/cpp", "clean"]

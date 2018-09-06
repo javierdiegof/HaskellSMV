@@ -70,7 +70,13 @@ main = hspec $ do
          (fileCheck "tests/shiftG/shiftG11.smv") `shouldReturn` [True, True, True, True, True]
       it "test shiftG12.smv" $ do
          (fileCheck "tests/shiftG/shiftG12.smv") `shouldReturn` [True, True, True, True, True]-}
-   describe  "counter" $ do
-      it "test counter4" $ do
+   describe  "fair" $ do
+      it "test fair2" $ do
+         (fileCheckOutput "test/testcodes/counter/H/counterH4.txt") `shouldReturn` [True]
+      it "test fair3" $ do
+         (fileCheckOutput "test/testcodes/interleave/H/interleaveH4.txt") `shouldReturn` [True]
+      it "test fair3" $ do
          (fileCheckOutput "test/testcodes/shift/H/shiftH4.txt") `shouldReturn` [True]
+      it "test fair3" $ do
+         (fileCheckOutput "test/testcodes/fair/H/fairH4.txt") `shouldReturn` [True]
          
