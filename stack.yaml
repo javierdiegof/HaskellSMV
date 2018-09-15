@@ -1,3 +1,7 @@
 resolver: lts-8.0
 packages:
 - '.'
+- location:
+    git: https://github.com/m4lvin/HasCacBDD.git
+    commit: 23405da09876356569fbbb4f150e33199e5546f9
+  extra-dep: true
