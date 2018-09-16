@@ -1,75 +1,39 @@
 name:           SMV-Haskell
 synopsis:       A symbolic model checker written in Haskell
-github:         https://github.com/javierdiegof/SMV-Haskell
 author:         Javier Diego-Fernández @ UNAM Mexico City C.U.
 maintainer:     Javier Diego-Fernández <javier.d.fernandez7@gmail.com>
-category:       Data      
-build-type:     Custom  # Optional but useful (uses custom Setup.hs file)
+category:       Data
 
 
 description:    Simple symbolic model checker based on NuSMV written in Haskell, it uses HasCacBDD binding
                 to implement the BDD functionality.
-  
+
 extra-source-files:
   - stack.yaml
-  - src/c/BDDNodeC.cpp
-  - src/c/BDDNodeC.h
-  - src/c/Makefile
-  - src/cpp/*.cpp
-  - src/cpp/*.h
-  - src/cpp/Makefile
-  - src/cpp/OriginalMakefile
-  - src/cpp/README
 
 github: javierdiegof/SMV-Haskell
-
-custom-setup:
-  dependencies:
-    - base >= 4.8 && < 5
-    - Cabal
-    - directory
 
 library:
   exposed-modules:
     - SemanticCheck
     - DataTypes
-    - Data.HasCacBDD
     - DataTypesOps
     - LanguageDef
     - SMVParser
-  
+
   dependencies:
     - base >=4.8 && < 5
     - process >= 1.1
     - containers
     - parsec
     - criterion
-  
-  dependencies:
-    - base >=4.8 && < 5
-    - process >= 1.1
-    - containers
-    - parsec
-    - criterion
-    - QuickCheck
-  
+    - HasCacBDD
+
   source-dirs:
     - src/SMV
-  
-  extra-libraries:
-    - stdc++
-    - CacBDD
-  
-  cc-options:
-    - -fPIC 
-    - -shared
-  
+
   ghc-options:
-    - -pgml 
-    - g++ 
-    - -Wall 
-    - -fPIC 
-    - -fno-full-laziness
+    - -Wall
 
 executables:
   counter-exe:
@@ -82,6 +46,7 @@ executables:
     dependencies:
     - SMV-Haskell
     - base >=4.8 && < 5
+    - HasCacBDD
 
 tests:
   stack-test:
@@ -95,8 +60,8 @@ tests:
       - exceptions
       - SMV-Haskell
       - directory
+      - HasCacBDD
 
     ghc-options:
       - -Weverything
       - -threaded
-
