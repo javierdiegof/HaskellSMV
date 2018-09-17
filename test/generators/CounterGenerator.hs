@@ -19,13 +19,13 @@ genProgram nvars has =  let
 ----------------------------------- Funciones para generar los elementos del programa (Inicio) --------------------
 genVarH :: Int -> String
 genVarH x =  let 
-               var = concat map addSemi (genStringList x x)
+               var = concat $ map addSemi (genStringList x x)
              in 
                "VAR" ++ var ++ "\n"
 
 genVarS :: Int -> String
 genVarS x =  let 
-               var = concat map (addSemi . (++ ": boolean")) (genStringList x x)
+               var = concat $ map (addSemi . (++ ": boolean")) (genStringList x x)
              in 
                "VAR" ++ var ++ "\n"
 
