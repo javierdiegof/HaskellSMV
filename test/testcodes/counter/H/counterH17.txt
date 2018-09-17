@@ -1,0 +1,24 @@
+VAR
+   a;
+   b;
+   c;
+   d;
+   e;
+   f;
+   g;
+   h;
+   i;
+   j;
+   k;
+   l;
+   m;
+   n;
+   o;
+   p;
+   q;
+INIT
+   !a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n & !o & !p & !q;
+TRANS
+   (next(a) xor a) & (next(b) <-> (b xor (a))) & (next(c) <-> (c xor (a & b))) & (next(d) <-> (d xor (a & b & c))) & (next(e) <-> (e xor (a & b & c & d))) & (next(f) <-> (f xor (a & b & c & d & e))) & (next(g) <-> (g xor (a & b & c & d & e & f))) & (next(h) <-> (h xor (a & b & c & d & e & f & g))) & (next(i) <-> (i xor (a & b & c & d & e & f & g & h))) & (next(j) <-> (j xor (a & b & c & d & e & f & g & h & i))) & (next(k) <-> (k xor (a & b & c & d & e & f & g & h & i & j))) & (next(l) <-> (l xor (a & b & c & d & e & f & g & h & i & j & k))) & (next(m) <-> (m xor (a & b & c & d & e & f & g & h & i & j & k & l))) & (next(n) <-> (n xor (a & b & c & d & e & f & g & h & i & j & k & l & m))) & (next(o) <-> (o xor (a & b & c & d & e & f & g & h & i & j & k & l & m & n))) & (next(p) <-> (p xor (a & b & c & d & e & f & g & h & i & j & k & l & m & n & o))) & (next(q) <-> (q xor (a & b & c & d & e & f & g & h & i & j & k & l & m & n & o & p)));
+CTLSPEC
+   AG(AF(a & b & c & d & e & f & g & h & i & j & k & l & m & n & o & p & q));

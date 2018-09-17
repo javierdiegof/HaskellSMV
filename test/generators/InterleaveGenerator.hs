@@ -1,7 +1,6 @@
 import Data.Char
 import Data.List
 
--- Este código genera programas de interleave arbitrariamente largos
 genProgram :: Int -> Bool -> IO ()
 genProgram val has = let
                         main     = "MODULE main\n"
@@ -14,8 +13,30 @@ genProgram val has = let
                         programS = main ++ varS ++ init ++ trans ++ spec
                      in
                         if has
-                        then writeFile ("../testcodes/interleave/H/interleaveH" ++ show val ++ ".txt") programH
-                        else writeFile ("../testcodes/interleave/S/interleaveS" ++ show val ++ ".smv") programS
+                        then writeFile ("../testcodes/interleave/H/interleaveH" ++ show(val) ++ ".txt") programH
+                        else writeFile ("../testcodes/interleave/S/interleaveS" ++ show(val) ++ ".smv") programS
+
+-- Este código genera programas de interleave arbitrariamente largos
+genProgramH :: Int -> IO()
+genProgramH val = let
+                     var   = genVarH val
+                     init  = genInit val
+                     trans = genTrans val
+                     spec  = genSpec val
+                     strf  = var ++ init ++ trans ++ spec
+                   in 
+                     writeFile ("../testcodes/interleave/H/interleaveH" ++ show(val) ++ ".txt") strf
+
+genProgramS :: Int -> IO()
+genProgramS val = let
+                     mod  = "MODULE main\n"
+                     var   = genVarS val
+                     init  = genInit val
+                     trans = genTrans val
+                     spec  = genSpec val
+                     strf = mod ++ var ++ init ++ trans ++ spec
+                   in 
+                     writeFile ("../testcodes/interleave/S/interleaveS" ++ show(val) ++ ".smv") strf
 
 genVarH :: Int -> String
 genVarH val =  let
@@ -37,11 +58,11 @@ genVarS val =  let
 
 genInit :: Int -> String
 genInit val =  let
-                  genl = genList val
+                  genl = genList (val)
                   negl = map ("!" ++) (init genl)
                   negp = intercalate " & " negl
                 in
-                  "INIT\n   " ++ negp ++ " & " ++ last genl ++ ";\n"
+                  "INIT\n   " ++ negp ++ " & " ++ (last genl) ++ ";\n"
 
 genTrans :: Int -> String 
 genTrans val = let
@@ -52,7 +73,7 @@ genTrans val = let
 
 genSpec :: Int -> String
 genSpec val =  let
-                  parity = last (genList val)
+                  parity = last (genList(val))
                   next = "AX" ++ printParen (printNeg parity)
                   paren = "AG" ++ printParen (printDImply parity next)
                 in 
@@ -61,7 +82,7 @@ genSpec val =  let
 
 printParity :: Int -> String
 printParity val = let
-                     genl = genList val
+                     genl = genList (val)
                      lval = last genl
                      xorl = printXORL (tail (reverse genl))
                    in 
@@ -69,17 +90,17 @@ printParity val = let
 
 
 printXORL :: [String] -> String
-printXORL []      = ""
-printXORL [x,y]   =  printParen (printXOR y x)
-printXORL (x:xs)  =  printParen (printXOR (printXORL xs) x)
+printXORL []  = ""
+printXORL (x:y:[]) =  printParen (printXOR y x)
+printXORL (x:xs) =  printParen (printXOR (printXORL xs) x)
 
 
                   
 printTerm :: Int -> String
 printTerm val =   let
                      genl = genList (val-1)
-                     tot = [intercalate " & "(printTermR y genl) | y <- [0 .. val-1]]
-                     totPar = map printParen tot
+                     tot = [(intercalate " & "(printTermR y genl)) | y <- [0 .. val-1]]
+                     totPar = map (printParen) tot
                    in
                      intercalate " | \n    " totPar
 
@@ -88,8 +109,8 @@ printTerm val =   let
 printTermR :: Int -> [String] -> [String]
 printTermR val []     = []
 printTermR val (x:xs) =  if val == 0
-                        then printParen $ printUnit x False : printTermR (val-1) xs
-                        else printParen $ printUnit x True  : printTermR (val-1) xs
+                        then printParen(printUnit x False) : (printTermR (val-1)(xs))
+                        else printParen(printUnit x True)  : (printTermR (val-1)(xs))
 
 
          
@@ -129,8 +150,8 @@ genList valmax =  let
                      numdig = numDigits valmax
                   in
                      if valmax >= 221
-                     then [genDig val numdig | val <- [0 .. valmax+1], val /= 221]
-                     else [genDig val numdig | val <- [0 .. valmax]]
+                     then [(genDig val numdig) | val <- [0 .. valmax+1], val /= 221]
+                     else [(genDig val numdig) | val <- [0 .. valmax]]
 
 
 genDig :: Int -> Int -> String
@@ -148,7 +169,7 @@ numDigitsR :: Int -> Int -> Int
 numDigitsR num act = let
                         x = num `div` 26
                       in
-                        if x == 0
+                        if(x == 0)
                         then act
                         else numDigitsR x (act+1)
 
@@ -161,16 +182,16 @@ lastStr dig = replicate dig 'z'
 
 
 addString :: [Int] -> String -> String
-addString = zipWith addChar 
+addString dec ini = zipWith addChar dec ini
 
 
 addChar :: Int -> Char -> Char
-addChar inc char = chr (ord char + inc)
+addChar inc char = chr (ord(char) + inc)
 
 
 
 decArr :: Int -> Int -> [[Int]] 
-decArr valmax size = [decomposeVal x size | x <- [0 .. valmax]] 
+decArr valmax size = [(decomposeVal x size) | x <- [0 .. valmax]] 
 
 decomposeVal :: Int -> Int -> [Int]
 decomposeVal val size = let
@@ -180,7 +201,7 @@ decomposeVal val size = let
                            res
 
 decomposeDigits :: Int -> [Int] -> [Int]
-decomposeDigits size arr = replicate (size - length arr) 0 ++ arr 
+decomposeDigits size arr = replicate (size - (length arr)) 0 ++ arr 
 
 
 decompose :: Int -> [Int]
@@ -191,8 +212,8 @@ decompose val =   if val == 0
                         res = val `mod` 26
                         nuval = (val-res) `div` 26
                       in 
-                        if nuval >= 0
-                        then  decompose nuval ++ [res]
+                        if(nuval >= 0)
+                        then  (decompose nuval) ++ [res]
                         else []
                                           
                     

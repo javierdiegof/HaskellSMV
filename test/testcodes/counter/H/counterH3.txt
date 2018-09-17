@@ -8,3 +8,7 @@ TRANS
    (next(a) xor a) & (next(b) <-> (b xor (a))) & (next(c) <-> (c xor (a & b)));
 CTLSPEC
    AG(AF(a & b & c));
+CTLSPEC
+   AG(AF(!a & !b & !c));
+CTLSPEC
+   AG((a & b & c) -> AX(!a & !b & !c));

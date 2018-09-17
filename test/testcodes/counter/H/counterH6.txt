@@ -1,0 +1,17 @@
+VAR
+   a;
+   b;
+   c;
+   d;
+   e;
+   f;
+INIT
+   !a & !b & !c & !d & !e & !f;
+TRANS
+   (next(a) xor a) & (next(b) <-> (b xor (a))) & (next(c) <-> (c xor (a & b))) & (next(d) <-> (d xor (a & b & c))) & (next(e) <-> (e xor (a & b & c & d))) & (next(f) <-> (f xor (a & b & c & d & e)));
+CTLSPEC
+   AG(AF(a & b & c & d & e & f));
+CTLSPEC
+   AG(AF(!a & !b & !c & !d & !e & !f));
+CTLSPEC
+   AG((a & b & c & d & e & f) -> AX(!a & !b & !c & !d & !e & !f));

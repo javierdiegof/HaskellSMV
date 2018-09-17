@@ -1,7 +1,0 @@
-DEFINE
-   s := a;
-INIT
-   a;
-   b;
-
-"DEFINE s := a; INIT a; b;"
