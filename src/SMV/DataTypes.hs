@@ -37,7 +37,7 @@ module DataTypes(
                   deriving (Show)
    
    -- Variables simples, sin posibilidad de next
-   data Variable = Variable String
+   newtype Variable = Variable String
                   deriving(Show)
 
    -- Misma sintaxis que NuSMV
@@ -76,13 +76,13 @@ module DataTypes(
                   |   AU
                   deriving(Show)
 
-   data VarDec     = VarDec    [Variable]     deriving (Show)
-   data IVarDec    = IVarDec   [Variable]     deriving (Show)
-   data InitCons   = InitCons   BSimple       deriving (Show)  
-   data DefineDec  = DefineDec [DefineExp]    deriving (Show)  
-   data TransCons  = TransCons  BNext         deriving (Show)
-   data CTLSpec    = CTLSpec   CTLF           deriving (Show) 
-   data FairCons   = FairCons  BSimple        deriving (Show) 
+   newtype VarDec    = VarDec    [Variable]     deriving (Show)
+   newtype IVarDec   = IVarDec   [Variable]     deriving (Show)
+   newtype InitCons  = InitCons   BSimple       deriving (Show)  
+   newtype DefineDec = DefineDec [DefineExp]    deriving (Show)  
+   newtype TransCons = TransCons  BNext         deriving (Show)
+   newtype CTLSpec   = CTLSpec   CTLF           deriving (Show) 
+   newtype FairCons  = FairCons  BSimple        deriving (Show) 
 
    data ModuleElem =   ModuleVar       VarDec
                      | ModuleIVar      IVarDec
@@ -93,11 +93,11 @@ module DataTypes(
                      | ModuleFair      FairCons
                      deriving (Show)
                
-   data UModule   = UModule [ModuleElem]   deriving (Show)
+   newtype UModule   = UModule [ModuleElem]   deriving (Show)
 
-   data OModule   = OModule VarDec (Maybe IVarDec) (Maybe DefineDec) InitCons TransCons [CTLSpec] (Maybe [FairCons]) deriving (Show)
+   data OModule      = OModule VarDec (Maybe IVarDec) (Maybe DefineDec) InitCons TransCons [CTLSpec] (Maybe [FairCons]) deriving (Show)
 
-   data PModule   = PModule VarDec (Maybe IVarDec) InitCons TransCons [CTLSpec] (Maybe [FairCons]) deriving (Show)
+   data PModule      = PModule VarDec (Maybe IVarDec) InitCons TransCons [CTLSpec] (Maybe [FairCons]) deriving (Show)
 
 
    

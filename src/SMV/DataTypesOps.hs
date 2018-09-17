@@ -1,6 +1,7 @@
 module DataTypesOps(
    syntaxCheck
 ) where
+   import Data.Maybe
    import DataTypes
    import SMVParser
    import qualified Data.Set as Set
@@ -12,7 +13,7 @@ module DataTypesOps(
    -- Ordenado a P
    -- Inicio
    -----------------------------------------------------------------------------------------------------
-   syntaxCheck :: String -> IO (PModule)
+   syntaxCheck :: String -> IO PModule
    syntaxCheck file =  do
                            umod <- parseFile file
                            let omod    = convertModuleUO umod           -- *
@@ -59,8 +60,8 @@ module DataTypesOps(
                                                                newctls  = subsCTLSS ctls map
                                                             in 
                                                                case fcs of
-                                                                  Nothing  -> (PModule vdc ivdc newics newtcs newctls Nothing)
-                                                                  Just fs ->  (PModule vdc ivdc newics newtcs newctls (Just (subsFairs fs map)))
+                                                                  Nothing -> PModule vdc ivdc newics newtcs newctls Nothing
+                                                                  Just fs -> PModule vdc ivdc newics newtcs newctls (Just (subsFairs fs map))
 
    defMap :: DefineDec -> DMS.Map Variable BSimple
    defMap (DefineDec defs) =  let
@@ -86,9 +87,8 @@ module DataTypesOps(
    checkVarsDef varset dfd =  let
                               defVarSet = extractVarsDef dfd
                             in
-                              if Set.null $ Set.intersection varset defVarSet
-                              then True
-                              else False
+                              Set.null $ Set.intersection varset defVarSet
+                              
 
    -- Funcion que verifica que las variables del lado derecho de las definiciones hayan sido declaradas (en VAR o en IVAR)
    checkSimpleDef :: Set.Set Variable -> DefineDec -> Bool
@@ -112,7 +112,7 @@ module DataTypesOps(
                                                                 then error "TRANS vacio"
                                                                 else if ctlsE
                                                                      then error "CTLSPEC vacio"
-                                                                     else (PModule vdc ivdc ics tcs ctls fcs)
+                                                                     else PModule vdc ivdc ics tcs ctls fcs
                                                    
 
    pModSyntaxCheck :: PModule -> PModule
@@ -127,21 +127,21 @@ module DataTypesOps(
                                                             checkctl       = checkCTLSVars ctls varset
                                                             checkfair      = checkFairVars fcs varset
                                                           in
-                                                            if (not checkinput)
+                                                            if not checkinput
                                                             then error "declaracion repetida en IVAR"
-                                                            else  if (not  incheckinit)
+                                                            else  if not  incheckinit
                                                                   then error "No se permiten IVARS en INIT"
-                                                                  else  if (not checkinit)
+                                                                  else  if not checkinit
                                                                         then error "Variable no declarada en INIT"
-                                                                        else  if (not checktrans)
+                                                                        else  if not checktrans
                                                                               then error "Error en las variables de TRANS, variable no declarada o IVAR dentro de next"
-                                                                              else  if (not incheckctl)
+                                                                              else  if not incheckctl
                                                                                     then error "No se permiten IVAR en CTLSPEC"
-                                                                                    else  if (not checkctl)
+                                                                                    else  if not checkctl
                                                                                           then error "Variable no declarada en CTLSPEC"
-                                                                                          else  if (not checkfair)
+                                                                                          else  if not checkfair
                                                                                                 then error "Variable no declarada dentro de FAIRNESS"
-                                                                                                else (PModule vdc ivdc ics tcs ctls fcs)
+                                                                                                else PModule vdc ivdc ics tcs ctls fcs
    -----------------------------------------------------------------------------------------------------
    -- Funciones de conversiones de modulos
    -- Desordenado a ordenado
@@ -161,11 +161,11 @@ module DataTypesOps(
 
    subsCTLSS :: [CTLSpec] -> DMS.Map Variable BSimple -> [CTLSpec]
    subsCTLSS [] _ = []
-   subsCTLSS (x:xs) map = (subsCTLSP x map) : subsCTLSS xs map
+   subsCTLSS (x:xs) map = subsCTLSP x map : subsCTLSS xs map
 
    subsFairs ::[FairCons] -> DMS.Map Variable BSimple -> [FairCons]
    subsFairs [] _ = []
-   subsFairs (x:xs) map = (subsFair x map) : subsFairs xs map
+   subsFairs (x:xs) map = subsFair x map : subsFairs xs map
 
    subsFair :: FairCons -> DMS.Map Variable BSimple -> FairCons
    subsFair (FairCons bsimple) map = FairCons $ subsSimple bsimple map
@@ -177,7 +177,7 @@ module DataTypesOps(
 
    subsCTLF :: CTLF -> DMS.Map Variable BSimple -> CTLF
    subsCTLF (CConst bconst) _             = CConst bconst 
-   subsCTLF (CVariable var) map           =   case (DMS.lookup var map) of
+   subsCTLF (CVariable var) map           = case DMS.lookup var map of
                                                 Nothing  -> CVariable var
                                                 Just def -> simpleToCTLF def
    subsCTLF (CBUnary bunop ctlf) map      = CBUnary bunop (subsCTLF ctlf map)
@@ -187,10 +187,10 @@ module DataTypesOps(
    
    subsNext :: BNext -> DMS.Map Variable BSimple -> BNext
    subsNext (NConst bconstant) map  = NConst bconstant
-   subsNext (NSVariable var)   map  =  case (DMS.lookup var map) of
+   subsNext (NSVariable var)   map  =  case DMS.lookup var map of
                                           Nothing -> NSVariable var
                                           Just def -> simpleToNext def False
-   subsNext (NNVariable var)  map   =  case (DMS.lookup var map) of
+   subsNext (NNVariable var)  map   =  case DMS.lookup var map of
                                           Nothing -> NNVariable var
                                           Just def -> simpleToNext def True
    subsNext (NUnary bunop bnext)  map   = NUnary bunop (subsNext bnext map)
@@ -199,9 +199,7 @@ module DataTypesOps(
 
    subsSimple :: BSimple -> DMS.Map Variable BSimple -> BSimple
    subsSimple (SConst bconstant) map      = SConst bconstant 
-   subsSimple (SVariable var) map         = case (DMS.lookup var map) of
-                                             Nothing  -> SVariable var
-                                             Just def -> def
+   subsSimple (SVariable var) map         = fromMaybe (SVariable var) (DMS.lookup var map)
    subsSimple (SUnary bunop bsimple) map   = SUnary bunop (subsSimple bsimple map)
    subsSimple (SBinary bbinop s1 s2) map   = SBinary bbinop (subsSimple s1 map) (subsSimple s2 map)
 
@@ -236,31 +234,31 @@ module DataTypesOps(
    checkInputDec vdc ivdc = Set.null (vdc `Set.intersection` ivdc)
 
    checkInitVars :: InitCons  -> Set.Set Variable -> Bool
-   checkInitVars (InitCons bsimple) varset = checkSimpleVars bsimple varset
+   checkInitVars (InitCons bsimple) = checkSimpleVars bsimple
 
    checkInitIVars :: InitCons -> Set.Set Variable -> Bool
-   checkInitIVars (InitCons bsimple) varset = checkNotSimpleVars bsimple varset
+   checkInitIVars (InitCons bsimple) = checkNotSimpleVars bsimple 
 
    checkTransVars :: TransCons -> Set.Set Variable -> Set.Set Variable -> Bool
-   checkTransVars (TransCons bnext) varset ivarset = checkNextVars bnext varset ivarset
+   checkTransVars (TransCons bnext) = checkNextVars bnext 
 
    checkCTLSVars :: [CTLSpec] -> Set.Set Variable -> Bool
    checkCTLSVars [] _     = True
-   checkCTLSVars ((CTLSpec x):xs) set = (checkCTLSVars1 x set) && checkCTLSVars xs set 
+   checkCTLSVars (CTLSpec x:xs) set = checkCTLSVars1 x set && checkCTLSVars xs set 
 
 
    checkCTLSIVars :: [CTLSpec] -> Set.Set Variable -> Bool
    checkCTLSIVars [] _  = True
-   checkCTLSIVars ((CTLSpec x):xs) set = (checkCTLSIVars1 x set) && checkCTLSIVars xs set 
+   checkCTLSIVars (CTLSpec x:xs) set = checkCTLSIVars1 x set && checkCTLSIVars xs set 
 
-   checkFairVars :: (Maybe [FairCons]) -> Set.Set Variable -> Bool
+   checkFairVars :: Maybe [FairCons] -> Set.Set Variable -> Bool
    checkFairVars Nothing _    = True
    checkFairVars (Just []) _  = True
-   checkFairVars (Just (x:xs)) vars =  (checkFairVars1 x vars) && (checkFairVars (Just xs) vars)
+   checkFairVars (Just (x:xs)) vars = checkFairVars1 x vars && checkFairVars (Just xs) vars
 
    checkDefVars :: DefineDec -> Set.Set Variable -> Bool
    checkDefVars (DefineDec [])      _  = True
-   checkDefVars (DefineDec (x:xs)) vars = (checkDefExpVars x vars) && (checkDefVars (DefineDec xs) vars) 
+   checkDefVars (DefineDec (x:xs)) vars = checkDefExpVars x vars && checkDefVars (DefineDec xs) vars
    --------------------------------------------------------------------------------------------------
    --   Funciones que realizan el chequeo sintactico de los diferentes elementos en un PModule
    --   Verifican que todas las variables usadas hayan sido declaradas en Vars
@@ -316,69 +314,68 @@ module DataTypesOps(
    --   Inicio
    --------------------------------------------------------------------------------------------------                          
    extractVarsDec :: VarDec -> Set.Set Variable
-   extractVarsDec (VarDec vars) =   case checkVarS vars (Just Set.empty) of
-                                       Just x -> x
-                                       Nothing -> error "Declaracion de VAR repetida"
+   extractVarsDec (VarDec vars) = fromMaybe 
+                                    (error "Declaracion de VAR repetida") 
+                                    (checkVarS vars (Just Set.empty))
+
 
    extractIVarsDec :: Maybe IVarDec -> Set.Set Variable
-   extractIVarsDec (Nothing)              = Set.empty
-   extractIVarsDec (Just (IVarDec vars))  = case checkVarS vars (Just Set.empty) of
-                                             Just x -> x
-                                             Nothing -> error "Declaracion de IVAR repetida"
-
+   extractIVarsDec Nothing                = Set.empty
+   extractIVarsDec (Just (IVarDec vars))  =  fromMaybe 
+                                                (error "Declaracion de IVAR repetida")
+                                                (checkVarS vars (Just Set.empty))
+   
    extractVarsDef :: DefineDec -> Set.Set Variable
    extractVarsDef defDec = let 
                               vars = defVarList defDec
                             in
-                              case checkVarS vars (Just Set.empty) of
-                                 Just x -> x
-                                 Nothing -> error "Variables en DEFINITION repetidas"
+                              fromMaybe 
+                                 (error "Variables en DEFINITION repetidas")
+                                 (checkVarS vars (Just Set.empty))
    
    -- Verifica que las variables que va agregando no se hayan declarado con anterioridad, si es asi, reporta un error
    checkVarS :: [Variable] -> Maybe (Set.Set Variable) -> Maybe (Set.Set Variable)
    checkVarS [] s = s
    checkVarS (x:xs) Nothing  = Nothing
-   checkVarS (x:xs) (Just s) = case Set.member x s of  
-                                 True  -> Nothing
-                                 False -> checkVarS xs (Just (Set.insert x s))
+   checkVarS (x:xs) (Just s) =   if Set.member x s 
+                                 then Nothing 
+                                 else checkVarS xs (Just (Set.insert x s))
 
    
    
    checkSimpleVars :: BSimple -> Set.Set Variable -> Bool
    checkSimpleVars (SConst _) _            = True
    checkSimpleVars (SVariable var) set     = Set.member var set
-   checkSimpleVars (SUnary _ exp) set    = checkSimpleVars exp set
-   checkSimpleVars (SBinary _ e1 e2) set   = (checkSimpleVars e1 set) && (checkSimpleVars e2 set) 
+   checkSimpleVars (SUnary _ exp) set      = checkSimpleVars exp set
+   checkSimpleVars (SBinary _ e1 e2) set   = checkSimpleVars e1 set && checkSimpleVars e2 set
 
    checkNotSimpleVars :: BSimple -> Set.Set Variable -> Bool
    checkNotSimpleVars (SConst _) _            = True
    checkNotSimpleVars (SVariable var) set     = not (Set.member var set)
    checkNotSimpleVars (SUnary _ exp) set      = checkNotSimpleVars exp set
-   checkNotSimpleVars (SBinary _ e1 e2) set   = (checkNotSimpleVars e1 set) && (checkNotSimpleVars e2 set) 
+   checkNotSimpleVars (SBinary _ e1 e2) set   = checkNotSimpleVars e1 set && checkNotSimpleVars e2 set
 
    
 
    checkNextVars :: BNext -> Set.Set Variable -> Set.Set Variable -> Bool
    checkNextVars (NConst _)  set      iset = True 
-   checkNextVars (NSVariable var) set iset = (Set.member var set) || (Set.member var iset)
-   checkNextVars (NNVariable var) set iset = (Set.member var set) && (not $ Set.member var iset)
+   checkNextVars (NSVariable var) set iset = Set.member var set || Set.member var iset
+   checkNextVars (NNVariable var) set iset = Set.member var set && not (Set.member var iset)
    checkNextVars (NUnary _ exp)   set iset = checkNextVars exp set iset 
-   checkNextVars (NBinary _ e1 e2)set iset = (checkNextVars e1 set iset)  && (checkNextVars e2 set iset)
+   checkNextVars (NBinary _ e1 e2)set iset = checkNextVars e1 set iset  && checkNextVars e2 set iset
 
    checkNextIVars :: BNext -> Set.Set Variable -> Bool
-   checkNextIVars (NConst _) iset     = True
-   checkNextIvars (NSVariable var) set = (Set.member var)
+   checkNextIVars (NConst _) iset      = True
+   checkNextIvars (NSVariable var) set = Set.member var
 
-
-   
    
    checkCTLSVars1 :: CTLF -> Set.Set Variable -> Bool
    checkCTLSVars1 (CConst _) _                  = True
    checkCTLSVars1 (CVariable var) set           = Set.member var set
    checkCTLSVars1 (CBUnary _ exp) set           = checkCTLSVars1 exp set
    checkCTLSVars1 (CCUnary _ exp) set           = checkCTLSVars1 exp set
-   checkCTLSVars1 (CBBinary _ exp1 exp2) set    = (checkCTLSVars1 exp1 set) && (checkCTLSVars1 exp2 set)
-   checkCTLSVars1 (CCBinary _ exp1 exp2) set    = (checkCTLSVars1 exp1 set) && (checkCTLSVars1 exp2 set)
+   checkCTLSVars1 (CBBinary _ exp1 exp2) set    = checkCTLSVars1 exp1 set && checkCTLSVars1 exp2 set
+   checkCTLSVars1 (CCBinary _ exp1 exp2) set    = checkCTLSVars1 exp1 set && checkCTLSVars1 exp2 set
 
 
    checkCTLSIVars1 :: CTLF -> Set.Set Variable -> Bool
@@ -386,17 +383,17 @@ module DataTypesOps(
    checkCTLSIVars1 (CVariable var) set           = not $ Set.member var set
    checkCTLSIVars1 (CBUnary _ exp) set           = checkCTLSIVars1 exp set
    checkCTLSIVars1 (CCUnary _ exp) set           = checkCTLSIVars1 exp set
-   checkCTLSIVars1 (CBBinary _ exp1 exp2) set    = (checkCTLSIVars1 exp1 set) && (checkCTLSIVars1 exp2 set)
-   checkCTLSIVars1 (CCBinary _ exp1 exp2) set    = (checkCTLSIVars1 exp1 set) && (checkCTLSIVars1 exp2 set)
+   checkCTLSIVars1 (CBBinary _ exp1 exp2) set    = checkCTLSIVars1 exp1 set && checkCTLSIVars1 exp2 set
+   checkCTLSIVars1 (CCBinary _ exp1 exp2) set    = checkCTLSIVars1 exp1 set && checkCTLSIVars1 exp2 set
 
 
    
 
    checkFairVars1 :: FairCons -> Set.Set Variable -> Bool
-   checkFairVars1 (FairCons bsimple) vars = checkSimpleVars bsimple vars
+   checkFairVars1 (FairCons bsimple) = checkSimpleVars bsimple 
 
    checkDefExpVars :: DefineExp -> Set.Set Variable -> Bool
-   checkDefExpVars (DefineExp _ bsimple) vars = checkSimpleVars bsimple vars
+   checkDefExpVars (DefineExp _ bsimple) = checkSimpleVars bsimple
 
    defVarList :: DefineDec -> [Variable]
    defVarList (DefineDec decs) = foldr addDefVar [] decs 
@@ -426,7 +423,7 @@ module DataTypesOps(
                                     _                       -> vars     
 
    joinIVarDec :: UModule -> Maybe IVarDec
-   joinIVarDec (UModule xs) = case (foldr joinIVarDec1 [] xs) of
+   joinIVarDec (UModule xs) = case foldr joinIVarDec1 [] xs of
                                  [] -> Nothing
                                  xs -> Just (IVarDec xs)
                               
@@ -446,9 +443,9 @@ module DataTypesOps(
    
    -- Junta todas las DefineDec, las une en una sola lista                                       
    joinDefineDec :: UModule -> Maybe DefineDec
-   joinDefineDec (UModule xs) =  case (foldr joinDefineDec1 [] xs) of
-                                       [] -> Nothing
-                                       xs -> Just (DefineDec xs)
+   joinDefineDec (UModule xs) =  case foldr joinDefineDec1 [] xs of
+                                    [] -> Nothing
+                                    xs -> Just (DefineDec xs)
 
    joinDefineDec1 :: ModuleElem -> [DefineExp] -> [DefineExp]
    joinDefineDec1 modelem defs = case modelem of
@@ -475,9 +472,9 @@ module DataTypesOps(
 
    -- Junta todas las fair constraints, las une en una lista y las verifica independientemente
    joinFairCons :: UModule -> Maybe [FairCons]
-   joinFairCons (UModule xs) =   case (foldr joinFairCons1 [] xs) of
-                                       [] -> Nothing
-                                       xs -> Just xs
+   joinFairCons (UModule xs) =   case foldr joinFairCons1 [] xs of
+                                    [] -> Nothing
+                                    xs -> Just xs
 
 
 

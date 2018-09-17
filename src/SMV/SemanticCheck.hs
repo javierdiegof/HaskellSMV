@@ -17,12 +17,12 @@ module SemanticCheck(
                            totvars  = sort(vars ++ ivars)
                            initBDD  = initSynthesis pmod totvars
                            transBDD = transSynthesis pmod totvars ivars
-                           res = case (existsFairness pmod) of
-                              True  -> fFormulaCheck pmod transBDD totvars
-                              False -> uFormulaCheck pmod transBDD totvars
+                           res = if existsFairness pmod                                 
+                                 then fFormulaCheck pmod transBDD totvars
+                                 else uFormulaCheck pmod transBDD totvars
                            verify = checkInitSat initBDD res
                         printSolution verify
-                        return (verify)  
+                        return verify
 
    fileCheckOutput :: String -> IO [Bool]
    fileCheckOutput file = do
@@ -34,41 +34,41 @@ module SemanticCheck(
                               totvars  = sort(vars ++ ivars)
                               initBDD  = initSynthesis pmod totvars
                               transBDD = transSynthesis pmod totvars ivars
-                              res = case (existsFairness pmod) of
-                                       True  -> fFormulaCheck pmod transBDD totvars
-                                       False -> uFormulaCheck pmod transBDD totvars
+                              res = if existsFairness pmod
+                                    then fFormulaCheck pmod transBDD totvars
+                                    else uFormulaCheck pmod transBDD totvars
                               verify = checkInitSat initBDD res
-                           putStrLn $ "\n El total de variables es: " ++ show (totvars) ++ "\n"   
+                           putStrLn $ "\n El total de variables es: " ++ show totvars ++ "\n"   
                            putStrLn $ "\n La numeracion de los estados es: " ++ show (varNumbering vars totvars) ++ "\n"
-                           putStrLn $ "Los estados iniciales son: " ++ show(initBDD) ++ "\n"
-                           putStrLn $ "La funcion de transicion es: " ++ show(transBDD) ++ "\n"
+                           putStrLn $ "Los estados iniciales son: " ++ show initBDD ++ "\n"
+                           putStrLn $ "La funcion de transicion es: " ++ show transBDD ++ "\n"
                            putStrLn $ "Las asignaciones que satisfacen la funcion de transicion son:" ++ show (allSats transBDD) ++ "\n"
-                           putStrLn $ "La lista de variables es: " ++ show(vars) ++ "\n"
-                           putStrLn $ "Los estados que satisfacen la formula son: " ++ show (res) ++ "\n"
+                           putStrLn $ "La lista de variables es: " ++ show vars ++ "\n"
+                           putStrLn $ "Los estados que satisfacen la formula son: " ++ show res ++ "\n"
                            putStrLn $ "Asignaciones: "    ++ show (map allSats res) ++ "\n"
-                           putStrLn $ "Verificacion: " ++ show(verify) ++ "\n"
-                           putStrLn $ "initBDD: " ++ show(initBDD) ++ "\n"
-                           putStrLn $ "res: " ++ show(res) ++ "\n"
+                           putStrLn $ "Verificacion: " ++ show verify ++ "\n"
+                           putStrLn $ "initBDD: " ++ show initBDD ++ "\n"
+                           putStrLn $ "res: " ++ show res ++ "\n"
                            printSolution verify
-                           return (verify) 
+                           return verify
 
    printSolution :: [Bool] -> IO ()
-   printSolution xs = printSolRec 1 xs
+   printSolution = printSolRec 1
 
    printSolRec :: Int -> [Bool] -> IO ()
    printSolRec _        []    = return ()
    printSolRec specnum (x:xs) =  do
                                     let 
-                                       res = case x of 
-                                          True  -> "\8872"
-                                          False -> "\8877"
-                                    putStrLn $ "Especificacion #" ++ show(specnum) ++ ": " ++ res
+                                       res = if x
+                                             then  "\8872"
+                                             else  "\8877"
+                                    putStrLn $ "Especificacion #" ++ show specnum ++ ": " ++ res
                                     printSolRec (specnum + 1) xs
 
    varNumbering :: [Variable] -> [Variable] -> [(String, Int)]
    varNumbering  [] totvars                  = []
-   varNumbering ((Variable str):xs) totvars  =  let
-                                                   ind = (Variable str) `elemIndex` totvars
+   varNumbering (Variable str : xs) totvars  =  let
+                                                   ind = Variable str `elemIndex` totvars
                                                  in
                                                    case ind of
                                                       Nothing  -> error "Variable no encontrada"
@@ -76,16 +76,12 @@ module SemanticCheck(
                                                                      vtuple   = (str, pos*2)
                                                                      vtuplep  = (str ++ "'", pos*2+1)
                                                                    in
-                                                                     vtuple:vtuplep:(varNumbering xs totvars)
+                                                                     vtuple : vtuplep : varNumbering xs totvars
 
                                                    
-
-
-
-
    checkInitSat :: Bdd -> [Bdd] -> [Bool]
    checkInitSat init []       = []
-   checkInitSat init (x:xs)   =  if (init `imp` x == top) 
+   checkInitSat init (x:xs)   =  if init `imp` x == top
                                  then True : checkInitSat init xs
                                  else False : checkInitSat init xs
                                  
@@ -100,25 +96,25 @@ module SemanticCheck(
                                                 Just (IVarDec vars) -> vars
 
    initSynthesis :: PModule -> [Variable] -> Bdd
-   initSynthesis (PModule _ _ (InitCons bsimple) _ _ _) vars = synthSimple bsimple vars
+   initSynthesis (PModule _ _ (InitCons bsimple) _ _ _) = synthSimple bsimple
 
    synthSimple :: BSimple -> [Variable] -> Bdd
    synthSimple (SConst const) _  =  case const of
                                           TRUE        ->  top
                                           FALSE       ->  bot
 
-   synthSimple (SVariable cur) vars =  case (cur `elemIndex` vars) of
+   synthSimple (SVariable cur) vars =  case cur `elemIndex` vars of
                                              Just num -> var $ num*2
                                              Nothing  -> error "Variable no encontrada"
 
    synthSimple (SUnary Not f) vars  = neg $ synthSimple f vars
 
    synthSimple (SBinary bop f1 f2) vars = case bop of
-                                                And   -> (synthSimple f1 vars) `con` (synthSimple f2 vars)
-                                                Or    -> (synthSimple f1 vars) `dis` (synthSimple f2 vars)
-                                                Xor   -> (synthSimple f1 vars) `xor` (synthSimple f2 vars)
-                                                If    -> (synthSimple f1 vars) `imp` (synthSimple f2 vars)
-                                                Iff   -> (synthSimple f1 vars) `equ` (synthSimple f2 vars)
+                                                And   -> synthSimple f1 vars `con` synthSimple f2 vars
+                                                Or    -> synthSimple f1 vars `dis` synthSimple f2 vars
+                                                Xor   -> synthSimple f1 vars `xor` synthSimple f2 vars
+                                                If    -> synthSimple f1 vars `imp` synthSimple f2 vars
+                                                Iff   -> synthSimple f1 vars `equ` synthSimple f2 vars
 
 
    ----------------- Funciones de sintesis la relacion de transicion ------------------------------------------------
@@ -134,22 +130,22 @@ module SemanticCheck(
    synthTrans (NConst const)      _     = case const of
                                              TRUE        ->  top
                                              FALSE       ->  bot
-   synthTrans (NSVariable cur)   vars  = case (cur `elemIndex` vars) of
+   synthTrans (NSVariable cur)   vars  = case cur `elemIndex` vars of
                                              Just num    -> var $ num*2   
                                              Nothing     -> error "Variable no encontrada"
 
-   synthTrans (NNVariable next)   vars  = case (next `elemIndex` vars) of
+   synthTrans (NNVariable next)   vars  = case next `elemIndex` vars of
                                              Just num    -> var $ num*2+1   
                                              Nothing     -> error "Variable no encontrada"
 
    synthTrans (NUnary Not f)  vars  = neg $ synthTrans f vars
 
    synthTrans (NBinary bop f1 f2)  vars  =   case bop of
-                                                And        -> (synthTrans f1 vars) `con` (synthTrans f2 vars)
-                                                Or         -> (synthTrans f1 vars) `dis` (synthTrans f2 vars)
-                                                Xor        -> (synthTrans f1 vars) `xor` (synthTrans f2 vars)
-                                                If         -> (synthTrans f1 vars) `imp` (synthTrans f2 vars)
-                                                Iff        -> (synthTrans f1 vars) `equ` (synthTrans f2 vars)
+                                                And        -> synthTrans f1 vars `con` synthTrans f2 vars
+                                                Or         -> synthTrans f1 vars `dis` synthTrans f2 vars
+                                                Xor        -> synthTrans f1 vars `xor` synthTrans f2 vars
+                                                If         -> synthTrans f1 vars `imp` synthTrans f2 vars
+                                                Iff        -> synthTrans f1 vars `equ` synthTrans f2 vars
 
    -- Elimina las variables INPUT utilizando en operador existencial
    removeInput :: Bdd -> [Variable] -> [Variable] -> Bdd
@@ -166,12 +162,12 @@ module SemanticCheck(
 
    ----------------- Funciones de verificacion de la formula CTL sin Fairness -----------------------------------------
    uFormulaCheck :: PModule -> Bdd -> [Variable] -> [Bdd]
-   uFormulaCheck (PModule _ _ _ _ ctlspecs _) trans vars = uFormulaCheckL ctlspecs trans vars
+   uFormulaCheck (PModule _ _ _ _ ctlspecs _) = uFormulaCheckL ctlspecs
 
 
    uFormulaCheckL :: [CTLSpec] -> Bdd -> [Variable] -> [Bdd]
    uFormulaCheckL [] trans vars = []
-   uFormulaCheckL ((CTLSpec ctlf) : xs) trans vars = (uSubCheck ctlf trans vars) : uFormulaCheckL  xs trans vars
+   uFormulaCheckL (CTLSpec ctlf : xs) trans vars = uSubCheck ctlf trans vars : uFormulaCheckL  xs trans vars
 
 
 
@@ -179,18 +175,18 @@ module SemanticCheck(
    uSubCheck  (CConst const) _  _                  =  case const of
                                                          TRUE        -> top
                                                          FALSE       -> bot
-   uSubCheck  (CVariable cur) _ vars               =  case (cur `elemIndex` vars) of
+   uSubCheck  (CVariable cur) _ vars               =  case cur `elemIndex` vars of
                                                          Just num    -> var $ num*2
                                                          Nothing     -> error "Variable no encontrada"
 
    uSubCheck (CBUnary Not ctlf) trans vars        =  neg $ uSubCheck ctlf trans vars
 
    uSubCheck (CBBinary bbinop f1 f2) trans vars   =  case bbinop of
-                                                            And      -> (uSubCheck f1 trans vars) `con` (uSubCheck f2 trans vars)
-                                                            Or       -> (uSubCheck f1 trans vars) `dis` (uSubCheck f2 trans vars)
-                                                            Xor      -> (uSubCheck f1 trans vars) `xor` (uSubCheck f2 trans vars)
-                                                            If       -> (uSubCheck f1 trans vars) `imp` (uSubCheck f2 trans vars)
-                                                            Iff      -> (uSubCheck f1 trans vars) `equ` (uSubCheck f2 trans vars)
+                                                            And      -> uSubCheck f1 trans vars `con` uSubCheck f2 trans vars
+                                                            Or       -> uSubCheck f1 trans vars `dis` uSubCheck f2 trans vars
+                                                            Xor      -> uSubCheck f1 trans vars `xor` uSubCheck f2 trans vars
+                                                            If       -> uSubCheck f1 trans vars `imp` uSubCheck f2 trans vars
+                                                            Iff      -> uSubCheck f1 trans vars `equ` uSubCheck f2 trans vars
    uSubCheck (CCUnary cunop cltf)  trans vars     =      let 
                                                             sub = uSubCheck cltf trans vars
                                                          in
@@ -214,7 +210,7 @@ module SemanticCheck(
    satEX subf trans  = let
                               nextsubf    = renameNextBdd subf -- X_B{x' <- x}
                               transnext   = con trans nextsubf -- Delta & nextsubf 
-                              nextvars    = [a | a <- (allVarsOfSorted transnext), a `mod` 2 == 1] -- Todas las variables next en transnext
+                              nextvars    = [a | a <- allVarsOfSorted transnext, a `mod` 2 == 1] -- Todas las variables next en transnext
                            in
                               existsSet nextvars transnext
 
@@ -266,27 +262,27 @@ module SemanticCheck(
                                                                   fairst   = fairStates trans fairl 
                                                                   ctlfFair = fSubCheckU ctls trans fairl vars
                                                                 in
-                                                                  map (con fairst) (ctlfFair)
+                                                                  map (con fairst) ctlfFair
                          
    fSubCheckU :: [CTLSpec] -> Bdd -> [Bdd] -> [Variable] -> [Bdd]
    fSubCheckU [] _ _ _ = []
-   fSubCheckU ((CTLSpec ctlf):xs) trans fairs vars = (fSubCheck ctlf trans fairs vars) : fSubCheckU xs trans fairs vars
+   fSubCheckU (CTLSpec ctlf : xs) trans fairs vars = fSubCheck ctlf trans fairs vars : fSubCheckU xs trans fairs vars
 
    fSubCheck :: CTLF -> Bdd -> [Bdd]-> [Variable] -> Bdd
    fSubCheck (CConst const) _ _ _      =  case const of
                                              TRUE  -> top
                                              FALSE -> bot
-   fSubCheck (CVariable cur) _ _ vars  =  case (cur `elemIndex` vars) of
+   fSubCheck (CVariable cur) _ _ vars  =  case cur `elemIndex` vars of
                                              Just num -> var $ num*2
                                              Nothing  -> error "Variable no encontrada"
 
    fSubCheck (CBUnary Not ctlf) trans fairs vars = neg $ fSubCheck ctlf trans fairs vars
 
    fSubCheck (CBBinary bbinop f1 f2) trans fairs vars = case bbinop of
-                                                            And   -> (fSubCheck f1 trans fairs vars) `con` (fSubCheck f2 trans fairs vars)
-                                                            Or    -> (fSubCheck f1 trans fairs vars) `dis` (fSubCheck f2 trans fairs vars)
-                                                            If    -> (fSubCheck f1 trans fairs vars) `imp` (fSubCheck f2 trans fairs vars)
-                                                            Iff   -> (fSubCheck f1 trans fairs vars) `equ` (fSubCheck f2 trans fairs vars)
+                                                            And   -> fSubCheck f1 trans fairs vars `con` fSubCheck f2 trans fairs vars
+                                                            Or    -> fSubCheck f1 trans fairs vars `dis` fSubCheck f2 trans fairs vars
+                                                            If    -> fSubCheck f1 trans fairs vars `imp` fSubCheck f2 trans fairs vars
+                                                            Iff   -> fSubCheck f1 trans fairs vars `equ` fSubCheck f2 trans fairs vars
    fSubCheck (CCUnary EX ctlf) trans fairs vars =  let
                                                       sub = fSubCheck ctlf trans fairs vars
                                                       statefair = fairStates trans fairs
@@ -308,10 +304,10 @@ module SemanticCheck(
 
 
    fairStates :: Bdd -> [Bdd] -> Bdd
-   fairStates trans xs = satEGFair top trans xs 
+   fairStates = satEGFair top 
 
    satEGFair :: Bdd -> Bdd -> [Bdd] -> Bdd
-   satEGFair subf trans xs = satEGFairA subf subf trans xs
+   satEGFair subf = satEGFairA subf subf 
 
 
    satEGFairA :: Bdd -> Bdd -> Bdd -> [Bdd] -> Bdd
@@ -331,11 +327,11 @@ module SemanticCheck(
                                              eu = satEU subf (fixed `con` x) trans
                                              ex = satEX eu trans
                                           in
-                                             ex `con` (satEGFairCon subf trans fixed xs)
+                                             ex `con` satEGFairCon subf trans fixed xs
                                           
    synthFairness :: [FairCons] -> [Variable] -> [Bdd]
    synthFairness [] _ = []
-   synthFairness ( (FairCons simple) : xs) vars = (synthSimple simple vars) : synthFairness xs vars
+   synthFairness (FairCons simple : xs) vars = synthSimple simple vars : synthFairness xs vars
 
    --synthFairness :: Fair -> [Variable] -> [Bdd]
    --synthFairness (Fair xs) vars = synthFairList xs vars

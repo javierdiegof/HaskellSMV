@@ -81,14 +81,14 @@ module SMVParser(
    varDecParser :: Parser VarDec
    varDecParser = do
                      reserved "VAR"
-                     list <- (endBy1 variableParser semi) -- separados y finalizados por punto y coma (semicolon)
+                     list <- endBy1 variableParser semi -- separados y finalizados por punto y coma (semicolon)
                      return $ VarDec list
 
                
    iVarDecParser :: Parser IVarDec
    iVarDecParser = do
                      reserved "IVAR"
-                     list <- (endBy1 variableParser semi) -- separados y finalizados por punto y coma (semicolon)
+                     list <- endBy1 variableParser semi -- separados y finalizados por punto y coma (semicolon)
                      return $ IVarDec list
 
 
@@ -103,7 +103,7 @@ module SMVParser(
    defineDecParser :: Parser DefineDec
    defineDecParser = do
                         reserved "DEFINE"
-                        list <- (endBy1 defineExpParser semi) -- separados y finalizados por un punto y coma (semicolon)
+                        list <- endBy1 defineExpParser semi -- separados y finalizados por un punto y coma (semicolon)
                         return $ DefineDec list
 
    
@@ -261,7 +261,7 @@ module SMVParser(
    --------------------------------------------------------------------------------------------------
    -- Parsea a los identificadores individualmente
    variableParser :: Parser Variable
-   variableParser = liftM Variable identifier -- Conformados por un identificador
+   variableParser = fmap Variable identifier -- Conformados por un identificador
 
    -- Parsea constantes booleanas, usadas para formar expresiones simples y complejas
    bConstantParser :: Parser BConstant
