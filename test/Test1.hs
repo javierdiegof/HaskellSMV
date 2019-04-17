@@ -10,19 +10,19 @@ main :: IO ()
 main = hspec $ do
    describe (title "CounterOutput") $ do
       it "test counter 3" $
-         fileCheckOutput "test/testcodes/counter/H/counterH3.txt" `shouldReturn` [True]
+         fileCheckOutput "test/testcodes/counter/H/counterH3.txt" `shouldReturn` [True,True,True]
       it "test counter 4" $ 
-         fileCheckOutput "test/testcodes/counter/H/counterH4.txt" `shouldReturn` [True]
+         fileCheckOutput "test/testcodes/counter/H/counterH4.txt" `shouldReturn` [True,True,True]
       it "test counter 7" $ 
-         fileCheckOutput "test/testcodes/counter/H/counterH7.txt" `shouldReturn` [True]
+         fileCheckOutput "test/testcodes/counter/H/counterH7.txt" `shouldReturn` [True,True,True]
    
    describe (title "CounterSilent") $ do     
       it "test counter 3" $ 
-         fileCheck "test/testcodes/counter/H/counterH3.txt" `shouldReturn` [True]
+         fileCheck "test/testcodes/counter/H/counterH3.txt" `shouldReturn` [True,True,True]
       it "test counter 4" $ 
-         fileCheck "test/testcodes/counter/H/counterH4.txt" `shouldReturn` [True]
+         fileCheck "test/testcodes/counter/H/counterH4.txt" `shouldReturn` [True,True,True]
       it "test counter 7" $ 
-         fileCheck "test/testcodes/counter/H/counterH7.txt" `shouldReturn` [True]
+         fileCheck "test/testcodes/counter/H/counterH7.txt" `shouldReturn` [True,True,True]
    
    describe (title "FairOutput") $ do
       it "test fair 3" $ 

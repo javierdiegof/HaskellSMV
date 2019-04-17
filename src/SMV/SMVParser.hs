@@ -2,12 +2,13 @@ module SMVParser(
    parseFile
 ) where
    import DataTypes
+   import LanguageDef
    import System.IO
    import Control.Monad
    import Data.Maybe
    import Text.ParserCombinators.Parsec
    import Text.ParserCombinators.Parsec.Expr
-   import LanguageDef
+   
 
 
    --------------------------------------------------------------------------------------------------
