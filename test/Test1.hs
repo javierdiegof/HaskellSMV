@@ -15,7 +15,11 @@ main = hspec $ do
          fileCheckOutput "test/testcodes/counter/H/counterH4.txt" `shouldReturn` [True,True,True]
       it "test counter 7" $ 
          fileCheckOutput "test/testcodes/counter/H/counterH7.txt" `shouldReturn` [True,True,True]
-   
+      it "test counter 9" $ 
+         fileCheckOutput "test/testcodes/counter/H/counterH9.txt" `shouldReturn` [True,True,True]
+      it "test counter 10" $ 
+         fileCheckOutput "test/testcodes/counter/H/counterH10.txt" `shouldReturn` [True,True,True]
+    
    describe (title "CounterSilent") $ do     
       it "test counter 3" $ 
          fileCheck "test/testcodes/counter/H/counterH3.txt" `shouldReturn` [True,True,True]
@@ -23,6 +27,10 @@ main = hspec $ do
          fileCheck "test/testcodes/counter/H/counterH4.txt" `shouldReturn` [True,True,True]
       it "test counter 7" $ 
          fileCheck "test/testcodes/counter/H/counterH7.txt" `shouldReturn` [True,True,True]
+      it "test counter 9" $ 
+         fileCheck "test/testcodes/counter/H/counterH9.txt" `shouldReturn` [True,True,True]
+      it "test counter 10" $ 
+         fileCheck "test/testcodes/counter/H/counterH10.txt" `shouldReturn` [True,True,True]
    
    describe (title "FairOutput") $ do
       it "test fair 3" $ 

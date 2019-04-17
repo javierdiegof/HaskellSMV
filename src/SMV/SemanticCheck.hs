@@ -68,7 +68,7 @@ module SemanticCheck(
    varNumbering :: [Variable] -> [Variable] -> [(String, Int)]
    varNumbering  [] totvars                  = []
    varNumbering (Variable str : xs) totvars  =  let
-                                                   ind = Variable str `elemIndex` totvars
+                                                   ind = Variable str `binIndex` totvars
                                                  in
                                                    case ind of
                                                       Nothing  -> error "Variable no encontrada"
@@ -103,7 +103,7 @@ module SemanticCheck(
                                           TRUE        ->  top
                                           FALSE       ->  bot
 
-   synthSimple (SVariable cur) vars =  case cur `elemIndex` vars of
+   synthSimple (SVariable cur) vars =  case cur `binIndex` vars of
                                              Just num -> var $ num*2
                                              Nothing  -> error "Variable no encontrada"
 
@@ -130,11 +130,11 @@ module SemanticCheck(
    synthTrans (NConst const)      _     = case const of
                                              TRUE        ->  top
                                              FALSE       ->  bot
-   synthTrans (NSVariable cur)   vars  = case cur `elemIndex` vars of
+   synthTrans (NSVariable cur)   vars  = case cur `binIndex` vars of
                                              Just num    -> var $ num*2   
                                              Nothing     -> error "Variable no encontrada"
 
-   synthTrans (NNVariable next)   vars  = case next `elemIndex` vars of
+   synthTrans (NNVariable next)   vars  = case next `binIndex` vars of
                                              Just num    -> var $ num*2+1   
                                              Nothing     -> error "Variable no encontrada"
 
@@ -151,7 +151,7 @@ module SemanticCheck(
    removeInput :: Bdd -> [Variable] -> [Variable] -> Bdd
    removeInput trans tvars [] = trans
    removeInput trans tvars (x:xs) = let
-                                       index = (x `elemIndex` tvars)
+                                       index = (x `binIndex` tvars)
                                      in
                                        case index of
                                           Just pos -> removeInput (exists (pos*2) trans) tvars xs
@@ -175,7 +175,7 @@ module SemanticCheck(
    uSubCheck  (CConst const) _  _                  =  case const of
                                                          TRUE        -> top
                                                          FALSE       -> bot
-   uSubCheck  (CVariable cur) _ vars               =  case cur `elemIndex` vars of
+   uSubCheck  (CVariable cur) _ vars               =  case cur `binIndex` vars of
                                                          Just num    -> var $ num*2
                                                          Nothing     -> error "Variable no encontrada"
 
@@ -272,7 +272,7 @@ module SemanticCheck(
    fSubCheck (CConst const) _ _ _      =  case const of
                                              TRUE  -> top
                                              FALSE -> bot
-   fSubCheck (CVariable cur) _ _ vars  =  case cur `elemIndex` vars of
+   fSubCheck (CVariable cur) _ _ vars  =  case cur `binIndex` vars of
                                              Just num -> var $ num*2
                                              Nothing  -> error "Variable no encontrada"
 
@@ -341,3 +341,15 @@ module SemanticCheck(
    --synthFairList [] _ = []
    --synthFairList (x:xs) vars = (synthOneSimple x vars) : synthFairList xs vars
    ----------------- Funciones de verificacion de la formula CTL con Fairness (fin) -----------------------------------------
+   binIndex :: (Ord a) => a -> [a] -> Maybe Int
+   binIndex val xs = binIndexAux val xs 0 (length xs - 1)
+
+
+   binIndexAux :: (Ord a) => a -> [a] -> Int -> Int -> Maybe Int
+   binIndexAux val xs low high 
+               | high < low     = Nothing
+               | xs!!mid > val  = binIndexAux val xs low (mid-1)
+               | xs!!mid < val  = binIndexAux val xs (mid+1) high
+               | otherwise      = Just mid
+               where    
+               mid = low + ((high - low) `div` 2)

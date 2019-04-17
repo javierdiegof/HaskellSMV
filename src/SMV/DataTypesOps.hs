@@ -4,6 +4,7 @@ module DataTypesOps(
    import Data.Maybe
    import DataTypes
    import SMVParser
+   import Data.List
    import qualified Data.Set as Set
    import qualified Data.Map.Strict as DMS
 
@@ -415,7 +416,7 @@ module DataTypesOps(
    -- Inicio
    --------------------------------------------------------------------------------------------------
    joinVarDec :: UModule -> VarDec
-   joinVarDec (UModule xs) = VarDec $ foldr joinVarDec1 [] xs
+   joinVarDec (UModule xs) = VarDec $ sort $ foldr joinVarDec1 [] xs
 
    joinVarDec1 :: ModuleElem -> [Variable] -> [Variable]
    joinVarDec1 modelem vars = case modelem of
@@ -425,7 +426,7 @@ module DataTypesOps(
    joinIVarDec :: UModule -> Maybe IVarDec
    joinIVarDec (UModule xs) = case foldr joinIVarDec1 [] xs of
                                  [] -> Nothing
-                                 xs -> Just (IVarDec xs)
+                                 xs -> Just (IVarDec $ sort  xs)
                               
    joinIVarDec1 :: ModuleElem -> [Variable] -> [Variable]
    joinIVarDec1 modelem vars = case modelem of  
