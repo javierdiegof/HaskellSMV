@@ -3,7 +3,7 @@ module Main where
 import Test.Hspec
 import Test.QuickCheck
 import Control.Exception (evaluate)
-import SemanticCheck
+import ModelCheck
 import System.Directory
 
 main :: IO ()

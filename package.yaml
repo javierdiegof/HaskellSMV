@@ -15,9 +15,9 @@ github: javierdiegof/SMV-Haskell
 
 library:
   exposed-modules:
-    - SemanticCheck
+    - ModelCheck
     - DataTypes
-    - DataTypesOps
+    - Preprocess
     - LanguageDef
     - SMVParser
 

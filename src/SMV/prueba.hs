@@ -1,3 +1,3 @@
-import SemanticCheck
+import ModelCheck
 
 main = benchMark

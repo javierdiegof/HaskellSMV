@@ -1,5 +1,5 @@
 module Main where
-import SemanticCheck
+import ModelCheck
 
 -- Absolute paths needed for performace testing, will delete afterwards
 main :: IO [Bool]

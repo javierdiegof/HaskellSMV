@@ -1,10 +1,10 @@
-module SemanticCheck(
+module ModelCheck(
    fileCheck,
    fileCheckOutput
 )where
    import DataTypes
    import SMVParser
-   import DataTypesOps
+   import Preprocess
    import Data.List
    import Data.HasCacBDD
 
