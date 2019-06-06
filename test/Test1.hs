@@ -10,7 +10,7 @@ main :: IO ()
 main = hspec $ do
    describe (title "Dining") $ do
       it "dining 2" $
-         fileCheckOutput "test/testcodes/dining/dining2.txt" `shouldReturn` [True]
+         fileCheckOutput "test/testcodes/dining/dining2.txt" `shouldReturn` [True, True]
 
 
 title :: String -> String
