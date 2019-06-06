@@ -1,0 +1,20 @@
+VAR
+    p1;
+    p2;
+INIT
+    !p1 & !p2;    
+IVAR
+    s1; 
+    s2;
+TRANS
+    (s1 & !s2 & !p2 -> next(p1)) &
+    (s2 & !s1 & !p1 -> next(p2)) &
+    (!s1 -> !next(p1)) &
+    (!s2 -> !next(p2)) &
+    (s1 &  s2 & !p1 & !p2 -> next(p1) xor next(p2));
+CTLSPEC
+    !(EF(p1 & p2));
+CTLSPEC
+    !(EF(i1 & i2));
+CTLSPEC
+    !(EF(d1 & d2));

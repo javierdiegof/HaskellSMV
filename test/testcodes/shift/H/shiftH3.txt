@@ -2,30 +2,24 @@ VAR
    a;
    b;
    c;
-   g;
-   h;
-   k;
+   s0;
+   s1; 
 IVAR
-   d;
-   e;
-   f;
-   i;
-   j;
+   sr;
+   sl;
+   pa;
+   pb;
+   pc;
 INIT
    !a & !b & !c;
-TRANS
-   ((!h & !g & !k) -> ((next(a) <-> a) & (next(b) <-> b) & (next(c) <-> c))) &
-   ((!h &  g & !k) -> ((next(a) <-> i) & (next(b) <-> a) & (next(c) <-> b)))&
-   (( h & !g & !k) -> ((next(a) <-> b) & (next(b) <-> c) & (next(c) <-> j))) &
-   (( h &  g & !k) -> ((next(a) <-> d) & (next(b) <-> e) & (next(c) <-> f))) &
-   (k -> ((next(a) <-> FALSE) & (next(b) <-> FALSE) & (next(c) <-> FALSE)))
+TRANS   
+   ((!s0 & !s1) -> ((next(a) <-> a ) & (next(b) <-> b ) & (next(c) <-> c ))) & -- igual
+   ((!s0 &  s1) -> ((next(a) <-> sr) & (next(b) <-> a ) & (next(c) <-> b ))) & -- sr
+   (( s0 & !s1) -> ((next(a) <-> b ) & (next(b) <-> c ) & (next(c) <-> sl))) & -- sl
+   (( s0 &  s1) -> ((next(a) <-> pa) & (next(b) <-> pb) & (next(c) <-> pc)));  -- carga 
 CTLSPEC
-   AG((!h & !g & !k) -> ((a <-> AX(a)) & (b <-> AX(b)) & (c <-> AX(c))));
+   AG((!s1 & !s0) -> ((a <-> AX(a)) & (b <-> AX(b)) & (c <-> AX(c))))
 CTLSPEC
-   AG((!h &  g & !k) -> (EX(a) & EX(!a)));
+   AG(EX (EX (!a & !b & !c)));
 CTLSPEC
-   AG((h & !g & !k) -> (EX(c) & EX(!c)));
-CTLSPEC
-   AG((h & g & !k) -> (EX(a) & EX(b) & EX(c) & EX(!a) & EX(!b) & EX(!c)));
-CTLSPEC
-   AG(k -> AX(!a & !b & !c));
+   AG((s1 & !s0) -> EX(a) & EX(!a) & !(EX(b) & EX(!b)) & !(EX(c) & EX(!c)));

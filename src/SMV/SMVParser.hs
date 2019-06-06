@@ -210,7 +210,7 @@ module SMVParser(
    ctlFParser :: Parser CTLF
    ctlFParser = buildExpressionParser cOperators cTerm
 
-   cTerm =     parens ctlFParser
+   cTerm =    parens ctlFParser
          <|>  cConstParser
          <|>  cVariableParser
 
