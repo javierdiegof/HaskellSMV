@@ -23,7 +23,7 @@ module LanguageDef(
       emptyDef{
                Token.commentLine          = "--",
                Token.identStart           = lower,
-               Token.identLetter          = lower <|> digit,
+               Token.identLetter          = lower <|> digit <|> oneOf "_",
                Token.reservedNames        = [
                                              "next",
                                              "MODULE",

@@ -1,0 +1,34 @@
+VAR
+    i1;
+    i2;
+    d1;
+    d2;
+IVAR
+    s1; 
+    s2;
+DEFINE
+    oc1 := i1 & d1;
+    oc2 := i2 & d2;
+    noc1 := !i1 & !d1;
+    noc2 := !i2 & !d2;
+INIT
+    noc1 & noc2;
+TRANS
+    (s1 & noc2 & !s2 -> next(oc1)) & -- pt. 3
+    (s2 & noc1 & !s1 -> next(oc2)) & -- pt. 3
+    -- pt. 4
+    (s1 & s2 & noc1 & noc2 -> (next(oc1) & next(noc2) xor next(noc1) & next(oc2))) & 
+    (s1 & oc1 -> next(oc1)) & -- pt. 5
+    (s2 & oc2 -> next(oc2)) & -- pt. 5
+    (!s1 -> next(noc1)) &     -- pt. 6
+    (!s2 -> next(noc2)) &     -- pt. 6
+    (oc2 -> next(noc1)) &     
+    (oc1 -> next(noc2));
+CTLSPEC
+    !(EF (i1 & i2)) & !(EF (d1 & d2));
+CTLSPEC
+    AG((oc1) | (noc1)) & AG((oc2) | (noc2));
+CTLSPEC 
+    EF (oc1) & EF(oc2);
+CTLSPEC 
+    EF (noc1) & EF(noc2);

@@ -28,25 +28,14 @@ library:
     - parsec
     - criterion
     - HasCacBDD
+    - directory
 
   source-dirs:
     - src/SMV
 
   ghc-options:
     - -Wall
-
-executables:
-  counter-exe:
-    main:           Main.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
-    - HasCacBDD
+  
 
 tests:
   stack-test:
@@ -66,10 +55,17 @@ tests:
       - -Weverything
       - -threaded
 
-
 executables:
-  counter3-exe:
-    main:           Counter3.hs
+  test-exe:
+    main:         TestEx.hs
+    source-dirs:  app
+    ghc-options: 
+      - -O2
+    dependencies:
+      - SMV-Haskell
+      - base >=4.8 && < 5
+  counter-exe:
+    main:           Counter.hs
     source-dirs:    app
     ghc-options:
     - -threaded
@@ -78,8 +74,11 @@ executables:
     dependencies:
     - SMV-Haskell
     - base >=4.8 && < 5
-  counter4-exe:
-    main:           Counter4.hs
+    - HasCacBDD
+    - directory
+    - HasCacBDD
+  fair-exe:
+    main:           Fair.hs
     source-dirs:    app
     ghc-options:
     - -threaded
@@ -88,135 +87,203 @@ executables:
     dependencies:
     - SMV-Haskell
     - base >=4.8 && < 5
+    - HasCacBDD
+    - directory
+    - HasCacBDD
+  interleave-exe:
+    main:           Interleave.hs
+    source-dirs:    app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - SMV-Haskell
+    - base >=4.8 && < 5
+    - HasCacBDD
+    - directory
+    - HasCacBDD
+  shift-exe:
+    main:           Shift.hs
+    source-dirs:    app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - SMV-Haskell
+    - base >=4.8 && < 5
+    - HasCacBDD
+    - directory
+    - HasCacBDD
 
-  counter5-exe:
-    main:           Counter5.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
+# executables:
+#   counter3-exe:
+#     main:           Counter.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -O2
+#     - -auto-all
+#     - -caf-all
+#     - -fforce-recomp
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
+#     - directory
 
-  counter6-exe:
-    main:           Counter6.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
+# executables:
+#   counter3-exe:
+#     main:           Counter3.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
+#   counter4-exe:
+#     main:           Counter4.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
 
-  counter7-exe:
-    main:           Counter7.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
+#   counter5-exe:
+#     main:           Counter5.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
 
-  counter8-exe:
-    main:           Counter8.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
+#   counter6-exe:
+#     main:           Counter6.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
+
+#   counter7-exe:
+#     main:           Counter7.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
+
+#   counter8-exe:
+#     main:           Counter8.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
   
-  counter9-exe:
-    main:           Counter9.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
+#   counter9-exe:
+#     main:           Counter9.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
   
-  counter10-exe:
-    main:           Counter10.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
+#   counter10-exe:
+#     main:           Counter10.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
   
-  counter11-exe:
-    main:           Counter11.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
+#   counter11-exe:
+#     main:           Counter11.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
   
-  counter12-exe:
-    main:           Counter12.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
+#   counter12-exe:
+#     main:           Counter12.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
   
-  counter13-exe:
-    main:           Counter13.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
+#   counter13-exe:
+#     main:           Counter13.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
   
-  counter14-exe:
-    main:           Counter14.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
+#   counter14-exe:
+#     main:           Counter14.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
     
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
 
-  counter15-exe:
-    main:           Counter10.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
+#   counter15-exe:
+#     main:           Counter10.hs
+#     source-dirs:    app
+#     ghc-options:
+#     - -threaded
+#     - -rtsopts
+#     - -with-rtsopts=-N
+#     dependencies:
+#     - SMV-Haskell
+#     - base >=4.8 && < 5
     
   # fair3-exe:
   #   main:           Fair3.hs

@@ -1,0 +1,123 @@
+VAR
+   a;
+   b;
+   c;
+   d;
+   e;
+   f;
+   g;
+   h;
+   i;
+   j;
+   k;
+   l;
+   m;
+   n;
+   o;
+DEFINE
+   z := !a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n & !o;
+   a0 := a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n & !o;
+   a1 := a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n &  o;
+   a2 := a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m &  n & !o;
+   a3 := a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !m &  n &  o;
+   a4 := a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  m & !n & !o;
+   a5 := a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  m & !n &  o;
+   a6 := a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  m &  n & !o;
+   a7 := a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  m &  n &  o;
+   a8 := a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  l & !m & !n & !o;
+   a9 := a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  l & !m & !n &  o;
+   a10 := a & !b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  l & !m &  n & !o;
+   b0 := !a & b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n & !o;
+   b1 := !a & b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n &  o;
+   b2 := !a & b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m &  n & !o;
+   b3 := !a & b & !c & !d & !e & !f & !g & !h & !i & !j & !k & !m &  n &  o;
+   b4 := !a & b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  m & !n & !o;
+   b5 := !a & b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  m & !n &  o;
+   b6 := !a & b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  m &  n & !o;
+   b7 := !a & b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  m &  n &  o;
+   b8 := !a & b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  l & !m & !n & !o;
+   b9 := !a & b & !c & !d & !e & !f & !g & !h & !i & !j & !k &  l & !m & !n &  o;
+   c0 := !a & !b & c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n & !o;
+   c1 := !a & !b & c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n &  o;
+   c2 := !a & !b & c & !d & !e & !f & !g & !h & !i & !j & !k & !l & !m &  n & !o;
+   c3 := !a & !b & c & !d & !e & !f & !g & !h & !i & !j & !k & !m &  n &  o;
+   c4 := !a & !b & c & !d & !e & !f & !g & !h & !i & !j & !k &  m & !n & !o;
+   c5 := !a & !b & c & !d & !e & !f & !g & !h & !i & !j & !k &  m & !n &  o;
+   c6 := !a & !b & c & !d & !e & !f & !g & !h & !i & !j & !k &  m &  n & !o;
+   c7 := !a & !b & c & !d & !e & !f & !g & !h & !i & !j & !k &  m &  n &  o;
+   c8 := !a & !b & c & !d & !e & !f & !g & !h & !i & !j & !k &  l & !m & !n & !o;
+   d0 := !a & !b & !c & d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n & !o;
+   d1 := !a & !b & !c & d & !e & !f & !g & !h & !i & !j & !k & !l & !m & !n &  o;
+   d2 := !a & !b & !c & d & !e & !f & !g & !h & !i & !j & !k & !l & !m &  n & !o;
+   d3 := !a & !b & !c & d & !e & !f & !g & !h & !i & !j & !k & !m &  n &  o;
+   d4 := !a & !b & !c & d & !e & !f & !g & !h & !i & !j & !k &  m & !n & !o;
+   d5 := !a & !b & !c & d & !e & !f & !g & !h & !i & !j & !k &  m & !n &  o;
+   d6 := !a & !b & !c & d & !e & !f & !g & !h & !i & !j & !k &  m &  n & !o;
+   d7 := !a & !b & !c & d & !e & !f & !g & !h & !i & !j & !k &  m &  n &  o;
+   e0 := !a & !b & !c & !d & e & !f & !g & !h & !i & !j & !k & !l & !m & !n & !o;
+   e1 := !a & !b & !c & !d & e & !f & !g & !h & !i & !j & !k & !l & !m & !n &  o;
+   e2 := !a & !b & !c & !d & e & !f & !g & !h & !i & !j & !k & !l & !m &  n & !o;
+   e3 := !a & !b & !c & !d & e & !f & !g & !h & !i & !j & !k & !m &  n &  o;
+   e4 := !a & !b & !c & !d & e & !f & !g & !h & !i & !j & !k &  m & !n & !o;
+   e5 := !a & !b & !c & !d & e & !f & !g & !h & !i & !j & !k &  m & !n &  o;
+   e6 := !a & !b & !c & !d & e & !f & !g & !h & !i & !j & !k &  m &  n & !o;
+   f0 := !a & !b & !c & !d & !e & f & !g & !h & !i & !j & !k & !l & !m & !n & !o;
+   f1 := !a & !b & !c & !d & !e & f & !g & !h & !i & !j & !k & !l & !m & !n &  o;
+   f2 := !a & !b & !c & !d & !e & f & !g & !h & !i & !j & !k & !l & !m &  n & !o;
+   f3 := !a & !b & !c & !d & !e & f & !g & !h & !i & !j & !k & !m &  n &  o;
+   f4 := !a & !b & !c & !d & !e & f & !g & !h & !i & !j & !k &  m & !n & !o;
+   f5 := !a & !b & !c & !d & !e & f & !g & !h & !i & !j & !k &  m & !n &  o;
+   g0 := !a & !b & !c & !d & !e & !f & g & !h & !i & !j & !k & !l & !m & !n & !o;
+   g1 := !a & !b & !c & !d & !e & !f & g & !h & !i & !j & !k & !l & !m & !n &  o;
+   g2 := !a & !b & !c & !d & !e & !f & g & !h & !i & !j & !k & !l & !m &  n & !o;
+   g3 := !a & !b & !c & !d & !e & !f & g & !h & !i & !j & !k & !m &  n &  o;
+   g4 := !a & !b & !c & !d & !e & !f & g & !h & !i & !j & !k &  m & !n & !o;
+   h0 := !a & !b & !c & !d & !e & !f & !g & h & !i & !j & !k & !l & !m & !n & !o;
+   h1 := !a & !b & !c & !d & !e & !f & !g & h & !i & !j & !k & !l & !m & !n &  o;
+   h2 := !a & !b & !c & !d & !e & !f & !g & h & !i & !j & !k & !l & !m &  n & !o;
+   h3 := !a & !b & !c & !d & !e & !f & !g & h & !i & !j & !k & !m &  n &  o;
+   i0 := !a & !b & !c & !d & !e & !f & !g & !h & i & !j & !k & !l & !m & !n & !o;
+   i1 := !a & !b & !c & !d & !e & !f & !g & !h & i & !j & !k & !l & !m & !n &  o;
+   i2 := !a & !b & !c & !d & !e & !f & !g & !h & i & !j & !k & !l & !m &  n & !o;
+   j0 := !a & !b & !c & !d & !e & !f & !g & !h & !i & j & !k & !l & !m & !n & !o;
+   j1 := !a & !b & !c & !d & !e & !f & !g & !h & !i & j & !k & !l & !m & !n &  o;
+   k0 := !a & !b & !c & !d & !e & !f & !g & !h & !i & !j & k & !l & !m & !n & !o;
+INIT
+   z;
+TRANS
+   (z & next(a0)) | (z & next(a1)) | (z & next(a2)) | (z & next(a3)) | (z & next(a4)) | (z & next(a5)) | (z & next(a6)) | (z & next(a7)) | (z & next(a8)) | (z & next(a9)) | (z & next(a10)) |
+   (a0 & next(a0)) |
+   (a1 & next(b0)) | (b0 & next(a1)) |
+   (a2 & next(b1)) | (b1 & next(c0)) | (c0 & next(a2)) |
+   (a3 & next(b2)) | (b2 & next(c1)) | (c1 & next(d0)) | (d0 & next(a3)) |
+   (a4 & next(b3)) | (b3 & next(c2)) | (c2 & next(d1)) | (d1 & next(e0)) | (e0 & next(a4)) |
+   (a5 & next(b4)) | (b4 & next(c3)) | (c3 & next(d2)) | (d2 & next(e1)) | (e1 & next(f0)) | (f0 & next(a5)) |
+   (a6 & next(b5)) | (b5 & next(c4)) | (c4 & next(d3)) | (d3 & next(e2)) | (e2 & next(f1)) | (f1 & next(g0)) | (g0 & next(a6)) |
+   (a7 & next(b6)) | (b6 & next(c5)) | (c5 & next(d4)) | (d4 & next(e3)) | (e3 & next(f2)) | (f2 & next(g1)) | (g1 & next(h0)) | (h0 & next(a7)) |
+   (a8 & next(b7)) | (b7 & next(c6)) | (c6 & next(d5)) | (d5 & next(e4)) | (e4 & next(f3)) | (f3 & next(g2)) | (g2 & next(h1)) | (h1 & next(i0)) | (i0 & next(a8)) |
+   (a9 & next(b8)) | (b8 & next(c7)) | (c7 & next(d6)) | (d6 & next(e5)) | (e5 & next(f4)) | (f4 & next(g3)) | (g3 & next(h2)) | (h2 & next(i1)) | (i1 & next(j0)) | (j0 & next(a9)) |
+   (a10 & next(b9)) | (b9 & next(c8)) | (c8 & next(d7)) | (d7 & next(e6)) | (e6 & next(f5)) | (f5 & next(g4)) | (g4 & next(h3)) | (h3 & next(i2)) | (i2 & next(j1)) | (j1 & next(k0)) | (k0 & next(a10));
+CTLSPEC
+   AF(a) & AF(b) & AF(c) & AF(d) & AF(e) & AF(f) & AF(g) & AF(h) & AF(i) & AF(j) & AF(k);
+FAIRNESS
+   a;
+FAIRNESS
+   b;
+FAIRNESS
+   c;
+FAIRNESS
+   d;
+FAIRNESS
+   e;
+FAIRNESS
+   f;
+FAIRNESS
+   g;
+FAIRNESS
+   h;
+FAIRNESS
+   i;
+FAIRNESS
+   j;
+FAIRNESS
+   k;
