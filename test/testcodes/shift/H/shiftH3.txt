@@ -14,12 +14,12 @@ INIT
    !a & !b & !c;
 TRANS   
    ((!s0 & !s1) -> ((next(a) <-> a ) & (next(b) <-> b ) & (next(c) <-> c ))) & -- igual
-   ((!s0 &  s1) -> ((next(a) <-> sr) & (next(b) <-> a ) & (next(c) <-> b ))) & -- sr
-   (( s0 & !s1) -> ((next(a) <-> b ) & (next(b) <-> c ) & (next(c) <-> sl))) & -- sl
-   (( s0 &  s1) -> ((next(a) <-> pa) & (next(b) <-> pb) & (next(c) <-> pc)));  -- carga 
+   ((!s1 &  s0) -> ((next(a) <-> sr) & (next(b) <-> a ) & (next(c) <-> b ))) & -- sr
+   (( s1 & !s0) -> ((next(a) <-> b ) & (next(b) <-> c ) & (next(c) <-> sl))) & -- sl
+   (( s1 &  s0) -> ((next(a) <-> pa) & (next(b) <-> pb) & (next(c) <-> pc)));  -- carga 
 CTLSPEC
    AG((!s1 & !s0) -> ((a <-> AX(a)) & (b <-> AX(b)) & (c <-> AX(c))))
 CTLSPEC
    AG(EX (EX (!a & !b & !c)));
 CTLSPEC
-   AG((s1 & !s0) -> EX(a) & EX(!a) & !(EX(b) & EX(!b)) & !(EX(c) & EX(!c)));
+   AG((!s1 & !s0) -> EX(a) & EX(!a) & !(EX(b) & EX(!b)) & !(EX(c) & EX(!c)));

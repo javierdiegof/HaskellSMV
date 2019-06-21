@@ -8,9 +8,13 @@ import System.Directory
 
 main :: IO ()
 main = hspec $ do
-   describe (title "Dining") $ do
-      it "dining 2" $
-         fileCheckOutput "test/testcodes/dining/newdining2.txt" `shouldReturn` [True, True, True, True]
+   describe (title "ThesisCheck") $ do
+      it "Counter3" $
+         fileCheck "test/testcodes/thesis/counter.txt" `shouldReturn` [True, True, True, True]
+      it "Shift3" $
+         fileCheck "test/testcodes/thesis/shift.txt" `shouldReturn` [True, True, True]
+      it "Dining2" $
+         fileCheck "test/testcodes/thesis/dining.txt" `shouldReturn` [True, True, True, True, False, False]
 
 
 title :: String -> String
