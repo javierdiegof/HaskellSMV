@@ -7,4 +7,4 @@ main :: IO [Bool]
 main = do
             args <- getArgs
             d <- getCurrentDirectory
-            fileCheck $ d ++  "/test/testcodes/counter/H/counterH" ++ head args ++ ".txt"
+            fileCheck $ d ++  "/test/testcodes/counter/T/counter" ++ head args ++ ".txt"

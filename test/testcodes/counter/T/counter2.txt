@@ -1,0 +1,15 @@
+VAR                 -- Declaracion de variables a utilizar
+   a;               -- Bit mas significativo
+   b;
+INIT 
+   !a & !b;    -- Estado inicial con todos los bits apagados
+TRANS               -- Estructura de Kripke
+   (next(a) xor a) & (next(b) <-> b xor a);
+CTLSPEC
+   AG(AF(!a & !b));
+CTLSPEC
+   AG(a & b -> AX(!a & !b));
+CTLSPEC
+   AG((a -> EX(!a)) | (b -> EX(!b)));
+CTLSPEC
+   AG((EX(a) <-> AX(a)) & (EX(b) <-> AX(b)));
