@@ -13,6 +13,7 @@ extra-source-files:
 
 github: javierdiegof/SMV-Haskell
 
+
 library:
   exposed-modules:
     - ModelCheck
@@ -36,6 +37,7 @@ library:
   ghc-options:
     - -Wall
   
+  
 
 tests:
   stack-test:
@@ -56,14 +58,34 @@ tests:
       - -threaded
 
 executables:
-  test-exe:
-    main:         TestEx.hs
+  test-exe1:
+    main:         TestEx1.hs
     source-dirs:  app
     ghc-options: 
       - -O2
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
     dependencies:
       - SMV-Haskell
       - base >=4.8 && < 5
+      - HasCacBDD
+      - directory
+      - HasCacBDD
+  test-exe2:
+    main:         TestEx2.hs
+    source-dirs:  app
+    ghc-options: 
+      - -O2
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - SMV-Haskell
+      - base >=4.8 && < 5
+      - HasCacBDD
+      - directory
+      - HasCacBDD
   counter-exe:
     main:           Counter.hs
     source-dirs:    app

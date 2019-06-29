@@ -5,4 +5,4 @@ INIT
 TRANS
 	(next(a) xor a);
 CTLSPEC
-AG((EX(a) <-> AX(a)));
+	AG(AF(!a));

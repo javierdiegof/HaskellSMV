@@ -1,0 +1,16 @@
+VAR
+	a;
+	b;
+	c;
+IVAR
+	d;
+	f;
+	g;
+INIT
+	!c;
+TRANS
+	((!a & !b) -> ((next(c) <-> c))) &
+	((!a &  b) -> ((next(c) <-> f))) &
+	(( a &  b) -> ((next(c) <-> d)));
+CTLSPEC
+	AG((!a & b) ->  EX(c) & EX(!c));

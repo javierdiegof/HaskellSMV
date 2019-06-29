@@ -1,21 +1,14 @@
-VAR                 -- Declaracion de variables a utilizar
-   a;               -- Bit mas significativo
-   b;
-   c;               
-   d;
-   e;
-   f;
-   g;
-INIT 
-   !a & !b & !c & !d & !e & !f & !g;    -- Estado inicial con todos los bits apagados
-TRANS               -- Estructura de Kripke
-   (next(a) xor a) & (next(b) <-> b xor a) & (next(c) <-> c xor a & b) & (next(d) <-> d xor a & b & c) & (next(e) <-> e xor a & b & c & d) 
-   & (next(f) <-> f xor a & b & c & d & e) & (next(g) <-> g xor a & b & c & d & e & f);
+VAR
+	a;
+	b;
+	c;
+	d;
+	e;
+	f;
+	g;
+INIT
+	!a & !b & !c & !d & !e & !f & !g;
+TRANS
+	(next(a) xor a) & (next(b) <-> b xor a) & (next(c) <-> c xor a & b) & (next(d) <-> d xor a & b & c) & (next(e) <-> e xor a & b & c & d) & (next(f) <-> f xor a & b & c & d & e) & (next(g) <-> g xor a & b & c & d & e & f);
 CTLSPEC
-   AG(AF(!a & !b & !c & !d & !e & !f & !g));
-CTLSPEC
-   AG(a & b & c & d & e & f & g -> AX(!a & !b & !c & !d & !e & !f & !g));
-CTLSPEC
-   AG((a -> EX(!a)) | (b -> EX(!b)) | (c -> EX(!c)) | (d -> EX(!d)) | (e -> EX(!e)) | (f -> EX(!f)) | (g -> EX(!g)));
-CTLSPEC
-   AG((EX(a) <-> AX(a)) & (EX(b) <-> AX(b)) & (EX(c) <-> AX(c)) & (EX(d) <-> AX(d)) & (EX(e) <-> AX(e)) & (EX(f) <-> AX(f)) & (EX(g) <-> AX(g)));
+AG((EX(a) <-> AX(a)) & (EX(b) <-> AX(b)) & (EX(c) <-> AX(c)) & (EX(d) <-> AX(d)) & (EX(e) <-> AX(e)) & (EX(f) <-> AX(f)) & (EX(g) <-> AX(g)));
