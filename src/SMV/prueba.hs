@@ -1,3 +1,0 @@
-import ModelCheck
-
-main = benchMark

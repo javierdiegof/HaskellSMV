@@ -40,7 +40,7 @@ library:
 tests:
   stack-test:
     source-dirs: test
-    main: Test1.hs
+    main: Test.hs
 
     dependencies:
       - base >=4.8 && < 5
@@ -54,65 +54,3 @@ tests:
     ghc-options:
       - -Weverything
       - -threaded
-
-executables:
-  test-exe:
-    main:         TestEx.hs
-    source-dirs:  app
-    ghc-options: 
-      - -O2
-    dependencies:
-      - SMV-Haskell
-      - base >=4.8 && < 5
-  counter-exe:
-    main:           Counter.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
-    - HasCacBDD
-    - directory
-    - HasCacBDD
-  fair-exe:
-    main:           Fair.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
-    - HasCacBDD
-    - directory
-    - HasCacBDD
-  interleave-exe:
-    main:           Interleave.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
-    - HasCacBDD
-    - directory
-    - HasCacBDD
-  shift-exe:
-    main:           Shift.hs
-    source-dirs:    app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - SMV-Haskell
-    - base >=4.8 && < 5
-    - HasCacBDD
-    - directory
-    - HasCacBDD

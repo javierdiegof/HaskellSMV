@@ -10,11 +10,11 @@ main :: IO ()
 main = hspec $ do
    describe (title "ThesisCheck") $ do
       it "Counter3" $
-         fileCheck "test/testcodes/thesis/counter.txt" `shouldReturn` [True, True, True, True]
+         fileCheckOutput "test/counter3.hmv" `shouldReturn` [True, True, True, True]
       it "Shift3" $
-         fileCheck "test/testcodes/thesis/shift.txt" `shouldReturn` [True, True, True]
+         fileCheckOutput "test/shift3.hmv" `shouldReturn` [True, True, True]
       it "Dining2" $
-         fileCheck "test/testcodes/thesis/dining.txt" `shouldReturn` [True, True, True, True, False, False]
+         fileCheckOutput "test/dining2.hmv" `shouldReturn` [True, True, True, True, False, False]
 
 
 title :: String -> String
