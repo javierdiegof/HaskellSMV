@@ -22,9 +22,13 @@ The formal syntax of every one of the elements is given below using Extended Bac
 Every state in the transition diagram is identified by a different satisfaction subset of the set of state variables (where the variable is considered true for that state iff it is in the associated subset). The VAR declaration lets you declare state variables.
 
 **vardec** &nbsp; ::= &nbsp; "VAR" **varlist**
+
 **varlist** &nbsp; ::= &nbsp; **variable** ";" { **variable** ";" }
+
 **variable** &nbsp; ::= &nbsp; **lower** { **lower** &nbsp; | &nbsp; **digit** &nbsp; | &nbsp; "_" }
+
 **lower** &nbsp; ::= &nbsp; "a" &nbsp; | &nbsp; "b" &nbsp; | &nbsp; ... &nbsp; | &nbsp; "z"
+
 **digit** &nbsp; ::= &nbsp; "1" &nbsp; | &nbsp; "2" &nbsp; | &nbsp; ... &nbsp; | &nbsp; "9"
 
 Note: Even though the only type of variable is boolean and declaration could be avoided, it is a good practice to declare them, it is easier to extend the verifier to other types of variables by explicitly requiring the user to declare them.
@@ -38,8 +42,10 @@ These are nondeterministic variables that can be true or false at any point in t
 These are nameholders for boolean expressions made out of state variables and input variables, these are used to make code more readable.
 
 **definedec** &nbsp; ::= &nbsp; "DEFINE" **defexplist**
+
 **defexplist** &nbsp; ::= &nbsp; **variable** &nbsp; ":=" &nbsp; **simple_exp** ";"
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp; **variable** &nbsp; ":=" &nbsp; **simple_exp** ";"&nbsp;}
+
 **simple_exp** &nbsp; ::= &nbsp; **constant**
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **constant**
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **variable**
@@ -50,14 +56,17 @@ These are nameholders for boolean expressions made out of state variables and in
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **simple_exp** &nbsp; "xor" &nbsp; **simple_exp**
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **simple_exp** &nbsp; "->" &nbsp; **simple_exp**
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **simple_exp** &nbsp; "<->" &nbsp; **simple_exp**
+
 **constant** &nbsp; ::= &nbsp; "TRUE" &nbsp; | &nbsp; "FALSE" &nbsp;
 
 ### Initial states formula
 Initial states are needed in order to obtain the satisfaction judgement. In here, it is explicitly declared as a boolean formula. 
+
 **initdec** &nbsp; ::= &nbsp; "INIT" **simple_exp** ";"
 
 ### Transition relation formula
 **transdec** &nbsp; ::= &nbsp; "TRANS" &nbsp; **nextexp** {";"}
+
 **nextexp**  &nbsp; ::= &nbsp; **constant**
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; **nextvariable**
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; **variable**
@@ -68,11 +77,13 @@ Initial states are needed in order to obtain the satisfaction judgement. In here
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **nextexp** &nbsp; "xor" &nbsp; **nextexp**
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **nextexp** &nbsp; "->" &nbsp; **nextexp**
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **nextexp** &nbsp; "<->" &nbsp; **nextexp**
+
 **nextvariable**  &nbsp; ::=&nbsp; "next" &nbsp;  "(" **variable** ")"
 
 ### CTL formula specification
 This is the CTL formula to be verified against the model defined. Just conventional CTL syntax
 **ctlspec** &nbsp; ::= &nbsp; "CTLSPEC" &nbsp; **ctlformula** {";"}
+
 **ctlformula**  &nbsp; ::= &nbsp; **constant**
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; **variable**
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "( "**ctlformula** ")"
