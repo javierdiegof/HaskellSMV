@@ -43,19 +43,18 @@ These are nameholders for boolean expressions made out of state variables and in
 
 **definedec** &nbsp; ::= &nbsp; "DEFINE" **defexplist**
 
-**defexplist** &nbsp; ::= &nbsp; **variable** &nbsp; ":=" &nbsp; **simple_exp** ";"
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{&nbsp; **variable** &nbsp; ":=" &nbsp; **simple_exp** ";"&nbsp;}
+**defexplist** &nbsp; ::= &nbsp; **variable** &nbsp; ":=" &nbsp; **simple_exp** ";"  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;{&nbsp; **variable** &nbsp; ":=" &nbsp; **simple_exp** ";"&nbsp;}
 
-**simple_exp** &nbsp; ::= &nbsp; **constant**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **constant**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **variable**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; "(" **simple_exp** ")"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; "!" &nbsp; **simple_exp** &nbsp; 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **simple_exp** &nbsp; "&" &nbsp; **simple_exp**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **simple_exp** &nbsp; "|" &nbsp; **simple_exp**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **simple_exp** &nbsp; "xor" &nbsp; **simple_exp**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **simple_exp** &nbsp; "->" &nbsp; **simple_exp**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **simple_exp** &nbsp; "<->" &nbsp; **simple_exp**
+**simple_exp** &nbsp; ::= &nbsp; **constant**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; **variable**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "(" **simple_exp** ")"  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "!" &nbsp; **simple_exp** &nbsp;  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; **simple_exp** &nbsp; "&" &nbsp; **simple_exp**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; **simple_exp** &nbsp; "|" &nbsp; **simple_exp**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; **simple_exp** &nbsp; "xor" &nbsp; **simple_exp**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; **simple_exp** &nbsp; "->" &nbsp; **simple_exp**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; **simple_exp** &nbsp; "<->" &nbsp; **simple_exp**
 
 **constant** &nbsp; ::= &nbsp; "TRUE" &nbsp; | &nbsp; "FALSE" &nbsp;
 
@@ -67,16 +66,17 @@ Initial states are needed in order to obtain the satisfaction judgement. In here
 ### Transition relation formula
 **transdec** &nbsp; ::= &nbsp; "TRANS" &nbsp; **nextexp** {";"}
 
-**nextexp**  &nbsp; ::= &nbsp; **constant**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; **nextvariable**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; **variable**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "( "**nextexp** ")"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "!" &nbsp; **nextexp** 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **nextexp** &nbsp; "&" &nbsp; **nextexp**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **nextexp** &nbsp; "|" &nbsp; **nextexp**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **nextexp** &nbsp; "xor" &nbsp; **nextexp**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **nextexp** &nbsp; "->" &nbsp; **nextexp**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **nextexp** &nbsp; "<->" &nbsp; **nextexp**
+**nextexp**  &nbsp; ::= &nbsp; **constant**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;| &nbsp; **variable**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;| &nbsp; **nextvariable**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;| &nbsp; "( "**nextexp** ")"  
+&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;| &nbsp; "!" &nbsp; **nextexp**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;| &nbsp; **nextexp** &nbsp; "&" &nbsp; **nextexp**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;| &nbsp; **nextexp** &nbsp; "|" &nbsp; **nextexp**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;| &nbsp; **nextexp** &nbsp; "xor" &nbsp; **nextexp**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;| &nbsp; **nextexp** &nbsp; "->" &nbsp; **nextexp**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;| &nbsp; **nextexp** &nbsp; "<->" &nbsp; **nextexp**  
+
 
 **nextvariable**  &nbsp; ::=&nbsp; "next" &nbsp;  "(" **variable** ")"
 
@@ -84,24 +84,23 @@ Initial states are needed in order to obtain the satisfaction judgement. In here
 This is the CTL formula to be verified against the model defined. Just conventional CTL syntax
 **ctlspec** &nbsp; ::= &nbsp; "CTLSPEC" &nbsp; **ctlformula** {";"}
 
-**ctlformula**  &nbsp; ::= &nbsp; **constant**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; **variable**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "( "**ctlformula** ")"
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "!" &nbsp; **ctlformula** 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "EX" &nbsp; **ctlformula** 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "EF" &nbsp; **ctlformula** 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "EG" &nbsp; **ctlformula** 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "AX" &nbsp; **ctlformula** 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "AF" &nbsp; **ctlformula** 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "AG" &nbsp; **ctlformula** 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| &nbsp; "AG" &nbsp; **ctlformula** 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **ctlformula** &nbsp; "&" &nbsp; **ctlformula**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **ctlformula** &nbsp; "|" &nbsp; **ctlformula**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **ctlformula** &nbsp; "xor" &nbsp; **ctlformula**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **ctlformula** &nbsp; "->" &nbsp; **ctlformula**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **ctlformula** &nbsp; "<->" &nbsp; **ctlformula**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **ctlformula** &nbsp; "EU" &nbsp; **ctlformula**
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | &nbsp; **ctlformula** &nbsp; "AU" &nbsp; **ctlformula**
+**ctlformula**  &nbsp; ::= &nbsp; **constant**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; **variable**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; "( "&nbsp;**ctlformula**&nbsp;")"  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; "!" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; "EX" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; "EF" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; "EG" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; "AX" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; "AF" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; "AG" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; **ctlformula** &nbsp; "&" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; **ctlformula** &nbsp; "|" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; **ctlformula** &nbsp; "xor" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; **ctlformula** &nbsp; "->" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; **ctlformula** &nbsp; "<->" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; **ctlformula** &nbsp; "EU" &nbsp; **ctlformula**  
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; **ctlformula** &nbsp; "AU" &nbsp; **ctlformula**  
 
 ### Fairness constraint specification.
 Just as NuSMV does, we restrict fairness constraints to boolean formulas. 
