@@ -113,9 +113,11 @@ There can be several state variable declarations, several input variable declara
 ## Examples
 Three examples are included in the Stack test suite in the project (just like Aristotle, we like things things separated in three).
 1. A three bit counter: a simple three bit counter, it goes from 0 to 7 in binary by changing the appropiate boolean variables. 
+![Alt text](test/images/counter3.png?raw=true "Title")
 2. A three bit universal shift register: A universal shift register with three cells. The lines s0 and s1 select the corresponding to be completed in the following clock cycle, Table 1 behaviour of the lines.
+![Alt text](test/images/shift3.png?raw=true "Title")
 3. 
-
+![Alt text](test/images/dining2.png?raw=true "Title")
 | s1       | s0     | Operation        |
 |:-------:|:-------:|:--------------:  |
 | 0        | 0      | No change        |
