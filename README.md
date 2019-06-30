@@ -118,6 +118,8 @@ Three examples are included in the Stack test suite in the project (just like Ar
 ![Alt text](test/images/shift3.png?raw=true "Title")
 3. 
 ![Alt text](test/images/dining2.png?raw=true "Title")
+
+
 | s1       | s0     | Operation        |
 |:-------:|:-------:|:--------------:  |
 | 0        | 0      | No change        |
