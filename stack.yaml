@@ -2,6 +2,5 @@ resolver: lts-8.0
 packages:
 - '.'
 
-
 extra-deps:
   - HasCacBDD-0.1.0.2
