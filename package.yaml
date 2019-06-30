@@ -27,7 +27,7 @@ library:
     - containers
     - parsec
     - criterion
-    - HasCacBDD
+    - HasCacBDD 
     - directory
 
   source-dirs:
@@ -49,7 +49,6 @@ tests:
       - exceptions
       - SMV-Haskell
       - directory
-      - HasCacBDD
 
     ghc-options:
       - -Weverything
