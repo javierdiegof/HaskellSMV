@@ -1,4 +1,5 @@
 name:           SMV-Haskell
+version:        1.0 # First major release!
 synopsis:       A symbolic model checker written in Haskell
 author:         Javier Diego-Fernández @ UNAM Mexico City C.U.
 maintainer:     Javier Diego-Fernández <javier.d.fernandez7@gmail.com>
