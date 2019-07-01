@@ -1,4 +1,4 @@
-name:           SMV-Haskell
+name:           Haskell-SMV
 version:        1.0 # First major release!
 synopsis:       A symbolic model checker written in Haskell
 author:         Javier Diego-Fernández @ UNAM Mexico City C.U.
@@ -12,7 +12,7 @@ description:    Simple symbolic model checker based on NuSMV written in Haskell,
 extra-source-files:
   - stack.yaml
 
-github: javierdiegof/SMV-Haskell
+github: javierdiegof/Haskell-SMV
 
 library:
   exposed-modules:
