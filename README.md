@@ -31,7 +31,7 @@ Every state in the transition diagram is identified by a different satisfaction 
 
 **digit** &nbsp; ::= &nbsp; "1" &nbsp; | &nbsp; "2" &nbsp; | &nbsp; ... &nbsp; | &nbsp; "9"
 
-Note: Even though the only type of variable is boolean and declaration could be avoided, it is a good practice to declare them, it is easier to extend the verifier to other types of variables by explicitly requiring the user to declare them.
+Note: Even though the only type of variable is boolean and declaration could be avoided, it is a good practice to declare them and it is easier to extend the verifier to other types of variables by explicitly requiring the user to declare them.
 
 ### Input variables
 These are nondeterministic variables that can be true or false at any point in time, generally used to denote input variables to the system over which the designer has no control. They are not used to identify states and cannot be used inside a specification.
@@ -39,7 +39,7 @@ These are nondeterministic variables that can be true or false at any point in t
 **ivardec** &nbsp; ::= &nbsp; "IVAR" **varlist**
 
 ### Composite variables (Define declarations)
-These are nameholders for boolean expressions made out of state variables and input variables, these are used to make code more readable.
+These are nameholders for boolean expressions made out of state variables and input variables, they are used to make code more readable.
 
 **definedec** &nbsp; ::= &nbsp; "DEFINE" **defexplist**
 
@@ -64,6 +64,10 @@ Initial states are needed in order to obtain the satisfaction judgement. In here
 **initdec** &nbsp; ::= &nbsp; "INIT" **simple_exp** ";"
 
 ### Transition relation formula
+The transition relation formula describes the temporal behaviour of the system being verified. This is done by establishing a boolean 
+relationship between variables in the "present" state of the system and the "next" state of the system (next instant of time). The keyword 
+"next" is used to denote those future step variables. 
+
 **transdec** &nbsp; ::= &nbsp; "TRANS" &nbsp; **nextexp** {";"}
 
 **nextexp**  &nbsp; ::= &nbsp; **constant**  
@@ -81,7 +85,8 @@ Initial states are needed in order to obtain the satisfaction judgement. In here
 **nextvariable**  &nbsp; ::=&nbsp; "next" &nbsp;  "(" **variable** ")"
 
 ### CTL formula specification
-This is the CTL formula to be verified against the model defined. Just conventional CTL syntax
+This is the CTL formula to be verified against the model defined. Just conventional CTL syntax.
+  
 **ctlspec** &nbsp; ::= &nbsp; "CTLSPEC" &nbsp; **ctlformula** {";"}
 
 **ctlformula**  &nbsp; ::= &nbsp; **constant**  
@@ -103,7 +108,10 @@ This is the CTL formula to be verified against the model defined. Just conventio
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;| &nbsp; **ctlformula** &nbsp; "AU" &nbsp; **ctlformula**  
 
 ### Fairness constraint specification.
-Just as NuSMV does, we restrict fairness constraints to boolean formulas. 
+Fairness constraints lets the designer avoid situations that are considered not realistic in the system designed where some property
+is never satisfied. Fairness allows the system to force the satisfaction of those conditions eventually in every infinite path.
+
+Just as NuSMV does, we restrict fairness constraints to boolean formulas.  
 **faircons** &nbsp; ::= &nbsp; "FAIRNESS" &nbsp; **simple_exp** {";"}
 
 Conventions: The usual requirements apply: all variables have to be declared before used, a file has to have all the elements necessary to do the verification, input variables have to have different identifiers than state variables and composite variables, etc. 
@@ -114,16 +122,15 @@ There can be several state variable declarations, several input variable declara
 Three examples are included in the Stack test suite in the project.
 1. A three bit counter: a simple three bit counter as shown in the image below. It works by changing the truth values of the corresponding variables.  
 <img src="https://github.com/javierdiegof/SMV-Haskell/blob/master/test/images/counter3.png" width="400" height="400"/>  
-It's transition diagram specification is based on the observation that, the truth value of a variable in the next clock cycle will change only when all the less
-significant variable are on, for more information the file counter3.hmv can be analyzed.  
+It's transition diagram specification is based on the observation that, the truth value of a variable in the next clock cycle will change only when all its less significant variables are on, for more information the file counter3.hmv can be analyzed.  
 
 Translated to common language, the four specs can be stated as:  
    1. For every path and every state, there is a future with value 0.
-   2. For all states where all variables are set to TRUE (number 7), all next states to these one have all variables set to FALSE (number 0).
+   2. For all states where all variables are set to TRUE (number 7), all next states to these ones have all variables set to FALSE (number 0).
    3. For every state, some of the following states have a different numerical value. 
    4. For every state there is only one following state.
 
-2. A three bit universal shift register: A universal shift register with three cells like the one shown in the following figure. 
+2. A three bit universal shift register: A universal shift register with three memory cells like the one shown in the following figure. 
 
 <img src="https://github.com/javierdiegof/SMV-Haskell/blob/master/test/images/shift3.png" width="900" height="400"/>
 
@@ -137,17 +144,18 @@ The behaviour of the register in the following clock cycle is determined by the 
 | 1  | 0  | Left shift   | 
 | 1  | 1  | Parallel load|
 
-When a right shift is chosen, cell a will acquire the value of line sr in the next clock cycle.  
-When a left shift is chosen, cell c will have the value of line sl.  
-When a parallel load is chosen, cells a,b, and c will acquire the value of lines pa, pb, and pc, respectively.  
+When a right shift is chosen, cell a will acquire the value of line sr in the next clock cycle, all other cells values will be shifted right.  
+When a left shift is chosen, cell c will have the value of line sl, all other cell values will be shifted left.  
+When a parallel load is chosen, cells a, b, and c will acquire the value of lines pa, pb, and pc, respectively.  
 In the example, variables sr, sl, a, b, and c are considered input variables.
 
-The transition relation formula is based on implications determined by lines s1 and s0.
+The transition relation formula is based on implications determined by lines the behaviour of lines s1 and s0.
 
 
 3. The last example is a solution to the dinning philosophers problem using an arbitor. It solves the problem just for two philosophers.  
 <img src="https://github.com/javierdiegof/SMV-Haskell/blob/master/test/images/dining2.png" width="400" height="400"/>  
-The variables in the model represent the following situations:
+The variables in the model represent the following situations:  
+
   - s1 and s2 indicate that philosophers 1 and 2 want to eat, respectively. It will be considered an input variable (we do not know a priorio when a philosopher will ask to eat).
   - i1 and i2 indicate that philosopher 1 and 2 are occuping the left fork, respectively.  
   - d1 and d2 indicate that philosopher 1 and 2 are occuping the right fork, respectively.  
