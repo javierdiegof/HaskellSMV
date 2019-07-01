@@ -116,6 +116,7 @@ Three examples are included in the Stack test suite in the project.
 <img src="https://github.com/javierdiegof/SMV-Haskell/blob/master/test/images/counter3.png" width="400" height="400"/>  
 It's transition diagram specification is based on the observation that, the truth value of a variable in the next clock cycle will change only when all the less
 significant variable are on, for more information the file counter3.hmv can be analyzed.  
+
 Translated to common language, the four specs can be stated as:  
    1. For every path and every state, there is a future with value 0.
    2. For all states where all variables are set to TRUE (number 7), all next states to these one have all variables set to FALSE (number 0).
