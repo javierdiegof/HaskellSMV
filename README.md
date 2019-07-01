@@ -155,18 +155,19 @@ The transition relation formula is based on implications determined by lines the
 3. The last example is a solution to the dinning philosophers problem using an arbitor. It solves the problem just for two philosophers.  
 <img src="https://github.com/javierdiegof/SMV-Haskell/blob/master/test/images/dining2.png" width="400" height="400"/>  
 The variables in the model represent the following situations:  
+  
 
-  - s1 and s2 indicate that philosophers 1 and 2 want to eat, respectively. It will be considered an input variable (we do not know a priorio when a philosopher will ask to eat).
-  - i1 and i2 indicate that philosopher 1 and 2 are occuping the left fork, respectively.  
-  - d1 and d2 indicate that philosopher 1 and 2 are occuping the right fork, respectively.  
+  - s1 and s2 indicate that philosophers 1 and 2 want to eat, respectively. It will be considered an input variable (we do not know a priori when a philosopher will ask to eat).
+  - i1 and i2 indicate that philosophers 1 and 2 are occuping the left fork, respectively.  
+  - d1 and d2 indicate that philosophers 1 and 2 are occuping the right fork, respectively.  
 
 The system works the following way:
   1. Philosophers 1 and 2 can ask the arbitor to eat at any moment in time. 
   2. When a philosopher is given both forks, he/she has to start eating immediately. 
   3. The arbitor will give a philosopher both forks whenever they are at the table and the other philosopher is not asking for them. 
-  4. If a philosopher is occupying both forks in an instant of time and keeps soliciting them, the arbitor will give him/her to continue using them the next instant of time. 
-  5. If a philosopher stops soliciting the forks, they will return to the table on the next instant of time. 
-  6.  If both philosopher ask to eat at the same time and both forks are on the table, the arbitor will concede them just to one of them nondeterministcally.
+  4. If a philosopher stops soliciting the forks, they will return to the table on the next instant of time. 
+  5. If both philosopher ask to eat at the same time and both forks are on the table, the arbitor will concede them just to one of them nondeterministcally.
+  6. If a philosopher is occupying both forks in an instant of time and keeps soliciting them, the arbitor will allow him/her to continue using them the next instant of time. 
 
 The properties to be checked in the system are:
   1. There is no state where both i1 and i2 are TRUE and there is no state where d1 and d2 are both TRUE. 
@@ -174,8 +175,8 @@ The properties to be checked in the system are:
   3. There exists a future state where philosopher 1 is eating and there is a future state where philosopher 2 is eating (the arbitor does allow a philosopher to eat eventually). 
   4. There exists a future state where philosopher 1 is not eating and there is a future state where philosopher 2 is no eating. 
 
-Since the characteristic number 6. in the arbitor allows an unfair situation where a philosopher can have indefinitely both forks, we add the 
-following two fairness constraints:
+Since the characteristic number 6 in the arbitor allows an unfair situation where a philosopher can have indefinitely both forks, we add the 
+following fairness constraints:
   1. philosopher 1 eventually eats.
   2. philosopher 2 eventually eats.
 
