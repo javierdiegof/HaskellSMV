@@ -115,7 +115,7 @@ Three examples are included in the Stack test suite in the project (just like Ar
 1. A three bit counter: a simple three bit counter, it goes from 0 to 7 in binary by changing the appropiate boolean variables.  
 <img src="https://github.com/javierdiegof/SMV-Haskell/blob/master/test/images/counter3.png" width="400" height="400"/>
 2. A three bit universal shift register: A universal shift register with three cells. The lines s0 and s1 select the corresponding to be completed in the following clock cycle, Table 1 behaviour of the lines.  
-<img src="https://github.com/javierdiegof/SMV-Haskell/blob/master/test/images/shift3.png" width="700" height="400"/>
+<img src="https://github.com/javierdiegof/SMV-Haskell/blob/master/test/images/shift3.png" width="800" height="400"/>
 3. 
 <img src="https://github.com/javierdiegof/SMV-Haskell/blob/master/test/images/dining2.png" width="400" height="400"/>
 
