@@ -48,7 +48,7 @@ tests:
       - hspec
       - QuickCheck
       - exceptions
-      - SMV-Haskell
+      - Haskell-SMV
       - directory
 
     ghc-options:
