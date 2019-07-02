@@ -1,0 +1,63 @@
+-- This file has been generated from package.yaml by hpack version 0.28.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: b3b64bb01eece879dd441bca9be8bca0eb6c9508d612d304772bf883e2889ba1
+
+name:           HaskellSMV
+version:        1.0.0
+synopsis:       A symbolic model checker written in Haskell
+description:    Simple symbolic model checker based on NuSMV written in Haskell, it uses HasCacBDD binding to implement the BDD functionality.
+category:       Data
+homepage:       https://github.com/javierdiegof/HaskellSMV#readme
+bug-reports:    https://github.com/javierdiegof/HaskellSMV/issues
+author:         Javier Diego-Fernández @ UNAM Mexico City C.U.
+maintainer:     Javier Diego-Fernández <javier.d.fernandez7@gmail.com>
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+extra-source-files:
+    stack.yaml
+
+source-repository head
+  type: git
+  location: https://github.com/javierdiegof/HaskellSMV
+
+library
+  exposed-modules:
+      ModelCheck
+      DataTypes
+      Preprocess
+      LanguageDef
+      SMVParser
+  other-modules:
+      Paths_HaskellSMV
+  hs-source-dirs:
+      src/SMV
+  ghc-options: -Wall
+  build-depends:
+      HasCacBDD
+    , base >=4.8 && <5
+    , containers
+    , criterion
+    , directory
+    , parsec
+    , process >=1.1
+  default-language: Haskell2010
+
+test-suite stack-test
+  type: exitcode-stdio-1.0
+  main-is: Test.hs
+  other-modules:
+      Paths_HaskellSMV
+  hs-source-dirs:
+      test
+  ghc-options: -Weverything -threaded
+  build-depends:
+      HaskellSMV
+    , QuickCheck
+    , base >=4.8 && <5
+    , directory
+    , exceptions
+    , hspec
+  default-language: Haskell2010
