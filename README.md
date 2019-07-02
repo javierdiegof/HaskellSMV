@@ -1,4 +1,4 @@
-# Haskell-SMV
+# HaskellSMV
 
 
 [![Release](https://img.shields.io/github/release/javierdiegof/HaskellSMV.svg)](https://github.com/javierdiegof/HaskellSMV/releases)
@@ -6,7 +6,7 @@
 
 
 ## Overview
-Haskell-SMV is a barebones functional symbolic CTL model checker written in Haskell as part of my undergraduate dissertation in computer engineering at UNAM, in Mexico City. It's syntax is heavily inspired by [NuSMV's](http://nusmv.fbk.eu/NuSMV/userman/v26/nusmv.pdf "NuSMV 2.6 User Manual"). 
+HaskellSMV is a barebones functional symbolic CTL model checker written in Haskell as part of my undergraduate dissertation in computer engineering at UNAM, in Mexico City. It's syntax is heavily inspired by [NuSMV's](http://nusmv.fbk.eu/NuSMV/userman/v26/nusmv.pdf "NuSMV 2.6 User Manual"). 
 
 The syntactic elements that can be defined in the verifier are the following ones:
   - State variables.
