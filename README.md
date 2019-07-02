@@ -1,8 +1,8 @@
 # Haskell-SMV
 
 
-[![Release](https://img.shields.io/github/release/javierdiegof/Haskell-SMV.svg)](https://github.com/m4lvin/HasCacBDD/releases)
-[![Build Status](https://travis-ci.com/javierdiegof/Haskell-SMV.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
+[![Release](https://img.shields.io/github/release/javierdiegof/Haskell-SMV.svg)](https://github.com/javierdiegof/Haskell-SMV/releases)
+[![Build Status](https://travis-ci.com/javierdiegof/Haskell-SMV.svg?branch=master)](https://travis-ci.com/javierdiegof/Haskell-SMV)
 
 
 ## Overview
