@@ -7,7 +7,7 @@ INIT
 TRANS               -- Estructura de Kripke
    (next(r) xor r) & (next(q) <-> q xor r) & (next(p) <-> p xor q & r);
 CTLSPEC
-   AG(AF(!p & !q & !r));
+   AG(AF(p & q & r));
 CTLSPEC
    AG(p & q & r -> AX(!p & !q & !r));
 CTLSPEC
